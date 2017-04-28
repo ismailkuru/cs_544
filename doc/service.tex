@@ -1,3 +1,7 @@
 \section{Service Description}
 \label{sec:serv_desc}
-\textsf{RCUC} protocol is designed to specify the communication between remote smart devices and the server which has information flow from different running devices on the car. 
+\textsf{RCUC} protocol is designed to specify the communication between remote smart devices and the server, Car-Control-Server \textsf{CCS}, which has information flow from different running devices on the car. \textsf{RCUC} protocol works as a middleware in between smart devices and the \textsf{CCS}. It enables remote devices to communicate with a \textsf{CCS} under a well specified rules. In other words \textsf{RCUC} translates the commands taken from client to a version of commands so that \textsf{CCS} understands,  communicates with devices on the car to perform clients request and then gives feed back to the client.  We would like to emphasise that this protocol does not aim to regulate the communication between \textsf{CCS} and devices on the car.
+
+\textsf{RCUC} relies on TCP in transportation. Our protocol uses stream-oriented channels with no fixed size boundries for messages.
+
+Our protocol provides authentication for the authorization of the client [Note: We can provide DES, and also SSL or Encryption can be option].
