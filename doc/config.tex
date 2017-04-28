@@ -1,0 +1,43 @@
+%%%%%%%%%%%%%%%%
+%%%  config  %%%
+%%%%%%%%%%%%%%%%
+
+\pagestyle{fancy}
+
+\geometry{letterpaper}
+
+\hypersetup{
+colorlinks,
+linkcolor=blue,
+filecolor=blue,
+urlcolor=blue,
+citecolor=blue}
+
+\fancyhf{}
+\fancyfoot[R]{\thepage}
+\fancyfoot[L]{X Protocol $\mid$ Group 2}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\tuple}[1]{\ensuremath{\left \langle #1 \right \rangle }}
+\newcommand{\sect}[1]{Sec.~\ref{#1}}
+\newcommand{\figr}[1]{Fig.~\ref{#1}}
+\newcommand{\tabl}[1]{Tab.~\ref{#1}}
+\newcommand{\appn}[1]{App.~\ref{#1}}
+\newcommand{\comm}[1]{}
+\newcommand{\abs}[1]{\arrowvert#1\arrowvert}
+\newcommand{\norm}[1]{\Arrowvert#1\Arrowvert}
+
+\newcommand{\footlabel}[2]{%
+    \addtocounter{footnote}{1}%
+    \footnotetext[\thefootnote]{%
+        \addtocounter{footnote}{-1}%
+        \refstepcounter{footnote}\label{#1}%
+        #2%
+    }%
+    $^{\ref{#1}}$%
+}
+
+\newcommand{\footref}[1]{%
+    $^{\ref{#1}}$%
+}

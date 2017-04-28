@@ -1,0 +1,79 @@
+%%%%%%%%%%%%%%%%
+%%%  config  %%%
+%%%%%%%%%%%%%%%%
+
+\documentclass[12pt]{usenixsubmit}
+\usepackage{setspace}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{color}
+\usepackage{hyperref}
+%\usepackage{appendix}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{geometry}
+
+%\setstretch{0.9}
+
+\input{config}
+
+%%%%%%%%%%%%%%%%
+%%% document %%%
+%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%% cover %%%
+
+\title{Group 2: X Protocol \\ \Large{CS544 Spring 2017, Drexel University}}
+
+\author{
+    Lewis Cannalongo \\
+    lrc74@drexel.edu
+    \and
+     Max Mattes \\
+    mm3888@drexel.edu
+    \and
+    Ismail Kuru \\
+    ik335@drexel.edu
+}
+\date{\today}
+
+\maketitle
+
+\thispagestyle{empty}
+
+\input{abstract}
+
+\tableofcontents
+\pagebreak
+
+\setcounter{page}{1}
+
+%%% content %%%
+
+\input{service}
+
+\input{pdus}
+
+\input{dfa}
+
+\input{extensibility}
+
+\input{security}
+
+%%% references %%%
+
+%\setstretch{0.8}
+%\bibliographystyle{IEEEtran}
+%\bibliography{references}
+
+%%% appendicies %%%
+
+%\clearpage
+
+%\input{appendicies}
+
+\end{document}
