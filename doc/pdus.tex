@@ -48,6 +48,7 @@ After the connection is established which means client takes \textsf{START} mess
 Here how the message from client to server for a utility command packet looks like :
 \[
 \textsf{C}:\left\{ \begin{array}{ll}  \textsf{COMMAND}:1\\
+                                      \textsf{COMMANDSEQNUM:1}\\
                                       \textsf{DEVICETYPE}:1 \\
                                        \textsf{DEVICENUM}:1 \\
                                       \textsf{DEVICECOMMANDTYPE}:1 \\
@@ -55,28 +56,59 @@ Here how the message from client to server for a utility command packet looks li
 
            \end{array} \right\}
 \]                                        
-where \textsf{COMMAND} denotes that client is sending a utility command. \textsf{DEVICETYPE} denotes the unique identifier for a device. \textsf{DEVICENUM} is used to denote identify a specific item among set of items in same type. \textsf{DEVICECOMMANDTYPE} is identifier for a specific utility such as volume-up associated with a specific device. \textsf{VALUE} is the value to set.
+where \textsf{COMMAND} denotes that client is sending a utility command. \textsf{COMMANDSEQNUM} denotes the squence number of the command which provides us bookkeeping for the messages in between server and client. \textsf{DEVICETYPE} denotes the unique identifier for a device. \textsf{DEVICENUM} is used to denote identify a specific item among set of items in same type. \textsf{DEVICECOMMANDTYPE} is identifier for a specific utility such as volume-up associated with a specific device. \textsf{VALUE} is the value to set.
 
 
 So client can send a message like :
 
-\[\textsf{COMMAND}:\]
+\[ [\textsf{COMMAND}]\;[12]\;[\textsf{RADIO}]\;[1]\;[\textsf{VOL\_UP}]\;[2]\]
 
+which will increase the radio 1's volume 2 level up.
 
-[Note: I think message format for client/server command can be refined.]
+[Note: I think message format for client/server command can be refined. I gues we can discuss this.]
 
-\paragraph{Assumption on Data at server}:  So each predefined device needs to have a :
+\paragraph{Assumption on Data at server}:  \hl{So each predefined device needs to have a :}
 \[  [\textsf{DEVICETYPE}] [\textsf{DEVICENUM}] [\textsf{STATES}] [\textsf{ACTIONS}]\]
-For example : [MIRROR] [0$\ldots$n] [UP$\mid$DOWN] [VOL\_UP $\mid$ VOL\_DOWN ]. Server is assumed to have bunch of these which basically states that the device with type mirror, number (there can be more mirror in the car), state of the device and action to be performed on the device with a given value.
-
-
-
+\hl{
+For example : [MIRROR] [0$\ldots$n] [UP$\mid$DOWN] [VOL\_UP $\mid$ VOL\_DOWN ]. Server is assumed to have bunch of these which basically states that the device with type mirror, number (there can be more mirror in the car), state of the device and action to be performed on the device with a given value. [WE SHOULD DISCUSS THIS.We may chanage the protocol and add one more phase such as  initialization of server and let the clients to know about this initialization. I am not sure we should discuss.]}
 
 \subsubsection{Server to Client Messages}
 \label{sec:pdus:pdu:s_to_c}
+There are two cases where server updates client:
+\begin{itemize}
+\item When client sent an command and the server updates with a confirmation that the action is applied or an error message.
+  \item Update on a non-client-invoked device state change
+  \end{itemize}
 
-The server can update the client 
+When a message is received from a server then its well-formedness verification is performed.
+\begin{itemize}
+\item \hl{[TODO: We can enforce a type/structure for device type identifier.]}
+\item \hl{[TODO:We can enforce a type/structure for device number. ]}
+\item \hl{[TODO: We can enforce constraints on which state received-command is legal to execute]}
+  \item \hl{[TODO: Received parameters/values are legal for the command to be executed ]}
+\end{itemize}
+
+Server sends an update message :
+\[
+\textsf{CSS}:\left\{ \begin{array}{ll}  \textsf{ERROR}:1\\
+                                      \textsf{LENMESSAGECHARS}:1 \\
+                                       \textsf{ERRORMESSAGE}:1 
+
+           \end{array} \right\}
+\]
+where \textsf{ERROR} denotes that server is sending an error message. \textsf{LENMESSAGECHARS} denotes the length of the error messages. \textsf{ERRORMESSAGE} denotes the error message's itself.
+
+For the positive feedbacks to clients requests:
+\[\textsf{CSS} : \left\{ \begin{array}{ll}  \textsf{APPLIED}:1\\
+                                             \textsf{COMMANDSEQNUM}:1
+\end{array} \right\}
+\]
+
 \subsection{Error Control}
 \label{sec:pdus:err}
-
+Error messages are raised when
+\begin{itemize}
+\item Server checks request and raise error if request message is not verified.
+\item Authentication is not provided
+  \end{itemize}
 \input{pdus_qos}
