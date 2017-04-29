@@ -16,7 +16,6 @@ Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may m
 \label{sec:pdus:pdu}
 \begin{itemize}
 \item \textsf{Handshake}: is done via authentication.
-\item \textsf{CCS Boot}: Server initializes itself and gives feedback to clients.
 \item \textsf{Utility Commands}: These are commands in between client and server. Client sends a command and waits for a response from server.
   \end{itemize}
 
@@ -27,19 +26,34 @@ where \textsf{CCS} and \textsf{C} denotes whether message is sent by \textsf{CCS
 
 \subsubsection{Handshake}
 \label{sec:pdus:pdu:hs}
-
-
-\subsubsection{Initialization}
-\label{sec:pdus:pdu:init}
-
-The initialization phase
-
+\begin{itemize}
+\item We assume that servers are already running. [Note: We can add one more phase for initialization of server but in that case ...]
+\item When a client wants to connect to \textsf{CCS} server
+  \[ \textsf{C} : \textsf{CON} : 1\]
+\item We assume that there is a preset 1 byte password. \textsf{CSS} request for password with a 8 byte message. [Note: We can change and refine these messages.]
+  \[\textsf{CSS} : \textsf{PASS} : 1\]
+  \item Then client sends its passwords back to the server.[Note: we can use DES encrpytion in here]. 
+    \[\textsf{C} : \textsf{SENDPASS} : 1\]
+  \item If the response is incorrect, the server notifies with an error message and closes the connection:
+    \[\textsf{CSS}:\textsf{ERROR}:1\]
+    \item Otherwise \textsf{CCS} responds with start message
+      \[\textsf{CSS} : \textsf{START} : 1\]
+    \end{itemize}
 
 \subsubsection{Client to Server Messages}
 \label{sec:pdus:pdu:c_to_s}
 
-After the connection is initialized,
+After the connection is established which means client takes \textsf{START} messassage, client send command messages to server. 
 
+Here how the message from client to server for a utility command packet looks like :
+
+\[\textsf{C}:\textsf{COMMAND}:1\]
+\[\textsf{C}:\textsf{DEVICETYPE}:1\]
+\[\textsf{C}:\textsf{DEVICENUM}:1\]
+\[\textsf{C}:\textsf{DEVICECOMMANDTYPE}:1\]
+\[\textsf{C}:\textsf{VALUE}:1\]
+
+where \textsf{COMMAND} denotes 
 \subsubsection{Server to Client Messages}
 \label{sec:pdus:pdu:s_to_c}
 
