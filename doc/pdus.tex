@@ -30,10 +30,9 @@ where \textsf{CCS} and \textsf{C} denotes whether message is sent by \textsf{CCS
 \item We assume that servers are already running. [Note: We can add one more phase for initialization of server but in that case ...]
 \item When a client wants to connect to \textsf{CCS} server
   \[ \textsf{C} : \textsf{CON} : 1\]
-\item We assume that there is a preset 1 byte password. \textsf{CSS} request for password with a 8 byte message. [Note: We can change and refine these messages.]
-  \[\textsf{CSS} : \textsf{PASS} : 1\]
+
   \item Then client sends its passwords back to the server.[Note: we can use DES encrpytion in here]. 
-    \[\textsf{C} : \textsf{SENDPASS} : 1\]
+    \[\textsf{C} : \textsf{LOGIN} : 1\]
   \item If the response is incorrect, the server notifies with an error message and closes the connection:
     \[\textsf{CSS}:\textsf{ERROR}:1\]
     \item Otherwise \textsf{CCS} responds with start message
@@ -47,7 +46,7 @@ After the connection is established which means client takes \textsf{START} mess
 
 Here how the message from client to server for a utility command packet looks like :
 \[
-\textsf{C}:\left\{ \begin{array}{ll}  \textsf{COMMAND}:1\\
+\textsf{C}:\left\{ \begin{array}{ll}  \textsf{CMD}:1\\
                                       \textsf{COMMANDSEQNUM:1}\\
                                       \textsf{DEVICETYPE}:1 \\
                                        \textsf{DEVICENUM}:1 \\
@@ -56,16 +55,27 @@ Here how the message from client to server for a utility command packet looks li
 
            \end{array} \right\}
 \]                                        
-where \textsf{COMMAND} denotes that client is sending a utility command. \textsf{COMMANDSEQNUM} denotes the squence number of the command which provides us bookkeeping for the messages in between server and client. \textsf{DEVICETYPE} denotes the unique identifier for a device. \textsf{DEVICENUM} is used to denote identify a specific item among set of items in same type. \textsf{DEVICECOMMANDTYPE} is identifier for a specific utility such as volume-up associated with a specific device. \textsf{VALUE} is the value to set.
+where \textsf{CMD} denotes that client is sending a utility command. \textsf{COMMANDSEQNUM} denotes the squence number of the command which provides us bookkeeping for the messages in between server and client. \textsf{DEVICETYPE} denotes the unique identifier for a device. \textsf{DEVICENUM} is used to denote identify a specific item among set of items in same type. \textsf{DEVICECOMMANDTYPE} is identifier for a specific utility such as volume-up associated with a specific device. \textsf{VALUE} is the value to set.
 
 
 So client can send a message like :
 
-\[ [\textsf{COMMAND}]\;[12]\;[\textsf{RADIO}]\;[1]\;[\textsf{VOL\_UP}]\;[2]\]
+\[ [\textsf{CMD}]\;[12]\;[\textsf{RADIO}]\;[1]\;[\textsf{VOL\_UP}]\;[2]\]
 
 which will increase the radio 1's volume 2 level up.
 
+Another type of command from client to user is for choosing a specific car:
+\[
+\textsf{C}:\left\{ \begin{array}{ll}  \textsf{USER\_CAR}:1\\
+                                      \textsf{COMMANDSEQNUM:1}\\
+                                      \textsf{CAR\_ID:1}
+
+           \end{array} \right\}
+\]                                        
+
+
 [Note: I think message format for client/server command can be refined. I gues we can discuss this.]
+
 
 \paragraph{Assumption on Data at server}:  \hl{So each predefined device needs to have a :}
 \[  [\textsf{DEVICETYPE}] [\textsf{DEVICENUM}] [\textsf{STATES}] [\textsf{ACTIONS}]\]
@@ -77,7 +87,6 @@ For example : [MIRROR] [0$\ldots$n] [UP$\mid$DOWN] [VOL\_UP $\mid$ VOL\_DOWN ]. 
 There are two cases where server updates client:
 \begin{itemize}
 \item When client sent an command and the server updates with a confirmation that the action is applied or an error message.
-  \item Update on a non-client-invoked device state change
   \end{itemize}
 
 When a message is received from a server then its well-formedness verification is performed.
