@@ -1,7 +1,7 @@
 \section{Message Definition -- PDU}
 \label{sec:pdus}
 
-In this section, we discuss the details of the \textfs{RCUC} protocol.
+In this section, we discuss the details of the \textsf{RCUC} protocol.
 
 \subsection{Addressing}
 \label{sec:pdus:addr}
@@ -11,10 +11,19 @@ Based on port configuration we explained, a TCP connection is established to the
 \subsection{Flow Control}
 \label{sec:pdus:flow}
 Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may mention that we can enhance the flow control with adding asychrony in communication such as when client sends a message  and returns but sender send feedback later on. This reduces the congestion of network. In addition, we may buffer requests and flush them to server to save reduce communication overhead for each command.]
-
+ 
 \subsection{PDU Definitions}
 \label{sec:pdus:pdu}
+\begin{itemize}
+\item \textsf{Handshake}: is done via authentication.
+\item \textsf{CCS Boot}: Server initializes itself and gives feedback to clients.
+\item \textsf{Utility Commands}: These are commands in between client and server. Client sends a command and waits for a response from server.
+  \end{itemize}
 
+
+PDU format is kept as generic as possible:
+\[\textsf{CCS} \; | \; \textsf{C} \; : \; \textsf{Expr} \; | \; \textsf{ID} \; : \; \textsf{Size} \]
+where \textsf{CCS} and \textsf{C} denotes whether message is sent by \textsf{CCS} server or client respectively. \textsf{Expr} and \textsf{ID} are data parts of the PDU chunks which represents either type/expression of the message, \textsf{Expr} or the unique device identifier, \textsf{ID}. \textsf{Size} is basically the number of bytesallocated for the message.
 
 \subsubsection{Handshake}
 \label{sec:pdus:pdu:hs}
