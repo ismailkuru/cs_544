@@ -1,33 +1,37 @@
 \section{DFA}
 \label{sec:dfa}
 
-\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4.8cm,
                     semithick]
   \tikzstyle{every state}=[fill=red,draw=none,text=white]
 
   \node[initial,state] (A)                    {$q_a$};
-  \node[state]         (B) [above right of=A] {$q_b$};
-  \node[state]         (D) [below right of=A] {$q_d$};
-  \node[state]         (C) [below right of=B] {$q_c$};
+  \node[state]         (B) [right of=A] {$q_b$};
 
+  \node[state]         (C) [ right of=B] {$q_c$};
+    \node[state]         (D) [below right of=C] {$q_d$};
+  \node[state]         (E) [below  of=D] {$q_e$};
   \path (A) edge              node {CON} (B)
-            
-        (B) edge [loop above] node {LOGIN} (C)
+        (B) edge  [bend left=80]node {LOGIN} (C)
            
-        (C) edge              node {USE} (D)
-            edge [bend left]  node {ERROR} (B)
-        (D) edge [loop below] node {COMMAND} (D)
-            edge              node {ERROR} (C)
+        (C) edge [bend left=80] node {USE\_CAR} (D)
+            edge   node {Err} (B)
+            edge [bend right]  node {LOGIN\_SEQ} (B)
+         
+        (D) edge [bend right] node {CMD} (E)
+            edge              node {Err} (C)
+            edge     [bend left = 60]         node {USE\_CAR\_SEQ}(C)
+        (E) edge [bend left = 80] node {CMD\_SEQ} (D)
+            edge [bend right =90] node {Err} (D)
             edge [bend left]  node {FINALIZE} (A);
 \end{tikzpicture}
 
-
-
+\begin{comment}
 \begin{tikzpicture}[font=\sffamily,>=stealth',thick,
 commentl/.style={text width=3cm, align=right},
 commentr/.style={commentl, align=left},]
-\node[] (init) {\LARGE Initiator};
-\node[right=1cm of init] (recv) {\LARGE Receiver};
+\node[] (init) {\LARGE Client};
+\node[right=1cm of init] (recv) {\LARGE CSS Server};
 
 
 \draw[->] ([yshift=-1.7cm]init.south) coordinate (fin1o) -- ([yshift=-.7cm]fin1o-|recv) coordinate (fin1e) node[pos=.3, above, sloped] {FIN};
@@ -58,3 +62,4 @@ commentr/.style={commentl, align=left},]
 \node[right = 2mm of recv|-aux1, commentr]{\textbf{ESTABLISHED}\\[-1.5mm]{\itshape connection}};
 \node[right = 2mm of fin1e.west, commentr]{\textbf{CLOSE\_WAIT}\\[-1mm]{\itshape passive close}};
 \end{tikzpicture}
+\end{comment}
