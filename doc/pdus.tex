@@ -1,14 +1,16 @@
 \section{Message Definition -- PDU}
 \label{sec:pdus}
 
-This section discusses the basic definitions of the ... protocol. 
+In this section, we discuss the details of the \textfs{RCUC} protocol.
 
 \subsection{Addressing}
 \label{sec:pdus:addr}
+\textsf{RCUC} protocol uses TCP/IP for transportation. It uses stream-oriented channels to send messages with no fixed sizes. [Note: We can customize port numbers to for specific task done by a device on the car. For example: We may want to assign base\_port\_number + device\_port\_index ex: 1010+1 = 1011 port no for air conditioner. ].
 
+Based on port configuration we explained, a TCP connection is established to the \textsf{CCS} IP address and port number provided.
 \subsection{Flow Control}
 \label{sec:pdus:flow}
-
+Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may mention that we can enhance the flow control with adding asychrony in communication such as when client sends a message  and returns but sender send feedback later on. This reduces the congestion of network. In addition, we may buffer requests and flush them to server to save reduce communication overhead for each command.]
 
 \subsection{PDU Definitions}
 \label{sec:pdus:pdu}
