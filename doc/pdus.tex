@@ -64,7 +64,7 @@ So client can send a message like :
 
 which will increase the radio 1's volume 2 level up.
 
-Another type of command from client to user is for choosing a specific car:
+Another type of command from client to server is for choosing a specific car:
 \[
 \textsf{C}:\left\{ \begin{array}{ll}  \textsf{USER\_CAR}:1\\
                                       \textsf{COMMANDSEQNUM:1}\\
@@ -73,7 +73,15 @@ Another type of command from client to user is for choosing a specific car:
            \end{array} \right\}
 \]                                        
 
+Another type of command from client to server is for finalizing the requests:
+\[
+\textsf{C}:\left\{ \begin{array}{ll}  \textsf{FINALIZE}:1\\
+                                      \textsf{COMMANDSEQNUM:1}\\
+                                      \textsf{CAR\_ID:1}
 
+           \end{array} \right\}
+
+\]
 [Note: I think message format for client/server command can be refined. I gues we can discuss this.]
 
 
