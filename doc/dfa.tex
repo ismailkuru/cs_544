@@ -21,10 +21,15 @@
         (D) edge [bend right] node {CMD} (E)
             edge              node {Err} (C)
             edge     [bend left = 60]         node {USE\_CAR\_SEQ}(C)
+            edge [bend left]  node {FINALIZE} (A)
         (E) edge [bend left = 80] node {CMD\_SEQ} (D)
-            edge [bend right =90] node {Err} (D)
-            edge [bend left]  node {FINALIZE} (A);
+            edge [bend right =90] node {Err} (D);
+            
 \end{tikzpicture}
+
+Our \textsf{DFA} is formally defined as
+\[Q = \{q_{a}, q_{b},q_{c},q_{d},q_{e}\}\]
+where $q_{a}$ is start state in which server accepts conncection requests from clients. $q_{b}$ is state where client sends its password to login to the server. $q_{c}$ is the state in which server gets requests to connect to a car. $q_{d}$ is the state in which client's request to the server for a specific car is satisfied and commands for controlling utilities are received. $q_{e}$ 
 
 
 \begin{document}
