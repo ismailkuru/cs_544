@@ -27,17 +27,16 @@ where \textsf{CCS} and \textsf{C} denotes whether message is sent by \textsf{CCS
 \subsubsection{Handshake}
 \label{sec:pdus:pdu:hs}
 \begin{itemize}
-\item We assume that servers are already running. [Note: We can add one more phase for initialization of server but in that case ...]
+\item We assume that servers are already running. 
 \item When a client wants to connect to \textsf{CCS} server
   \[ \textsf{C} : \textsf{CON} : 1\]
-
-  \item Then client sends its passwords back to the server.[Note: we can use DES encrpytion in here]. 
-    \[\textsf{C} : \textsf{LOGIN} : 1\]
-  \item If the response is incorrect, the server notifies with an error message and closes the connection:
-    \[\textsf{CSS}:\textsf{ERROR}:1\]
-    \item Otherwise \textsf{CCS} responds with start message
-      \[\textsf{CSS} : \textsf{START} : 1\]
-    \end{itemize}
+\item Then client sends its passwords back to the server.[Note: we can use DES encrpytion in here]. 
+  \[\textsf{C} : \textsf{LOGIN} : 1\]
+\item If the response is incorrect, the server notifies with an error message and closes the connection:
+  \[\textsf{CSS}:\textsf{ERROR}:1\]
+\item Otherwise \textsf{CCS} responds with start message
+  \[\textsf{CSS} : \textsf{START} : 1\]
+\end{itemize}
 
 \subsubsection{Client to Server Messages}
 \label{sec:pdus:pdu:c_to_s}
@@ -66,22 +65,23 @@ which will increase the radio 1's volume 2 level up.
 
 Another type of command from client to server is for choosing a specific car:
 \[
-\textsf{C}:\left\{ \begin{array}{ll}  \textsf{USER\_CAR}:1\\
-                                      \textsf{COMMANDSEQNUM:1}\\
-                                      \textsf{CAR\_ID:1}
+\textsf{C}: \left\{ \begin{array}{ll}  \textsf{USER\_CAR}:1\\
+                                      \textsf{COMMANDSEQNUM}:1\\
+                                      \textsf{CAR\_ID}:1
 
            \end{array} \right\}
 \]                                        
 
 Another type of command from client to server is for finalizing the requests:
+
 \[
-\textsf{C}:\left\{ \begin{array}{ll}  \textsf{FINALIZE}:1\\
-                                      \textsf{COMMANDSEQNUM:1}\\
-                                      \textsf{CAR\_ID:1}
+\textsf{C}: \left\{ \begin{array}{ll}  \textsf{FORMALIZE}:1\\
+                                      \textsf{COMMANDSEQNUM}:1\\
+                                      \textsf{CAR\_ID}:1
 
            \end{array} \right\}
+\]      
 
-\]
 [Note: I think message format for client/server command can be refined. I gues we can discuss this.]
 
 
