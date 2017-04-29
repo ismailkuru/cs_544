@@ -47,13 +47,31 @@ After the connection is established which means client takes \textsf{START} mess
 
 Here how the message from client to server for a utility command packet looks like :
 
-\[\textsf{C}:\textsf{COMMAND}:1\]
-\[\textsf{C}:\textsf{DEVICETYPE}:1\]
-\[\textsf{C}:\textsf{DEVICENUM}:1\]
-\[\textsf{C}:\textsf{DEVICECOMMANDTYPE}:1\]
-\[\textsf{C}:\textsf{VALUE}:1\]
+\[
+\textsf{C}:\left\{\begin{array}{l}  \textsf{COMMAND}:1\\
+                                      \textsf{DEVICETYPE}:1 \\
+                                       \textsf{DEVICENUM}:1 \\
+                                      \textsf{DEVICECOMMANDTYPE}:1 \\
+                                      \textsf{VALUE}:1
+                                        \right\}\end{array}
+\]
+where \textsf{COMMAND} denotes that client is sending a utility command. \textsf{DEVICETYPE} denotes the unique identifier for a device. \textsf{DEVICENUM} is used to denote identify a specific item among set of items in same type. \textsf{DEVICECOMMANDTYPE} is identifier for a specific utility such as volume-up associated with a specific device. \textsf{VALUE} is the value to set.
 
-where \textsf{COMMAND} denotes 
+
+So client can send a message like :
+
+\[\textsf{COMMAND}:\]
+
+
+[Note: I think message format for client/server command can be refined.]
+
+\paragraph{Assumption on Data at server}:  So each predefined device needs to have a :
+\[  [\textsf{DEVICETYPE}] [\textsf{DEVICENUM}] [\textsf{STATES}] [\textsf{ACTIONS}]\]
+For example : [MIRROR] [0...n] [UP|DOWN] [VOL\_UP | VOL\_DOWN ]. Server is assumed to have bunch of these which basically states that the device with type mirror, number (there can be more mirror in the car), state of the device and action to be performed on the device with a given value.
+
+
+
+
 \subsubsection{Server to Client Messages}
 \label{sec:pdus:pdu:s_to_c}
 
