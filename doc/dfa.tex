@@ -32,7 +32,7 @@ Our \textsf{DFA} is formally defined as
 where $q_{a}$ is start state in which server accepts conncection requests from clients. $q_{b}$ is state where client sends its password to login to the server. $q_{c}$ is the state in which server gets requests to connect to a car. $q_{d}$ is the state in which client's request to the server for a specific car is satisfied and commands for controlling utilities are received. $q_{e}$ 
 
 
-\begin{document}
+
     \begin{sequencediagram}
         \newthread[white]{c}{Client}
         \newinst[4]{s}{CSS Server}
