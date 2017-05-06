@@ -19,63 +19,126 @@ Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may m
 \item \textsf{Utility Commands}: These are commands in between client and server. Client sends a command and waits for a response from server.
   \end{itemize}
 
+Our PDU definitions are based on generic chunk design:
+\[\textsf{Identifier/Code} : \textsf{Size}\]
+
+
 \subsubsection{Handshake}
 \label{sec:pdus:pdu:hs}
-
+All the handshaking is handled with underlying transport layer protocol. What we additionally provide as a part of handshaking is authentication of an user and we expalin it in the following sections.
 \subsubsection{Client to Server Messages}
 \label{sec:pdus:pdu:c_to_s}
 
+\paragraph{User Authentication}: Each user is identifier with its user-id. Each user needs to authenticate to choose a car and request utility functions to be applied to the car's devices.
+\begin{table}[ht!]
+  \centering
+
+\begin{tabular}{l l l}
+\hline
+\textbf{Command Code} & \textbf{User ID} &   \textbf{User Password}  \\
+\hline
+
+\hline
+\textsf{[0x03:1]} -- Authentication Command  & \textsf{[0x00:1]} -- User 1 & \textsf{[0x00:1]} -- Password 1   \\
+\hline
+                  & \textsf{[0x01:1]} -- User 2 & \textsf{[0x12:1]} -- Password 2 \\
+\hline
+                 & \textsf{[0x02:1]}  -- User 3 & \textsf{[0x30:1]} -- Password 3\\
+\hline
+\hline
+\end{tabular}
+\caption{List of users and their encodings.}
+\end{table}
+
+\textsf{0X03:1} denotes the identifier/code for the command which is used as request to authenticate a user. An example usage of this command is :
+\[\textsf{client} --> \textsf{[0x00:1]} \;\; \textsf{[0x00:1]}\]
+where the first \textsf{[0x00:1]} denotes user id and the second \textsf{[0x00:1]} denotes the password of the user.
+
+\paragraph{Access To Car}:
 
 \begin{table}[ht!]
   \centering
-  \resizebox{\textwidth}{!}{
-\begin{tabular}{l l l l l l}
+
+\begin{tabular}{l l}
 \hline
-\textbf{Command Code} & \textbf{Command Name} & \textbf{Car ID} & \textbf{Car Name} & \textbf{State Name}& \textbf{States Code} \\
-\hline
+\textbf{Command Code} & \textbf{Car ID}   \\
 \hline
 
-\textsf{[0x04]} & \textsf{CAR\_CON\_CMD}  &     \textsf{0x00}  &   \textsf{Car 1}    &  \textsf{connected}   & \textsf{[0x00:1]} \\
-                &                         &                    &                     &  \textsf{notconnected} & \textsf{[0x01:1]} \\
+\hline
+\textsf{[0x04:1]} -- Acces to Car Request Command & \textsf{[0x00:1]} -- Car 1  \\
+\hline
+                  & \textsf{[0x01:1]} -- Car 2 \\
+\hline
+                 & \textsf{[0x02:1]}  -- Car 3\\
 \hline
 \hline
-\end{tabular}}
-\caption{A Car Account Access Command}
+\end{tabular}
+\caption{List of cars and their encodings.}
 \end{table}
 
+
+An example usage of the car access command is
+\[\textsf{client} --> \textsf{[0x04:1]} \;\;  \textsf{[0x00:1]} \]
+\textsf{Command Code}, $\textsf{[0x04:1]}$, denotes an identifier/code for a command which is used to access to a car with identifier ,  \textsf{[0x00:1]}.
+
+\paragraph{Car Utility Request}: Once an user is authenticated and accessed its car, he can start change the car's devices utility functions via client which sending request to server for these actions.
 \begin{table}[ht!]
   \centering
   \resizebox{\textwidth}{!}{
-\begin{tabular}{l l l l l l l l}
+    
+\begin{tabular}{l l l l}
 \hline
-\textbf{Command Code} & \textbf{Command Name} & \textbf{Device ID} & \textbf{Device Name} & \textbf{State Name}& \textbf{States Code} & \textbf{Action Name}  & \textbf{Actions Code} \\
+\textbf{Command Code} &\textbf{Device ID}  & \textbf{States Code} &  \textbf{Actions Code} \\
 \hline
 \hline
 
-\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x00}  & \textsf{Radio}      & \textsf{off}  & \textsf{[0x00:1]}   & \textsf{turn\_on}   & \textsf{[0x00:1]}  \\
-                &                         &                    &                     &  \textsf{on}  & \textsf{[0x01:1]}   & \textsf{turn\_off}  & \textsf{[0x01:1]} \\
-                &                         &                    &                     &               &                     & \textsf{vol\_up}    & \textsf{[0x02:1]} \\
-                &                         &                    &                     &               &                     &  \textsf{vol\_down} & \textsf{[0x03:1]} \\
+\textsf{[0x05:1]} -- Utility Request Command &     \textsf{[0x00:1]} -- Radio    &  \textsf{[0x00:1]} -- on   & \textsf{[0x00:1]} -- turn on  \\
+                                   & \textsf{[0x01:1]} --  off  & \textsf{[0x01:1]} -- turn off\\
+                                   &                            & \textsf{[0x02:1]} -- volume up\\
+                                   &                            & \textsf{[0x03:1]} -- volume on\\
 \hline
-\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x01}  & \textsf{Door}       &\textsf{unlocked}  & \textsf{[0x00:1]}   & \textsf{unlock}   & \textsf{[0x00:1]}  \\
-                &                         &                    &                     &\textsf{locked}    & \textsf{[0x01:1]}   & \textsf{lock}  & \textsf{[0x01:1]} \\
+     & \textsf{[0x01:1]} -- Doors    & \textsf{[0x00:1]} -- locked     & \textsf{[0x00:1]} -- lock  \\
+                                    & \textsf{[0x01:1]} -- unlocked   & \textsf{[0x01:1]} -- unlock\\
 \hline
-\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x02}  & \textsf{Mirror}     &\textsf{left}     & \textsf{[0x00:1]}   & \textsf{move\_right} & \textsf{[0x00:1]}  \\
-                &                         &                    &                     &\textsf{right}    & \textsf{[0x01:1]}   & \textsf{move\_left}  & \textsf{[0x01:1]} \\
-                &                         &                    &                     &                  &                     & \textsf{move\_up}    & \textsf{[0x02:1]} \\
-                &                         &                    &                     &                  &                     & \textsf{move\_down}  & \textsf{[0x03:1]} \\
+  &\textsf{[0x02:1]} -- Window    & \textsf{[0x00:1]} -- left   & \textsf{[0x00:1]} -- up  \\
+                                 & \textsf{[0x01:1]} -- right  & \textsf{[0x01:1]} -- down\\
+                                 &                             & \textsf{[0x02:1]} -- left\\
+                                 &                             & \textsf{[0x03:1]} -- right\\
 
 \hline
-\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x03}  & \textsf{AC}         &\textsf{off}      & \textsf{[0x00:1]}   & \textsf{turn\_on} & \textsf{[0x00:1]}  \\
-                &                         &                    &                     &\textsf{on}       & \textsf{[0x01:1]}   & \textsf{turn\_off}  & \textsf{[0x01:1]} \\
-                &                         &                    &                     &                  &                     & \textsf{increase}    & \textsf{[0x02:1]} \\
-                &                         &                    &                     &                  &                     & \textsf{decrease}  & \textsf{[0x03:1]} \\
+   & \textsf{[0x03:1]} -- AC  & \textsf{[0x00:1]} -- on  & \textsf{[0x00:1]} -- turn on \\
+                            & \textsf{[0x01:1]} -- off & \textsf{[0x01:1]} -- turn off\\
+                            &                          & \textsf{[0x02:1]} -- increase\\
+                            &                          & \textsf{[0x03:1]} -- decrease\\
 \hline
 \hline
 \end{tabular}}
-\caption{Utility Commands}
+\caption{List of devices and their encodings.}
 \end{table}
 
+
+\textsf{Command Code}, $\textsf{[0x05:1]}$, denotes an identifier/code for a command which is used for requesting a utility to be applied on device. \textsf{Device ID}, $\textsf{[0x00:1]}$ denotes an unique identifier/code used for a device, ex: \textsf{Radio}. \textsf{States Code}, $\textsf{[0x00:1]}$ denotes an identifier/code for keeping the status of the device, \textsf{off-on}. \textsf{Actions Code}, $\textsf{0x00:1}$, denotes an identifier/code for showing the action to be applied on device, ex: \textsf{turn-off, turn-on, vol\_up, vol\_down}.  
+
+
+An example usage of utility command request from client is
+\[\textsf{client} --> \textsf{[0x05:1]} \;\;  \textsf{[0x00:1]}   \;\;  \textsf{[0x00:1]}\]
+where \textsf{[0x05:1]} is utility request command encoding , the following  \textsf{[0x00:1]} is device identifier and the last one,  \textsf{[0x00:1]}, is the encoding of the action to be performed on device which is turning on the radio.
+
+\paragraph{Termination}: Termination is the last action which can be performed by both client and server. Once command for termination is sent by any of two, all resources being used for the connection is properly finalized and connection is terminated.
+
+\begin{table}[ht!]
+  \centering
+  \begin{tabular}{l}
+\hline
+\textbf{Command Code} \\
+\hline
+\hline
+\textsf{[0x09:1]}   \\
+\hline
+\hline
+\end{tabular}
+\caption{Termination command sent by Client/Server}
+\end{table}
 
 \subsubsection{Server to Client Messages}
 \label{sec:pdus:pdu:s_to_c}
@@ -86,26 +149,26 @@ There are two cases where server updates client:
 
 When a message is received from a server then its well-formedness verification is performed.
 \begin{itemize}
-\item \hl{[TODO: We can enforce a type/structure for device type identifier.]}
-\item \hl{[TODO:We can enforce a type/structure for device number. ]}
-\item \hl{[TODO: We can enforce constraints on which state received-command is legal to execute]}
-  \item \hl{[TODO: Received parameters/values are legal for the command to be executed ]}
+\item  We can enforce a type/structure for device type identifier.
+\item We can enforce a type/structure for device number.
+\item  We can enforce constraints on which state received-command is legal to execute.
+\item Received parameters/values are legal for the command to be executed. 
 \end{itemize}
 
 Server sends an update message :
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{l l l}
+  \begin{tabular}{l l}
 \hline
-\textbf{Command Code} & \textbf{Command Name} & \textbf{Content}\\
+\textbf{Command Code}  & \textbf{Content}\\
 \hline
 \hline
-\textsf{[0x06]} & \textsf{Server\_Error}  &     \textsf{[Command\_Applied\_Error\_String:1]} \\
+\textsf{[0x06:1]}  &  \textsf{[Failure\_String:1]} \\
 \hline
 \hline
 \end{tabular}
-\caption{Server Error Message}
+\caption{Server Failure Message}
 \end{table}
 
 
@@ -113,16 +176,16 @@ For the positive feedbacks to clients requests:
 
 \begin{table}[ht!]
   \centering
-\begin{tabular}{l l l}
+\begin{tabular}{l l}
 \hline
-\textbf{Command Code} & \textbf{Command Name} & \textbf{Content}\\
+\textbf{Command Code}  & \textbf{Content}\\
 \hline
 \hline
-\textsf{[0x07]} & \textsf{Server\_Update}  &     \textsf{[Command\_Applied\_String:1]} \\
+\textsf{[0x07:1]} &\textsf{[Success\_String:1]} \\
 \hline
 \hline
 \end{tabular}
-\caption{Server Update Message}
+\caption{Server Success Message}
 \end{table}
 
 
