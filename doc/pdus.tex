@@ -19,76 +19,46 @@ Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may m
 \item \textsf{Utility Commands}: These are commands in between client and server. Client sends a command and waits for a response from server.
   \end{itemize}
 
-
-PDU format is kept as generic as possible:
-\[\textsf{CCS} \; | \; \textsf{C} \; : \; \textsf{Expr} \; | \; \textsf{ID} \; : \; \textsf{Size} \]
-where \textsf{CCS} and \textsf{C} denotes whether message is sent by \textsf{CCS} server or client respectively. \textsf{Expr} and \textsf{ID} are data parts of the PDU chunks which represents either type/expression of the message, \textsf{Expr} or the unique device identifier, \textsf{ID}. \textsf{Size} is basically the number of bytesallocated for the message.
-
 \subsubsection{Handshake}
 \label{sec:pdus:pdu:hs}
-\begin{itemize}
-\item We assume that servers are already running. 
-\item When a client wants to connect to \textsf{CCS} server
-  \[ \textsf{C} : \textsf{CON} : 1\]
-\item Then client sends its passwords back to the server.[Note: we can use DES encrpytion in here]. 
-  \[\textsf{C} : \textsf{LOGIN} : 1\]
-\item If the response is incorrect, the server notifies with an error message and closes the connection:
-  \[\textsf{CSS}:\textsf{ERROR}:1\]
-\item Otherwise \textsf{CCS} responds with start message
-  \[\textsf{CSS} : \textsf{START} : 1\]
-\end{itemize}
 
 \subsubsection{Client to Server Messages}
 \label{sec:pdus:pdu:c_to_s}
 
-After the connection is established which means client takes \textsf{START} messassage, client send command messages to server. 
 
-Here how the message from client to server for a utility command packet looks like :
-\[
-\textsf{C}:\left\{ \begin{array}{ll}  \textsf{CMD}:1\\
-                                      \textsf{COMMANDSEQNUM:1}\\
-                                      \textsf{DEVICETYPE}:1 \\
-                                       \textsf{DEVICENUM}:1 \\
-                                      \textsf{DEVICECOMMANDTYPE}:1 \\
-                                        \textsf{VALUE}:1
+\begin{table}[ht!]
+  \centering
+  \resizebox{\textwidth}{!}{
+\begin{tabular}{l l l l l l l l}
+\hline
+\textbf{Command Code} & \textbf{Command Name} & \textbf{Device ID} & \textbf{Device Name} & \textbf{State Name}& \textbf{States Code} & \textbf{Action Name}  & \textbf{Actions Code} \\
+\hline
+\hline
 
-           \end{array} \right\}
-\]                                        
-where \textsf{CMD} denotes that client is sending a utility command. \textsf{COMMANDSEQNUM} denotes the squence number of the command which provides us bookkeeping for the messages in between server and client. \textsf{DEVICETYPE} denotes the unique identifier for a device. \textsf{DEVICENUM} is used to denote identify a specific item among set of items in same type. \textsf{DEVICECOMMANDTYPE} is identifier for a specific utility such as volume-up associated with a specific device. \textsf{VALUE} is the value to set.
+\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x00}  & \textsf{Radio}      & \textsf{off}  & \textsf{[0x00:1]}   & \textsf{turn\_on}   & \textsf{[0x00:1]}  \\
+                &                         &                    &                     &  \textsf{on}  & \textsf{[0x01:1]}   & \textsf{turn\_off}  & \textsf{[0x01:1]} \\
+                &                         &                    &                     &               &                     & \textsf{vol\_up}    & \textsf{[0x02:1]} \\
+                &                         &                    &                     &               &                     &  \textsf{vol\_down} & \textsf{[0x03:1]} \\
+\hline
+\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x01}  & \textsf{Door}       &\textsf{unlocked}  & \textsf{[0x00:1]}   & \textsf{unlock}   & \textsf{[0x00:1]}  \\
+                &                         &                    &                     &\textsf{locked}    & \textsf{[0x01:1]}   & \textsf{lock}  & \textsf{[0x01:1]} \\
+\hline
+\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x02}  & \textsf{Mirror}     &\textsf{left}     & \textsf{[0x00:1]}   & \textsf{move\_right} & \textsf{[0x00:1]}  \\
+                &                         &                    &                     &\textsf{right}    & \textsf{[0x01:1]}   & \textsf{move\_left}  & \textsf{[0x01:1]} \\
+                &                         &                    &                     &                  &                     & \textsf{move\_up}    & \textsf{[0x02:1]} \\
+                &                         &                    &                     &                  &                     & \textsf{move\_down}  & \textsf{[0x03:1]} \\
 
+\hline
+\textsf{[0x05]} & \textsf{ACTION\_CMD}    &     \textsf{0x03}  & \textsf{AC}         &\textsf{off}      & \textsf{[0x00:1]}   & \textsf{turn\_on} & \textsf{[0x00:1]}  \\
+                &                         &                    &                     &\textsf{on}       & \textsf{[0x01:1]}   & \textsf{turn\_off}  & \textsf{[0x01:1]} \\
+                &                         &                    &                     &                  &                     & \textsf{increase}    & \textsf{[0x02:1]} \\
+                &                         &                    &                     &                  &                     & \textsf{decrease}  & \textsf{[0x03:1]} \\
+\hline
+\hline
+\end{tabular}}
+\caption{Utility Commands}
+\end{table}
 
-So client can send a message like :
-
-\[ [\textsf{CMD}]\;[12]\;[\textsf{RADIO}]\;[1]\;[\textsf{VOL\_UP}]\;[2]\]
-
-which will increase the radio 1's volume 2 level up.
-
-Another type of command from client to server is for choosing a specific car:
-\[
-\textsf{C}: \left\{ \begin{array}{ll}  \textsf{USER\_CAR}:1\\
-                                      \textsf{COMMANDSEQNUM}:1\\
-                                      \textsf{CAR\_ID}:1
-
-           \end{array} \right\}
-\]                                        
-
-Another type of command from client to server is for finalizing the requests:
-
-\[
-\textsf{C}: \left\{ \begin{array}{ll}  \textsf{FORMALIZE}:1\\
-                                      \textsf{COMMANDSEQNUM}:1\\
-                                      \textsf{CAR\_ID}:1
-
-           \end{array} \right\}
-\]      
-
-[Note: I think message format for client/server command can be refined. I gues we can discuss this.]
-
-
-\paragraph{Assumption on Data at server}:  \hl{So each predefined device needs to have a :}
-\[  [\textsf{DEVICETYPE}] [\textsf{DEVICENUM}] [\textsf{STATES}] [\textsf{ACTIONS}]\]
-\hl{
-For example : [MIRROR] [0$\ldots$n] [UP$\mid$DOWN] [VOL\_UP $\mid$ VOL\_DOWN ]. Server is assumed to have bunch of these which basically states that the device with type mirror, number (there can be more mirror in the car), state of the device and action to be performed on the device with a given value. [WE SHOULD DISCUSS THIS.We may chanage the protocol and add one more phase such as  initialization of server and let the clients to know about this initialization. I am not sure we should discuss.]}
 
 \subsubsection{Server to Client Messages}
 \label{sec:pdus:pdu:s_to_c}
@@ -106,20 +76,38 @@ When a message is received from a server then its well-formedness verification i
 \end{itemize}
 
 Server sends an update message :
-\[
-\textsf{CSS}:\left\{ \begin{array}{ll}  \textsf{ERROR}:1\\
-                                      \textsf{LENMESSAGECHARS}:1 \\
-                                       \textsf{ERRORMESSAGE}:1 
 
-           \end{array} \right\}
-\]
-where \textsf{ERROR} denotes that server is sending an error message. \textsf{LENMESSAGECHARS} denotes the length of the error messages. \textsf{ERRORMESSAGE} denotes the error message's itself.
+\begin{table}[ht!]
+  \centering
+\begin{tabular}{l l l}
+\hline
+\textbf{Command Code} & \textbf{Command Name} & \textbf{Content}\\
+\hline
+\hline
+\textsf{[0x06]} & \textsf{Server\_Error}  &     \textsf{[Command\_Applied\_Error\_String:1]} \\
+\hline
+\hline
+\end{tabular}
+\caption{Server Error Message}
+\end{table}
+
 
 For the positive feedbacks to clients requests:
-\[\textsf{CSS} : \left\{ \begin{array}{ll}  \textsf{APPLIED}:1\\
-                                             \textsf{COMMANDSEQNUM}:1
-\end{array} \right\}
-\]
+
+\begin{table}[ht!]
+  \centering
+\begin{tabular}{l l l}
+\hline
+\textbf{Command Code} & \textbf{Command Name} & \textbf{Content}\\
+\hline
+\hline
+\textsf{[0x07]} & \textsf{Server\_Update}  &     \textsf{[Command\_Applied\_String:1]} \\
+\hline
+\hline
+\end{tabular}
+\caption{Server Update Message}
+\end{table}
+
 
 \subsection{Error Control}
 \label{sec:pdus:err}
