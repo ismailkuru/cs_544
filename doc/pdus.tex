@@ -29,6 +29,23 @@ Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may m
 \begin{table}[ht!]
   \centering
   \resizebox{\textwidth}{!}{
+\begin{tabular}{l l l l l l}
+\hline
+\textbf{Command Code} & \textbf{Command Name} & \textbf{Car ID} & \textbf{Car Name} & \textbf{State Name}& \textbf{States Code} \\
+\hline
+\hline
+
+\textsf{[0x04]} & \textsf{CAR\_CON\_CMD}  &     \textsf{0x00}  &   \textsf{Car 1}    &  \textsf{connected}   & \textsf{[0x00:1]} \\
+                &                         &                    &                     &  \textsf{notconnected} & \textsf{[0x01:1]} \\
+\hline
+\hline
+\end{tabular}}
+\caption{A Car Account Access Command}
+\end{table}
+
+\begin{table}[ht!]
+  \centering
+  \resizebox{\textwidth}{!}{
 \begin{tabular}{l l l l l l l l}
 \hline
 \textbf{Command Code} & \textbf{Command Name} & \textbf{Device ID} & \textbf{Device Name} & \textbf{State Name}& \textbf{States Code} & \textbf{Action Name}  & \textbf{Actions Code} \\
@@ -79,7 +96,7 @@ Server sends an update message :
 
 \begin{table}[ht!]
   \centering
-\begin{tabular}{l l l}
+  \begin{tabular}{l l l}
 \hline
 \textbf{Command Code} & \textbf{Command Name} & \textbf{Content}\\
 \hline
