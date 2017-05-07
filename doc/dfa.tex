@@ -3,61 +3,28 @@
 
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4.8cm,
                     semithick]
-  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+  \tikzstyle{every state}=[draw=black,shape=rectangle]
 
-  \node[initial,state] (A)                    {$q_a$};
-  \node[state]         (B) [right of=A] {$q_b$};
-
-  \node[state]         (C) [ right of=B] {$q_c$};
-    \node[state]         (D) [below right of=C] {$q_d$};
-  \node[state]         (E) [below  of=D] {$q_e$};
-  \path (A) edge              node {CON} (B)
-        (B) edge  [bend left=80]node {LOGIN} (C)
-           
-        (C) edge [bend left=80] node {USE\_CAR} (D)
-            edge   node {Err} (B)
-            edge [bend right]  node {LOGIN\_SEQ} (B)
-         
-        (D) edge [bend right] node {CMD} (E)
-            edge              node {Err} (C)
-            edge     [bend left = 60]         node {USE\_CAR\_SEQ}(C)
-            edge [bend left]  node {FINALIZE} (A)
-        (E) edge [bend left = 80] node {CMD\_SEQ} (D)
-            edge [bend right =90] node {Err} (D);
-            
+  \node[initial,state] (A)                    {CLOSED};
+  \node[state]         (B) [right of=A]       {INIT};
+  \node[state]         (C) [below right of=B] {AUTH};
+  \node[state]         (D) [below of=C]       {ESTABLISHED};
+  \node[state]         (E) [below left of=B]  {LISTEN};
+  \node[state]         (F) [left of=D]        {WAITCMD};
+  \node[state]         (G) [right of=D]       {WAITQRY};
+  \path (A) edge node {TLS connection} (B)
+        (B) edge [loop above] node[above, align=center]    {rcv invalid auth;\\snd failure} (B)
+            edge [bend right] node[sloped, align=center, pos=0.8, swap]       {snd auth} (C)
+            edge node[sloped, align=center, pos=0.2, swap] {rcv valid auth;\\snd success} (E)
+        (C) edge node[align=left] {rcv success} (D)
+            edge [bend right] node[sloped, align=center, pos=0.8, swap] {rcv failure} (B)
+        (D) edge [bend right] node[above] {snd command}   (F)
+            edge [bend left] node[above]  {snd query} (G)
+        (E) edge [out=30, in=330, looseness=4] node[right, align=center]  {rcv query;\\snd info} (E)
+        (E) edge [out=150, in=210, looseness=4] node[left, align=center]  {rcv command;\\snd success\\OR snd failure} (E)
+        (E) edge [loop below] node[below, align=center]  {rcv unknown;\\snd error} (E)
+        (F) edge [bend right] node[below, align=center] {rcv success\\OR rcv failure\\OR rcv error}   (D)
+        (G) edge [bend left]  node[below, align=center] {rcv info\\OR rcv error}   (D);
 \end{tikzpicture}
 
-Our \textsf{DFA} is formally defined as
-\[Q = \{q_{a}, q_{b},q_{c},q_{d},q_{e}\}\]
-where $q_{a}$ is start state in which server accepts conncection requests from clients. $q_{b}$ is state where client sends its password to login to the server. $q_{c}$ is the state in which server gets requests to connect to a car. $q_{d}$ is the state in which client's request to the server for a specific car is satisfied and commands for controlling utilities are received. $q_{e}$ 
-
-
-
-    \begin{sequencediagram}
-        \newthread[white]{c}{Client}
-        \newinst[4]{s}{CSS Server}
-
-        \mess{c}{CON}{s}
-        \mess{s}{CONSEQ}{c}
-        \mess{c}{LOGIN}{s}
-        \mess{s}{LOGINSEQ}{c}
-
-
-        
-        \mess{c}{USECAR}{s}
-        \mess{s}{USECARSEQ}{c}
-
-
-
-        
-        \mess{c}{CMD}{s}
-        \mess{s}{CMDSEQ}{c}
-
-        
-        \mess{c}{FINALIZE}{s}
-        \mess{s}{FINALIZESEQ}{c}
-
-       
-    \end{sequencediagram}
-
-    
+In addition to the information pictured in the DFA, the shutdown command can be sent from any state. Sending or receiving a shutdown results in termination of the TLS session and moving to the CLOSED state. The implementation can choose whether to send an error in any state where an invalid or malformed message is received, and the recipient can decide whether to send a new message or send a shutdown to terminate the connection. The server should also maintain a \texttt{retries} count in the INIT state to count the number of failures sent, and after a configureable \texttt{max\textunderscore retries}, it should sent a shutdown.
