@@ -22,7 +22,9 @@ Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may m
 Our PDU definitions are based on generic chunk design:
 \[\textsf{Identifier/Code} : \textsf{Size}\]
 
-
+Each command is going to be in the following structure:
+\[\textsf{[Command Code:Size]} \;\; \textsf{[Number Of Chunks:Size]}\]
+where \textsf{[Command Code:Size]} denotes the command type with a fixed size, 1 byte and \textsf{[Number Of Chunks:Size]} denotes the number of following chunks used to form the command. 
 \subsubsection{Handshake}
 \label{sec:pdus:pdu:hs}
 All the handshaking is handled with underlying transport layer protocol. What we additionally provide as a part of handshaking is authentication of an user and we expalin it in the following sections.
@@ -33,15 +35,15 @@ All the handshaking is handled with underlying transport layer protocol. What we
 \begin{table}[ht!]
   \centering
 
-\begin{tabular}{l l l}
+\begin{tabular}{l l l l}
 \hline
-\textbf{Command Code} & \textbf{User ID} &   \textbf{User Password}  \\
+\textbf{Command Code} & \textbf{Number Of Chunks} &\textbf{User ID} &   \textbf{User Password}  \\
 \hline
 
 \hline
-\textsf{[0x03:1]} -- Authentication Command  & \textsf{[0x00:1]} -- User 1 & \textsf{[0x00:1]} -- Password 1   \\
+\textsf{[0x03:1]} -- Authentication Command  & \textsf{[0x02:1]} -- Number of Chunks & \textsf{[0x00:1]} -- User 1 & \textsf{[0x00:1]} -- Password 1   \\
 \hline
-                  & \textsf{[0x01:1]} -- User 2 & \textsf{[0x12:1]} -- Password 2 \\
+                 & \textsf{[0x01:1]} -- User 2 & \textsf{[0x12:1]} -- Password 2 \\
 \hline
                  & \textsf{[0x02:1]}  -- User 3 & \textsf{[0x30:1]} -- Password 3\\
 \hline
@@ -50,49 +52,22 @@ All the handshaking is handled with underlying transport layer protocol. What we
 \caption{List of users and their encodings.}
 \end{table}
 
-\textsf{0X03:1} denotes the identifier/code for the command which is used as request to authenticate a user. An example usage of this command is :
-\[\textsf{client} --> \textsf{[0x00:1]} \;\; \textsf{[0x00:1]}\]
-where the first \textsf{[0x00:1]} denotes user id and the second \textsf{[0x00:1]} denotes the password of the user.
-
-\paragraph{Access To Car}:
-
-\begin{table}[ht!]
-  \centering
-
-\begin{tabular}{l l}
-\hline
-\textbf{Command Code} & \textbf{Car ID}   \\
-\hline
-
-\hline
-\textsf{[0x04:1]} -- Acces to Car Request Command & \textsf{[0x00:1]} -- Car 1  \\
-\hline
-                  & \textsf{[0x01:1]} -- Car 2 \\
-\hline
-                 & \textsf{[0x02:1]}  -- Car 3\\
-\hline
-\hline
-\end{tabular}
-\caption{List of cars and their encodings.}
-\end{table}
-
-
-An example usage of the car access command is
-\[\textsf{client} --> \textsf{[0x04:1]} \;\;  \textsf{[0x00:1]} \]
-\textsf{Command Code}, $\textsf{[0x04:1]}$, denotes an identifier/code for a command which is used to access to a car with identifier ,  \textsf{[0x00:1]}.
+An example usage of this command is :
+\[\textsf{client} --> \textsf{[0X03:1]} \;\;\textsf{[0x02:1]} \;\;\textsf{[0x00:1]} \;\; \textsf{[0x00:1]}\]
+where \textsf{[0x03]} denotes the type of command, \textsf{Authentication Command}, \textsf{0x02} denotes number of chunk following which is 2, the first \textsf{[0x00:1]} denotes user id and the second \textsf{[0x00:1]} denotes the password of the user.
 
 \paragraph{Car Utility Request}: Once an user is authenticated and accessed its car, he can start change the car's devices utility functions via client which sending request to server for these actions.
 \begin{table}[ht!]
   \centering
   \resizebox{\textwidth}{!}{
     
-\begin{tabular}{l l l l}
+\begin{tabular}{l l l l l l}
 \hline
-\textbf{Command Code} &\textbf{Device ID}  & \textbf{States Code} &  \textbf{Actions Code} \\
+\textbf{Command Code} &\textbf{Number of Chunks} & \textbf{Vehicle ID} &\textbf{Device ID}  & \textbf{States Code} &  \textbf{Actions Code} \\
 \hline
 \hline
 
-\textsf{[0x05:1]} -- Utility Request Command &     \textsf{[0x00:1]} -- Radio    &  \textsf{[0x00:1]} -- on   & \textsf{[0x00:1]} -- turn on  \\
+\textsf{[0x05:1]} -- Utility Request Command & \textsf{0x03} -- Number of Chunks  & \textsf{0x01} -- Car ID &  \textsf{[0x00:1]} -- Radio    &  \textsf{[0x00:1]} -- on   & \textsf{[0x00:1]} -- turn on  \\
                                    & \textsf{[0x01:1]} --  off  & \textsf{[0x01:1]} -- turn off\\
                                    &                            & \textsf{[0x02:1]} -- volume up\\
                                    &                            & \textsf{[0x03:1]} -- volume on\\
@@ -113,7 +88,7 @@ An example usage of the car access command is
 \hline
 \hline
 \end{tabular}}
-\caption{List of devices and their encodings.}
+\caption{List of devices and their encodings for a vehicle.}
 \end{table}
 
 
@@ -121,19 +96,19 @@ An example usage of the car access command is
 
 
 An example usage of utility command request from client is
-\[\textsf{client} --> \textsf{[0x05:1]} \;\;  \textsf{[0x00:1]}   \;\;  \textsf{[0x00:1]}\]
-where \textsf{[0x05:1]} is utility request command encoding , the following  \textsf{[0x00:1]} is device identifier and the last one,  \textsf{[0x00:1]}, is the encoding of the action to be performed on device which is turning on the radio.
+\[\textsf{client} --> \textsf{[0x05:1]} \;\; \textsf{[0x03]} \;\; \textsf{[0X01]} \;\;  \textsf{[0x00:1]}   \;\;  \textsf{[0x00:1]}\]
+where \textsf{[0x05:1]} is utility request command encoding , \textsf{[0x03:1]} is the number of chunks following in the command, \textsf{[0x01:1]} is vehicle identifier, the following  \textsf{[0x00:1]} is device identifier and the last one,  \textsf{[0x00:1]}, is the encoding of the action to be performed on device which is turning on the radio.
 
 \paragraph{Termination}: Termination is the last action which can be performed by both client and server. Once command for termination is sent by any of two, all resources being used for the connection is properly finalized and connection is terminated.
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{l}
+  \begin{tabular}{l l}
 \hline
-\textbf{Command Code} \\
+\textbf{Command Code} & \textbf{[Number Of Chunks]}\\
 \hline
 \hline
-\textsf{[0x09:1]}   \\
+\textsf{[0x09:1]} -- Terminate Command & \textsf{0x00} -- Number of Chunks  \\
 \hline
 \hline
 \end{tabular}
@@ -159,12 +134,12 @@ Server sends an update message :
 
 \begin{table}[ht!]
   \centering
-  \begin{tabular}{l l}
+  \begin{tabular}{l l l}
 \hline
-\textbf{Command Code}  & \textbf{Content}\\
+\textbf{Command Code} & \textbf{Number Of Chunks} & \textbf{Content}\\
 \hline
 \hline
-\textsf{[0x06:1]}  &  \textsf{[Failure\_String:1]} \\
+\textsf{[0x06:1]} -- Failure Command  & \textsf{[0x01]} -- Number of Chunks & \textsf{[Failure\_String:1]} \\
 \hline
 \hline
 \end{tabular}
@@ -176,12 +151,12 @@ For the positive feedbacks to clients requests:
 
 \begin{table}[ht!]
   \centering
-\begin{tabular}{l l}
+\begin{tabular}{l l l}
 \hline
-\textbf{Command Code}  & \textbf{Content}\\
+\textbf{Command Code}  & \textbf{Number Of Chunks} & \textbf{Content}\\
 \hline
 \hline
-\textsf{[0x07:1]} &\textsf{[Success\_String:1]} \\
+\textsf{[0x07:1]} -- Success Command & \textsf{[0x01]} -- Number of Chunks & \textsf{[Success\_String:1]} \\
 \hline
 \hline
 \end{tabular}
