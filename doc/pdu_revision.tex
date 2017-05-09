@@ -20,7 +20,7 @@ CONTENT CHUNKs are generically defined and dynamically sized message elements. A
 
 
 \subsubsection{Minimum Required Implementation}
-All RAUC implementations \textbf{MUST} implement the following  messages, as well as the two error messages, to be considered fully-functioning.
+All RAUC implementations \textbf{MUST} implement the following  messages, as well as the two error messages, to be considered fully-functioning. In table \ref{tab:coml}, we list the message types and their usage. We basically assign a type code to each message type so that we can identify what sort of message is sent/recevived. We structure our messages in a way that we can support variable length messages. We keep track of number of required content chunks of for each message. 
 
 \label{sec:pdus:pdu:c_to_s}
 \
@@ -50,7 +50,8 @@ All RAUC implementations \textbf{MUST} implement the following  messages, as wel
   \textsf{Temporary Error}             & \textsf{254}   & \textsf{0} & \textsf{Error Message}\\
 \hline
 \end{tabular}}
-\caption{Command Types}
+\label{tab:coml}
+\caption{Message Types}
 \end{table}
 
 \paragraph{User Authentication}: After establishing a connection, ACS servers \textbf{MUST NOT} accept any commands other than User Authentication(header [3:2]) or CLOSE (header [9:0])  before first authenticating the client. Once authenticated, clients can issue further commands. The User Authentication command is a 3-chunk message made up of the header and two content chunks: USERNAME and PASSWORD.  With "..." representing user data, the following is an example of the User Authentication command with USERNAME that is 32 bytes long and a PASSWORD that is 256 bytes long:
