@@ -7,24 +7,19 @@
 
   \node[initial,state] (A)                    {CLOSED};
   \node[state]         (B) [right of=A]       {INIT};
-  \node[state]         (C) [below right of=B] {AUTH};
-  \node[state]         (D) [below of=C]       {ESTABLISHED};
-  \node[state]         (E) [below left of=B]  {LISTEN};
+  \node[state]         (C) [right of=B] {AUTH};
+  \node[state]         (D) [below left of=C]       {ESTABLISHED};
   \node[state]         (F) [left of=D]        {WAITCMD};
   \node[state]         (G) [right of=D]       {WAITQRY};
   \path (A) edge node {TLS connection} (B)
-        (B) edge [loop above] node[above, align=center]    {rcv invalid auth;\\snd failure} (B)
-            edge [bend right] node[sloped, align=center, pos=0.8, swap]       {snd auth} (C)
-            edge node[sloped, align=center, pos=0.2, swap] {rcv valid auth;\\snd success} (E)
-        (C) edge node[align=left] {rcv success} (D)
-            edge [bend right] node[sloped, align=center, pos=0.8, swap] {rcv failure} (B)
-        (D) edge [bend right] node[above] {snd command}   (F)
-            edge [bend left] node[above]  {snd query} (G)
-        (E) edge [out=30, in=330, looseness=4] node[right, align=center]  {rcv query;\\snd info} (E)
-        (E) edge [out=150, in=210, looseness=4] node[left, align=center]  {rcv command;\\snd success\\OR snd failure} (E)
-        (E) edge [loop below] node[below, align=center]  {rcv unknown;\\snd error} (E)
-        (F) edge [bend right] node[below, align=center] {rcv success\\OR rcv failure\\OR rcv error}   (D)
-        (G) edge [bend left]  node[below, align=center] {rcv info\\OR rcv error}   (D);
+        (B) edge [bend left] node[above]       {auth} (C)
+        (C) edge node[sloped, align=left, swap] {success} (D)
+            edge [bend left] node[above] {failure} (B)
+        (D) edge [right] node[above] {command}   (F)
+            edge [left] node[above]  {query} (G)
+            edge node[sloped, swap]  {shutdown} (A)
+        (F) edge [bend right] node[below, align=center] {success\\OR failure\\OR error}   (D)
+        (G) edge [bend left]  node[below, align=center] {info\\OR error}   (D);
 \end{tikzpicture}
 
 In addition to the information pictured in the DFA, the shutdown command can be sent from any state. Sending or receiving a shutdown results in termination of the TLS session and moving to the CLOSED state. The implementation can choose whether to send an error in any state where an invalid or malformed message is received, and the recipient can decide whether to send a new message or send a shutdown to terminate the connection. The server should also maintain a \texttt{retries} count in the INIT state to count the number of failures sent, and after a configureable \texttt{max\textunderscore retries}, it should sent a shutdown.
