@@ -1,7 +1,4 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
 
-\begin{document}
 \section{Message Definition -- PDU}
 \label{sec:pdus}
 
@@ -26,6 +23,35 @@ CONTENT CHUNKs are generically defined and dynamically sized message elements. A
 All RAUC implementations \textbf{MUST} implement the following  messages, as well as the two error messages, to be considered fully-functioning.
 
 \label{sec:pdus:pdu:c_to_s}
+\
+\begin{table}[ht!]
+  \centering
+\resizebox{\textwidth}{!}{
+\begin{tabular}{l l l l}
+\hline
+\textbf{Message Type} & \textbf{Message Type Code} &\textbf{Required Content Chunks} &   \textbf{Usage}  \\
+\hline
+
+\hline
+\textsf{User Authenticatoin}  		& \textsf{3}		    & \textsf{2} 	& \textsf{Client Handshake Message}   \\
+\hline
+       \textsf{Authenticatoin Acknowledgement}    & \textsf{4}       & \textsf{[0 | 1]}  & \textsf{Server Handshake Message}  \\
+\hline
+     \textsf{Utility Control Request}             & \textsf{5}  & \textsf{4} & \textsf{Client Command to Server}\\
+\hline
+  \textsf{Request Received}             & \textsf{15}   & \textsf{[0 | 1]} & \textsf{Server Response to UCR}\\
+\hline
+  \textsf{Utility State Query}             & \textsf{6}   & \textsf{[0 | 1 | 2 | 3 | 4 ]} & \textsf{Client Command to Server}\\
+\hline
+  \textsf{Query Result}             & \textsf{16}  & \textsf{1} & \textsf{Server Response to Query}\\
+\hline
+  \textsf{Permanent Error}             & \textsf{255}   & \textsf{0} & \textsf{Error Message}\\
+\hline
+  \textsf{Temporary Error}             & \textsf{254}   & \textsf{0} & \textsf{Error Message}\\
+\hline
+\end{tabular}}
+\caption{Command Types}
+\end{table}
 
 \paragraph{User Authentication}: After establishing a connection, ACS servers \textbf{MUST NOT} accept any commands other than User Authentication(header [3:2]) or CLOSE (header [9:0])  before first authenticating the client. Once authenticated, clients can issue further commands. The User Authentication command is a 3-chunk message made up of the header and two content chunks: USERNAME and PASSWORD.  With "..." representing user data, the following is an example of the User Authentication command with USERNAME that is 32 bytes long and a PASSWORD that is 256 bytes long:
 
@@ -40,7 +66,7 @@ All RAUC implementations \textbf{MUST} implement the following  messages, as wel
 \begin{center}
 {\textsf{[4:0] : []}}
 
-\\[1\baselineskip]
+%\\[1\baselineskip]
 {\textsf{[4:1] : [SERVER VERSION]}}
 
 {\textsf{[4:1] : [1 : ...]}}
@@ -60,7 +86,7 @@ about whether or not such commands were forwarded; only that the command was val
 \begin{center}
 {\textsf{[15:0] : []}}
 
-\\[1\baselineskip]
+%\\[1\baselineskip]
 {\textsf{[15:1] : [SUCCESS]}}
 
 {\textsf{[15:1] : [1 : 1111 1111]}}
@@ -123,7 +149,3 @@ RAUC supports two types of error messages: Permanent and Temporary.
 \begin{center}
 {\textsf{[254:0] : []}}
 \end{center}
-
-
-  
-\end{document}

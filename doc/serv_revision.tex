@@ -1,13 +1,7 @@
-\documentclass{article}
-\usepackage[utf8]{inputenc}
-\usepackage{indentfirst}
-\begin{document}
+
 \section{Service Description}
 \label{sec:serv_desc}
 
 The Remote Automobile Utility Control \textbf{(RAUC)} protocol specifies communication between smart-devices and Automobile Control Server \textbf{(ACS)} machines through variable-sized messages sent across a TCP connection with all communications encrypted through TLS. These messages represent commands that instruct the ACS machine to either forward the command to or perform a query against some automobile connected to the ACS server. RAUC connections require clients to authenticate themselves with the ACS server before any commands or queries may be issued.
 \par
 ACS hosts act as middlemen between smart-devices and automobiles, translating commands from smart devices and sending them to the utility components (radio, HVAC system, etc.) of connected autos, while simultaneously formatting utility component metadata (radio volume, tuner setting, temperature, etc.) into messages which can be relayed back to connected smart-devices. Thus, ACS hosts implementing RAUC \textbf{MUST} implement both RAUC and some other protocol for final transmission to the automobile. Essentially, RAUC provides a unified protocol only for communication between smart devices and ACS servers. Final transmission to the auto is handled by the ACS server as automakers may provide proprietary protocols for such networked communication. This document contains no specifications for communication between an ACS machine and an automobile.
-
-
-\end{document}
