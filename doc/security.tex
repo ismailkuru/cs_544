@@ -1,9 +1,38 @@
-\section{Security Implications}
+\section{Security}
 \label{sec:security}
 
-\subsection{Security}
-\label{sec:security:sec}
+\subsection{Authentication}
+\label{sec:security:autht}
+Authentication is handled by the initial handshake between the client and server. Authentication is done through a username and password. The authentication step occurs after the TLS connection, so the user's credentials are encrypted on the wire and cannot be taken by an outside observer (unless there's some issue with the underlying TLS session). The server must maintain a limited number of retries to prevent brute force attacks. The server should maintain retry information externally to the session and utilize an exponential delay to prevent an attacker from re-intializing the TLS connection and continuing the brute force attack. 
 
- 
-\subsection{Security Issues}
-\label{sec:security:issues}
+The exact authentication mechanism is beyond the scope of this protocol, but we recommend following typical security hygiene such as storing hashed and salted passwords in a secure database, hashing the password immediately upon receiving it from the network, and forbidding transfer of passwords over the network in any form.
+
+\subsection{Authorization}
+\label{sec:security:authz}
+If the server receives any requests before the TLS connection, or any requests aside from the Authentication message prior to reaching the \texttt{ESTABLISHED} state, it must either discard them or respond with an error or shutdown message. If an error is sent from any state, it must not include any information the user is not authorized to access.
+
+Authorization of users to specific vehicles should be handled by the server application. If a user tries to access a vehicle they are not authorized to access, the server must respond with a nondescript error which does not indicate whether the chosen vehicle exists. Server response to unauthorized access should be identical to attempts to access a non-existent vehicle, including response time, to prevent attempts to acquire information the user is not authorized to know. The server should terminate the connection after repeated attempts at unauthorized access to a vehicle, and follow an exponential delay method similar to failed authentication attempts. Authorization may be split into query-only and full control, in which case the server may choose to respond with a different error for users able to query a vehicle but not control it.
+
+\subsection{Confidentiality}
+\label{sec:security:conf}
+User and data confidentiality are established through TLS encryption. If authentication and authorization procedures are implemented correctly, user data should not be transmissible to unauthorized parties, and an attacker should not be able to impersonate a user, and therefore their data is confidential.
+
+Creation and modification of user accounts and permissions are beyond the scope of this protocol. This protocol cannot defend against users who have wrongfully acquired account credentials or permissions they are not supposed to have.
+
+\subsection{Availability}
+\label{sec:security:avail}
+Protection against denial of service attacks is beyond the scope of this protocol. Server applications should be careful to implement extra guards against these attacks, especially because TLS overhead can worsen the problem. Servers may choose to refuse TLS connections with users who are on exponential delay due to repeated failed authentication or attempts at unauthorized access to lessen the burden.
+
+The server may also choose to shutdown connections after a certain time period or long periods of silence to reduce load and improve availability. These must be done through the typical procedure of sending a shutdown packet to the client.
+
+The server must cease processing as soon as an error is encountered in a message, to reduce the potential for messages that lie about their size or contain other errors that would utilize CPU time and reduce availability for other clients.
+
+\subsection{Integrity}
+\label{sec:security:integrity}
+Data integrity is guaranteed by usage of a TLS connection. The sequence numbers and encryption scheme of TLS ensure that repeated and damaged messages will be rejected before reaching the application layer. No messages may be sent outside of the TLS connection to ensure integrity and confidentiality.
+
+\subsection{Non-Repudiation}
+\label{sec:security:nonrep}
+Non-repudiation is also established by the TLS connection. Tight control over authorization and authentication in the server application and refusal of commands prior to authentication ensure the identity of the client before any actions are taken. The usage of sequence numbers in the TLS encryption scheme provides defense against external message replay attacks that could otherwise result in malicious control of the vehicle (e.g. sending repeated commands to raise the vehicle's speed). The client should wait for the server to respond to commands and not re-send them to prevent message replay issues at the application layer.
+
+The server and client should consider adopting a certificate signing scheme similar to HTTPS to prevent identity forgery, thereby preventing unsuspecting clients from sending their credentials to a malicious host.
