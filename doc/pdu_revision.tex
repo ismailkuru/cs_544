@@ -3,7 +3,21 @@
 \label{sec:pdus}
 
 In this section, we discuss the details of the \textsf{RAUC} protocol.
- 
+
+ \subsection{Addressing}
+\label{sec:pdus:addr}
+\textsf{RAUC} protocol uses TCP/IP for transportation. It uses stream-oriented channels to send messages with no fixed sizes. [Note: We can customize port numbers to for specific task done by a device on the car. For example: We may want to assign base\_port\_number + device\_port\_index ex: 1010+1 = 1011 port no for air conditioner. ].
+
+Based on port configuration we explained, a TCP connection is established to the \textsf{CCS} IP address and port number provided.
+
+\subsection{Flow Control}
+\label{sec:pdus:flow}
+Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may mention that we can enhance the flow control with adding asychrony in communication such as when client sends a message  and returns but sender send feedback later on. This reduces the congestion of network. In addition, we may buffer requests and flush them to server to save reduce communication overhead for each command.]
+
+\subsubsection{Handshake}
+\label{sec:pdus:pdu:hs}
+All the handshaking is handled with
+
 \subsection{PDU (Message) Definitions}
 RAUC uses a single generic, variable sized PDU comprised of two parts: A single HEADER CHUNK and an ordered set of up to 255 CONTENT CHUNKs. The PDU is delineated by the end of the final CONTENT CHUNK in the message. Determining the position of the end of the last CONTENT CHUNK is defined below. This same PDU is used for both client-to-server and server-to-client messages.
 
