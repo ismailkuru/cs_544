@@ -1,2 +1,22 @@
+\documentclass{article}
+\usepackage{ulem}
+
+\begin{document}
 \section{Extensibility}
-\label{sec:extend}
+\label{sec:ext}
+RAUC employs a service extension model which allow a RAUC client and ACS server to make use of service extensions above and beyond the minimum implementation requirements provided in this document. We do not detail the service extension model in this document but instead provide a high level overview of the model's intended usage structure.
+
+The ACS server, acting as an interface between RAUC clients and connected autos,  has more knowledge of what is possible (which autos support specific types of remote control, for example) in a given conversation between a device and a connected auto. As such, ACS servers have heightened responsibility in the end-to-end conversation that RAUC is but one part of. Therefore, the ACS server acts as the moderator for the conversation and is responsible for defining the acceptable version of the conversation and any extensions which may be used throughout.
+
+\subsection{Version and Extension Negotiation}
+Version concordance occurs after a RAUC client authenticates itself with the ACS server. RAUC clients are expressly forbid from issuing commands other than User Authentication during the initial state of the conversation. The Authentication Acknowledgement step therefore provides an optimal time for the server to declare its running version. All ACS servers \textbf{SHOULD} return an Authentication Acknowledgement which contains protocol version information, however extended ACS servers \textbf{MUST} return an Authentication Acknowledgement that contains a list of running extensions. RAUC clients are by default required to accept extended Authentication Acknowledgement messages for precisely this reason and \textbf{MUST} restrict the messages they send to match those accepted by the server.
+
+\subsection{Extension Model}
+
+Since all RAUC messages use the same two part HEADER : CONTENT structure, adding new functionality to the protocol is as simple as defining a new message in the client and server applications. The simplicity of the messages also allows for various encodings to be used for content chunks of each message. By default, RAUC clients and ACS servers \textbf{SHOULD} use UTF-8 encoding for content chunks, though this can also be negotiated during the handshake.
+
+Currently, the only limit to the model is the fact that the HEADER CHUNK part of each message is limited to two bytes. This limits the number of acceptable message types and size of a given message (in chunks) to 256 of each, though in reality the number of available message codes is fewer due to the minimum required messages of the protocol. However, the size of the message header can change based on protocol version, allowing for future versions to support more than 256 message types that are limited to 65kb in size. In truth,  RAUC's strength lies in the simplicity of its message, which is easily scalable by increasing the byte-size of either of any of its subparts. 
+
+\subsection{Extensibility of Protocol DFA}
+The generic nature of RAUC PDUs along with the protocol's one-to-one client-message-to-server-message flow control also allows for new protocol states to be easily added. In the same way that the ACS server refuses all messages from the client besides User Authentication during the initial state, the server may limit which messages are valid at any given time based on the protocol state. For example, consider the popular security option of two-factor authentication. \sout{If a user account has a registered automobile that allows for remote control of critical components (throttle, brakes - basically anything controlled by a car's ECU), policy decisions may state that NO commands which will flow to an ECU be accepted.} Policy decisions may limit a user's ability to query active components unless two-factor authentication has been used on this connection. \textbf{needs rewrite: This extension essentially places another state after the "auth provided" state which does not transition to the "query sequence" state when a Utility State Query message occurs.}
+\end{document}
