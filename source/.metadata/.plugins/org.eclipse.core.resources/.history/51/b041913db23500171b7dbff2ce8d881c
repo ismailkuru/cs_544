@@ -1,0 +1,7 @@
+package pdu;
+
+import pdu.Chunk;
+
+public class ContentChunk extends Chunk {
+
+}

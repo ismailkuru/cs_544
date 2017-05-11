@@ -1,0 +1,7 @@
+package pdu.MessageImpl;
+
+import pdu.ChunkImpl.Message;
+
+public class RequestReceivedMessage extends Message{
+
+}

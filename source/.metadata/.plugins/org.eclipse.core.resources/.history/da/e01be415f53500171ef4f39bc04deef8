@@ -1,0 +1,11 @@
+package pdu;
+
+import java.util.List;
+
+
+public abstract class Message<E>{
+
+	Chunk<Integer,Integer> _header;
+	List<Chunk<Integer,E>> _content;
+	
+}

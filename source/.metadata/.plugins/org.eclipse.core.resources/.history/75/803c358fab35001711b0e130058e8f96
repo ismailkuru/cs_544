@@ -1,0 +1,5 @@
+package pdu;
+
+public class UtilStateQueryMessage {
+
+}

@@ -1,0 +1,14 @@
+\BOOKMARK [1][-]{section.1}{Service Description}{}% 1
+\BOOKMARK [1][-]{section.2}{Message Definition \205 PDU}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Addressing}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Flow Control}{section.2}% 4
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Handshake}{subsection.2.2}% 5
+\BOOKMARK [2][-]{subsection.2.3}{PDU \(Message\) Definitions}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Minimum Required Implementation}{subsection.2.3}% 7
+\BOOKMARK [2][-]{subsection.2.4}{Error Control}{section.2}% 8
+\BOOKMARK [2][-]{subsection.2.5}{Quality of Service}{section.2}% 9
+\BOOKMARK [1][-]{section.3}{DFA}{}% 10
+\BOOKMARK [1][-]{section.4}{Extensibility}{}% 11
+\BOOKMARK [2][-]{subsection.4.1}{Version and Extension Negotiation}{section.4}% 12
+\BOOKMARK [2][-]{subsection.4.2}{Extension Model}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.3}{Extensibility of Protocol DFA}{section.4}% 14

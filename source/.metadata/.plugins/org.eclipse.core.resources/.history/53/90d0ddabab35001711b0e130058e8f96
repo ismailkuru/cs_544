@@ -1,0 +1,7 @@
+package pdu;
+
+import pdu.Message;
+
+public class UtilStateQueryMessage extends Message{
+
+}

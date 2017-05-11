@@ -1,0 +1,20 @@
+package pdu.ChunkImpl;
+
+
+public abstract class Message{
+
+	MessageType _messageType;
+	
+	//already ready ready to have 
+	
+	
+	public 	Message(MessageType mtype) {
+		this._messageType = mtype;
+	}
+
+	public MessageType getMessageType() {
+		return _messageType;
+	}
+	
+	
+}

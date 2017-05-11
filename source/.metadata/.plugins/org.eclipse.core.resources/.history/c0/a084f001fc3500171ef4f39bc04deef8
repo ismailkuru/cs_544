@@ -1,0 +1,15 @@
+package pdu.ChunkImpl;
+
+import java.awt.TrayIcon.MessageType;
+
+import pdu.Chunk;
+
+public class HeaderChunk extends Chunk<MessageType, Integer>{
+
+	public HeaderChunk(MessageType mt, Integer cnt) {
+		super(mt, cnt);
+		// TODO Auto-generated constructor stub
+	}
+	
+
+}

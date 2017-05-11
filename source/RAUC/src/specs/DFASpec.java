@@ -1,36 +1,34 @@
 package specs;
 
-import pdu.*;
-import pdu.MessageImpl.PermanentErrorMessage;
+import pdu.ChunkImpl.Message;
+import pdu.ChunkImpl.MessageType;
+
 
 public abstract class DFASpec {
 
 	// common server and client fields
 	
-		/**
-		 * The state of the protocol
-		 */
+		//State of the protocol initialized with CLOSED
 		protected DFAState state = DFAState.CLOSED;
 	
-
-		/**
-		 * Initializes the DFA with the given house.
-		 */
 		public DFASpec() {
 		
 		}
 		
 		// common procedures
 		
-		/**
-		 * Main DFA message processing procedure. Processes the given message with
-		 * respect to the current state of the DFA, changes the state of the DFA
-		 * accordingly and returns the message to be sent to the other side.
-		 * @param m incoming message to process at the current state.
-		 * @return the response message after the DFA state is changed, corresponding
-		 * to the input message.
-		 */
+		/*Procedure called when a message is taken. It it dispatches the processing
+		 * of the message to state specific message processing procedure. A message is
+		 * is consumed and transition in the DFA happens and returns a message to other
+		 * side.
+		 *  
+		 * @param message m 
+		 * @return : Return a message to be sent after the state transition
+		 * 					 in DFA occurs
+		 * 
+		 * */
 		public Message process(Message m) {
+			
 			// if the incoming message is a shutdown request, return immediately
 			if (m.getMessageType() == MessageType.OP_SHUTDOWN) return m;
 			// otherwise, process the message in the respective state of the protocol
@@ -42,7 +40,7 @@ public abstract class DFASpec {
 			case S_AWAITS_ACTION:			return processServerAwaitsAction(m);
 			case C_AWAITS_CONFIRM:			return processClientAwaitsConfirm(m);
 			
-			default:						return ((Message) new PermanentErrorMessage(MessageType.ERROR)); // should not get here error state
+			default:						return  processError(m); // should not get here error state
 			}
 		}
 
@@ -95,7 +93,10 @@ public abstract class DFASpec {
 		 * @return the response message to pass to the other end.
 		 */
 		protected abstract Message processClientAwaitsConfirm	(Message m);
-	
+		
+		// [TODO]These two can be removed later for optimization
+		protected abstract Message processError(Message m);
+		protected abstract Message processFailure(Message m);
 		
 		// getters
 		

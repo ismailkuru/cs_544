@@ -1,0 +1,7 @@
+package components;
+
+import components.Component;
+
+public class Radio extends Component{
+
+}

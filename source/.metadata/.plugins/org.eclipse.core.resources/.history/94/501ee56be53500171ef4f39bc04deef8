@@ -1,0 +1,27 @@
+package specs;
+
+public enum DFAState {
+	CLOSED				("Closed"),
+	S_AWAITS_INIT ("Server awaits initialization"),
+	C_AWAITS_FAILURE ("Client awaits authentication"),
+	S_AWAITS_
+	C_AWAITS_VERSION	("Client awaits version"),
+	S_AWAITS_VERSION	("Server awaits version selection"),
+	C_AWAITS_CHALLENGE	("Client awaits challenge"),
+	S_AWAITS_RESPONSE	("Server awaits response"),
+	C_AWAITS_INIT		("Client awaits init"),
+	S_AWAITS_ACTION		("Server awaits action"), 
+	C_AWAITS_CONFIRM	("Client awaits confirmation");
+	
+	private String desc;
+	
+	private DFAState(String desc) {
+		this.desc = desc;
+	}
+	
+	@Override
+	public String toString() {
+		return desc;
+
+
+}

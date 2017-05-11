@@ -1,0 +1,5 @@
+package pdu.MessageImpl;
+
+public class FailureMessage extends Message{
+
+}

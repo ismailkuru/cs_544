@@ -1,6 +1,6 @@
 package specs.SpecImpl;
 
-import pdu.Message;
+import pdu.ChunkImpl.Message;
 import specs.DFASpec;
 
 public class ServerDFASpec extends DFASpec{
@@ -37,6 +37,18 @@ public class ServerDFASpec extends DFASpec{
 
 	@Override
 	protected Message processClientAwaitsConfirm(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Message processError(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Message processFailure(Message m) {
 		// TODO Auto-generated method stub
 		return null;
 	}

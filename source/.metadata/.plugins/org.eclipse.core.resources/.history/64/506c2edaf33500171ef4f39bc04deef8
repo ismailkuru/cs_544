@@ -1,0 +1,6 @@
+package pdu.MessageImpl;
+
+
+public class AuthACKMessage extends Message{
+
+}

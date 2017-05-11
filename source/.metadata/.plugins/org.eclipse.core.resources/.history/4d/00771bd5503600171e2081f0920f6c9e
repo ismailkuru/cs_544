@@ -1,0 +1,23 @@
+package pdu.ChunkImpl;
+
+import java.awt.image.renderable.ContextualRenderedImageFactory;
+import java.util.List;
+
+
+public class Message{
+
+	HeaderChunk _header;
+	List<ContentChunk> _content;
+	
+	
+	
+	public 	Message() {
+
+	}
+
+	public MessageType getMessageType() {
+
+	}
+	
+	
+}
