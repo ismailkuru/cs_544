@@ -1,7 +1,7 @@
 package specs;
 
 import pdu.*;
-import pdu.MessageImpl.ErrorMessage;
+import pdu.MessageImpl.PermanentErrorMessage;
 
 public abstract class DFASpec {
 
@@ -42,7 +42,7 @@ public abstract class DFASpec {
 			case S_AWAITS_ACTION:			return processServerAwaitsAction(m);
 			case C_AWAITS_CONFIRM:			return processClientAwaitsConfirm(m);
 			
-			default:						return ((Message) new ErrorMessage(MessageType.ERROR)); // should not get here error state
+			default:						return ((Message) new PermanentErrorMessage(MessageType.ERROR)); // should not get here error state
 			}
 		}
 
