@@ -1,7 +1,7 @@
 package specs;
 
-import pdu.ChunkImpl.Message;
-import pdu.ChunkImpl.MessageType;
+import pdu.Message;
+import pdu.MessageType;
 
 
 public abstract class DFASpec {

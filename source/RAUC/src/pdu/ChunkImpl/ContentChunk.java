@@ -2,21 +2,23 @@ package pdu.ChunkImpl;
 
 import pdu.Chunk;
 
-public class ContentChunk extends Chunk<byte[], byte[]>{
+public class ContentChunk extends Chunk<String, String>{
 
 		
-	public ContentChunk(byte[] sz, byte[] cnt) {
+	public ContentChunk(String sz ,String cnt) {
 		super(sz, cnt);
 		// TODO Auto-generated constructor stub
 	}
 	
-	public byte getSize(){
-		return this.getFirst()[0];
+	public String getSize(){
+		return this.getFirst();
 		
 	}
 	
-	public byte[] getContent(){
+	public String getContent(){
 		return this.getSecond();
 	}
+	public void setSize(String sz){this.setFirst(sz);}
+	public void setContent(String cnt){this.setSecond(cnt);}
 
 }

@@ -1,6 +1,6 @@
 package specs.SpecImpl;
 
-import pdu.ChunkImpl.Message;
+import pdu.Message;
 import specs.DFASpec;
 
 public class ServerDFASpec extends DFASpec{
