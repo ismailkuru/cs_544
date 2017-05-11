@@ -1,6 +1,0 @@
-package pdu.MessageImpl;
-
-
-public class UtilControlReqMessage extends Message{
-
-}

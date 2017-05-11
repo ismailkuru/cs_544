@@ -1,5 +1,0 @@
-package pdu;
-
-public class RequestReceivedMessage extends Message{
-
-}

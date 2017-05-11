@@ -1,7 +1,0 @@
-package components;
-
-import components.Component;
-
-public class AC extends Component {
-
-}

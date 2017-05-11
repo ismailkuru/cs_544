@@ -1,7 +1,0 @@
-package pdu.MessageImpl;
-
-import pdu.ChunkImpl.Message;
-
-public class PermanentErrorMessage extends Message {
-
-}
