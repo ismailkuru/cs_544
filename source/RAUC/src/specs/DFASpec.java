@@ -27,6 +27,8 @@ public abstract class DFASpec {
 		 * 					 in DFA occurs
 		 * 
 		 * */
+		
+		
 		public Message process(Message m) {
 			
 			// if the incoming message is a shutdown request, return immediately
