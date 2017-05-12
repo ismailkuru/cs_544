@@ -1,5 +1,6 @@
 package pdu.MessageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -13,17 +14,16 @@ public class AuthenAckMessage extends Message{
 	
 	String _ver = ""; 
 	public AuthenAckMessage(String ver){
+		this._content = new ArrayList<ContentChunk>();
 		setVer(ver);
+		
 		if(versionExists()){
-			
-			this._header.setMessageType(MessageType.OP_SUCCESS_VER) ;
-			this._header.setChunkCount("1");
+			this._header = new HeaderChunk(MessageType.OP_SUCCESS_VER,"1");
 			ContentChunk vernum = new ContentChunk("32", ver);
 			this._content.add(0, vernum);
 		}
 		else{
-			this._header.setMessageType(MessageType.OP_SUCCESS) ;
-			this._header.setChunkCount("0");
+			this._header = new HeaderChunk(MessageType.OP_SUCCESS,"0");
 		}
 	}
 	

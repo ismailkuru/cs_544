@@ -1,5 +1,6 @@
 package pdu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -8,7 +9,7 @@ import pdu.ChunkImpl.HeaderChunk;
 
 public abstract class Message{
 	public HeaderChunk _header;
-	public List<ContentChunk> _content;
+	public ArrayList<ContentChunk> _content;
 		
 	public 	Message(){}	
 	public abstract HeaderChunk getHeader();

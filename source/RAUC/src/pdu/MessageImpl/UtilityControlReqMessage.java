@@ -1,5 +1,6 @@
 package pdu.MessageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -19,8 +20,8 @@ public class UtilityControlReqMessage extends Message{
 	
 	public UtilityControlReqMessage(){}
 	public UtilityControlReqMessage(String aid, String comp, String attr, String val){
-		this._header.setMessageType(MessageType.OP_COMMAND) ;
-		this._header.setChunkCount("4");
+		this._header = new HeaderChunk(MessageType.OP_COMMAND, "4");
+		this._content = new ArrayList<ContentChunk>();
 
 		//Add pass and uname content in addition to header
 		ContentChunk autoId = new ContentChunk("32", aid);

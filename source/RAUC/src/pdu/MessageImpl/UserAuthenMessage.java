@@ -1,5 +1,6 @@
 package pdu.MessageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -16,8 +17,8 @@ public class UserAuthenMessage extends Message{
 	
 	public UserAuthenMessage(){}
 	public UserAuthenMessage(String uname, String pass){
-		this._header.setMessageType(MessageType.OP_AUTH) ;
-		this._header.setChunkCount("2");
+		this._content = new ArrayList<ContentChunk>();
+		this._header = new HeaderChunk(MessageType.OP_AUTH,"2");
 
 		//Add pass and uname content in addition to header
 		ContentChunk unameContent = new ContentChunk("32", uname);

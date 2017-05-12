@@ -1,5 +1,6 @@
 package pdu.MessageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -14,14 +15,13 @@ public class RequestReceivedMessage extends Message{
 	Boolean isFailure;
 	
 	public RequestReceivedMessage(Boolean f){
+		this._content = new ArrayList<ContentChunk>();
 		setIsFailure(f);
 		if(isFailure){
-			this._header.setMessageType(MessageType.OP_FAILURE) ;
-			this._header.setChunkCount("0");		
+			this._header = new HeaderChunk(MessageType.OP_FAILURE,"0");
 		}
 		else{
-			this._header.setMessageType(MessageType.OP_COMMAND_RECEIVED) ;
-			this._header.setChunkCount("1");		
+			this._header = new HeaderChunk(MessageType.OP_COMMAND_RECEIVED,"1");
 			ContentChunk suc = new ContentChunk("1", "1");
 			this._content.add(0, suc);
 		}
