@@ -6,7 +6,7 @@ import pdu.MessageType;
 
 public class HeaderChunk extends Chunk<MessageType, String>{
 
-	
+
 	public HeaderChunk(MessageType mt, String cc) {
 		super(mt, cc);
 		// TODO Auto-generated constructor stub

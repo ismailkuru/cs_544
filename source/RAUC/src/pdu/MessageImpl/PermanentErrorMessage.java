@@ -1,5 +1,6 @@
 package pdu.MessageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -11,10 +12,14 @@ import pdu.ChunkImpl.HeaderChunk;
 
 public class PermanentErrorMessage extends Message{
 
-	
+	public PermanentErrorMessage(){
+		
+		this._content = new ArrayList<ContentChunk>();
+		this._header = new HeaderChunk(MessageType.OP_ERROR,"0");
+	}
 	public MessageType getMessageType() {
 		// TODO Auto-generated method stub
-		return null;
+		return MessageType.OP_ERROR;
 	}
 
 	public JsonElement toJson() {

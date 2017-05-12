@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
+import com.sun.xml.internal.bind.v2.Messages;
 
 import pdu.Message;
 import pdu.MessageType;
@@ -48,7 +49,7 @@ public class UtilityStateQueryMessage extends Message{
 	
 	public MessageType getMessageType() {
 		// TODO Auto-generated method stub
-		return null;
+		return MessageType.OP_QUERY;
 	}
 
 	public JsonElement toJson() {
@@ -59,15 +60,15 @@ public class UtilityStateQueryMessage extends Message{
 	@Override
 	public HeaderChunk getHeader() {
 		// TODO Auto-generated method stub
-		return null;
+		return this._header;
 	}
 
 	@Override
 	public List<ContentChunk> getContent() {
 		// TODO Auto-generated method stub
-		return null;
+		return this._content;
 	}
 
-	
+	//[TODO : add more getter setter if needed]
 
 }

@@ -1,5 +1,6 @@
 package pdu.MessageImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -10,10 +11,19 @@ import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
 
 public class TerminationMessage extends Message{
+	
+	
+	
+	public TerminationMessage(){
+		
+		this._content = new ArrayList<ContentChunk>();
+		this._header = new HeaderChunk(MessageType.OP_SHUTDOWN,"0");
+	}
 
+	
 	public MessageType getMessageType() {
 		// TODO Auto-generated method stub
-		return null;
+		return MessageType.OP_SHUTDOWN;
 	}
 
 	public JsonElement toJson() {
@@ -32,5 +42,5 @@ public class TerminationMessage extends Message{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	//[TODO ]
 }
