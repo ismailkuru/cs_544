@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
-import com.sun.xml.internal.bind.v2.Messages;
 
 import pdu.Message;
 import pdu.MessageType;
@@ -13,7 +12,8 @@ import pdu.ChunkImpl.HeaderChunk;
 
 public class UtilityStateQueryMessage extends Message{
 
-	public UtilityStateQueryMessage(String... params){
+	public UtilityStateQueryMessage(String[] params){
+		try{
 		this._content = new ArrayList<ContentChunk>();
 		
 		
@@ -44,18 +44,37 @@ public class UtilityStateQueryMessage extends Message{
 			this._content.add(2,attrb);
 			
 		}
+		}catch(Exception e ){
+			System.out.println("Error");
+			
+		}
 			
 	}
+	public String toString(){
+		
+		String strHeader = "";
+		String contHeader = "";
+		
+			strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
+			contHeader = "Content=";
+			for(int i = 0 ; i<this.getContent().size(); i ++){
+				contHeader += "["+ this.getContent().get(i).getSize() + ":"+ this.getContent().get(i).getContent()+  "]";
+			}
+		
+			
 	
+		return strHeader + "#" + contHeader;
+	}
+	public JsonElement toJson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	public MessageType getMessageType() {
 		// TODO Auto-generated method stub
 		return MessageType.OP_QUERY;
 	}
 
-	public JsonElement toJson() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public HeaderChunk getHeader() {

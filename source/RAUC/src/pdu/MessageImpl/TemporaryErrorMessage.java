@@ -17,6 +17,12 @@ public class TemporaryErrorMessage extends Message{
 		this._content = new ArrayList<ContentChunk>();
 		this._header = new HeaderChunk(MessageType.OP_TMP_ERROR,"0");
 	}
+	public String toString(){
+		String strHeader;
+		strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
+		return strHeader;
+		
+	}
 	public MessageType getMessageType() {
 		// TODO Auto-generated method stub
 		return MessageType.OP_TMP_ERROR;
@@ -30,13 +36,13 @@ public class TemporaryErrorMessage extends Message{
 	@Override
 	public HeaderChunk getHeader() {
 		// TODO Auto-generated method stub
-		return null;
+		return this._header;
 	}
 
 	@Override
 	public List<ContentChunk> getContent() {
 		// TODO Auto-generated method stub
-		return null;
+		return this._content;
 	}
 
 

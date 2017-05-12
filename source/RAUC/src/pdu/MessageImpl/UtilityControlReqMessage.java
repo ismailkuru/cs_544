@@ -20,18 +20,22 @@ public class UtilityControlReqMessage extends Message{
 	
 	public UtilityControlReqMessage(){}
 	public UtilityControlReqMessage(String aid, String comp, String attr, String val){
-		this._header = new HeaderChunk(MessageType.OP_COMMAND, "4");
-		this._content = new ArrayList<ContentChunk>();
+		try{
+			this._header = new HeaderChunk(MessageType.OP_COMMAND, "4");
+			this._content = new ArrayList<ContentChunk>();
 
-		//Add pass and uname content in addition to header
-		ContentChunk autoId = new ContentChunk("32", aid);
-		this._content.set(0,autoId );
-		ContentChunk compnt = new ContentChunk("32", comp);
-		this._content.add(1,compnt);
-		ContentChunk attrb = new ContentChunk("32", attr);
-		this._content.add(2,attrb);
-		ContentChunk vl = new ContentChunk("32", val);
-		this._content.add(3,vl);
+			//Add pass and uname content in addition to header
+			ContentChunk autoId = new ContentChunk("32", aid);
+			this._content.add(0,autoId );
+			ContentChunk compnt = new ContentChunk("32", comp);
+			this._content.add(1,compnt);
+			ContentChunk attrb = new ContentChunk("32", attr);
+			this._content.add(2,attrb);
+			ContentChunk vl = new ContentChunk("32", val);
+			this._content.add(3,vl);
+		}catch(Exception e){
+			System.out.println("Error");
+		}
 		
 	}
 		
@@ -39,6 +43,20 @@ public class UtilityControlReqMessage extends Message{
 		return MessageType.OP_COMMAND;
 	}
 
+	public String toString(){
+		
+		String strHeader = "";
+		String contHeader = "";
+		
+			strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
+			contHeader = "Content=";
+			for(int i = 0 ; i<this.getContent().size(); i ++){
+				contHeader += "["+ this.getContent().get(i).getSize() + ":"+ this.getContent().get(i).getContent()+  "]";
+			}
+		
+		return strHeader + "#" + contHeader;
+	}
+	
 	public JsonElement toJson() {
 		// TODO Auto-generated method stub
 		return null;

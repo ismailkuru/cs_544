@@ -26,6 +26,12 @@ public class TerminationMessage extends Message{
 		return MessageType.OP_SHUTDOWN;
 	}
 
+	public String toString(){
+		String strHeader;
+		strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
+		return strHeader;
+		
+	}
 	public JsonElement toJson() {
 		// TODO Auto-generated method stub
 		return null;
@@ -34,13 +40,13 @@ public class TerminationMessage extends Message{
 	@Override
 	public HeaderChunk getHeader() {
 		// TODO Auto-generated method stub
-		return null;
+		return this._header;
 	}
 
 	@Override
 	public List<ContentChunk> getContent() {
 		// TODO Auto-generated method stub
-		return null;
+		return this._content;
 	}
 	//[TODO ]
 }

@@ -17,21 +17,40 @@ public class UserAuthenMessage extends Message{
 	
 	public UserAuthenMessage(){}
 	public UserAuthenMessage(String uname, String pass){
-		this._content = new ArrayList<ContentChunk>();
-		this._header = new HeaderChunk(MessageType.OP_AUTH,"2");
+		try{
+			this._content = new ArrayList<ContentChunk>();
+			this._header = new HeaderChunk(MessageType.OP_AUTH,"2");
 
-		//Add pass and uname content in addition to header
-		ContentChunk unameContent = new ContentChunk("32", uname);
-		this._content.set(0,unameContent );
-		ContentChunk passContent = new ContentChunk("256", pass);
-		this._content.add(1,passContent);
+			//Add pass and uname content in addition to header
+			ContentChunk unameContent = new ContentChunk("32", uname);
+			this._content.add(0,unameContent );
+			ContentChunk passContent = new ContentChunk("256", pass);
+			this._content.add(1,passContent);
+		}catch(Exception e){
+			System.out.println("");
+			}
 		
 	}
 		
 	public MessageType getMessageType() {
 		return MessageType.OP_AUTH;
 	}
-
+	
+	public String toString(){
+		String strHeader = "";
+		String contHeader = "";
+		
+			strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
+			contHeader = "Content=";
+			for(int i = 0 ; i<this.getContent().size(); i ++){
+				contHeader += "["+ this.getContent().get(i).getSize() + ":"+ this.getContent().get(i).getContent()+  "]";
+			}
+		
+			
+	
+		return strHeader + "#" + contHeader;
+		
+	}
 	public JsonElement toJson() {
 		// TODO Auto-generated method stub
 		return null;
