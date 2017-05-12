@@ -1,5 +1,3 @@
-
-
 \section{Common Themes Detailed}
 \label{sec:ct}
 
@@ -14,14 +12,14 @@ The HEADER CHUNK is a special, fixed-size chunk that contains two one-byte eleme
 
 \[\textsf{\textbf{HEADER CHUNK:} [MESSAGE TYPE} : \textsf{CHUNK COUNT]}\]
 
-CONTENT CHUNKs are generically defined and dynamically sized message elements. A content chunk has two parts: SIZE and DATA. SIZE is a single byte that defines how many bytes make up the data portion of the chunk. DATA is the actual data content of the chunk that is meaningful to the application. RAUC clients \textbf{MUST} size the data sent in each content chunk it sends out; relying on default implementations (such as setting all usernames to 32 bytes long and setting all unused high-order bytes to 0) is not advised.
+CONTENT CHUNKs are generically defined and dynamically sized message elements. A content chunk has two parts: SIZE and DATA. SIZE is a single byte that defines how many bytes make up the data portion of the chunk. DATA is the actual data content of the chunk that is meaningful to the application. RAUC clients must size the data sent in each content chunk it sends out; relying on default implementations (such as setting all usernames to 32 bytes long and setting all unused high-order bytes to 0) is not advised.
 
 \[\textsf{\textbf{CONTENT CHUNK:} [SIZE} : \textsf{DATA]}\]
 
 
 
 \subsubsection{Minimum Required Implementation}
-All RAUC implementations \textbf{MUST} implement the following  messages, as well as the two error messages, to be considered fully-functioning. In table \ref{tab:coml}, we list the message types and their usage. We basically assign a type code to each message type so that we can identify what sort of message is sent/recevived. We structure our messages in a way that we can support variable length messages. We keep track of number of required content chunks of for each message. 
+All RAUC implementations must implement the following  messages, as well as the two error messages, to be considered fully-functioning. In table \ref{tab:coml}, we list the message types and their usage. We basically assign a type code to each message type so that we can identify what sort of message is sent/recevived. We structure our messages in a way that we can support variable length messages. We keep track of number of required content chunks of for each message. 
 
 \label{sec:pdus:pdu:c_to_s}
 \
@@ -56,7 +54,7 @@ All RAUC implementations \textbf{MUST} implement the following  messages, as wel
 \label{tab:coml}
 \end{table}
 
-\paragraph{User Authentication}: After establishing a connection, ACS servers \textbf{MUST NOT} accept any commands other than User Authentication(header [3:2]) or CLOSE (header [9:0])  before first authenticating the client. Once authenticated, clients can issue further commands. The User Authentication command is a 3-chunk message made up of the header and two content chunks: USERNAME and PASSWORD.  With "..." representing user data, the following is an example of the User Authentication command with USERNAME that is 32 bytes long and a PASSWORD that is 256 bytes long:
+\paragraph{User Authentication}: After establishing a connection, ACS servers must not accept any commands other than User Authentication(header [3:2]) or CLOSE (header [9:0])  before first authenticating the client. Once authenticated, clients can issue further commands. The User Authentication command is a 3-chunk message made up of the header and two content chunks: USERNAME and PASSWORD.  With "..." representing user data, the following is an example of the User Authentication command with USERNAME that is 32 bytes long and a PASSWORD that is 256 bytes long:
 
 \begin{center}
 {\textsf{[3:2] : [USERNAME] [PASSWORD]}}
@@ -64,7 +62,7 @@ All RAUC implementations \textbf{MUST} implement the following  messages, as wel
 {\textsf{[3:2] : [32: ... ] [256: ... ]}}
 \end{center}
 
-\paragraph{Authentication Acknowledgement}: Authentication Acknowledgement (AA) (header [4:0-*]) commands are sent by ACS servers ONLY after successful user authentication. This message lets the client know that the server is ready to begin receiving Utility Control Request or Utility State Query messages. ACS servers \textbf{MAY} use Authentication Acknowledgement commands to transmit additional information such as protocol version, supported extensions with an extended content chunk count. The message header being set to 4 is enough for clients to know that authentication was successful and that the server is listening for commands. Two examples appear below.
+\paragraph{Authentication Acknowledgement}: Authentication Acknowledgement (AA) (header [4:0-*]) commands are sent by ACS servers ONLY after successful user authentication. This message lets the client know that the server is ready to begin receiving Utility Control Request or Utility State Query messages. ACS servers may use Authentication Acknowledgement commands to transmit additional information such as protocol version, supported extensions with an extended content chunk count. The message header being set to 4 is enough for clients to know that authentication was successful and that the server is listening for commands. Two examples appear below.
 
 \begin{center}
 {\textsf{[4:0] : []}}
@@ -75,7 +73,7 @@ All RAUC implementations \textbf{MUST} implement the following  messages, as wel
 {\textsf{[4:1] : [1 : ...]}}
 \end{center}
 
-\paragraph{Utility Control Request}: A Utility Control Request (UCR) (header [5:4]) represents a command that a smart device wishes to ultimately forward to an automobile connected to the ACS server. The ACS server \textbf{MUST} acknowledge receipt of a Utility Control Request message but \textbf{MAY} choose whether or not to acknowledge if the command was successfully forwarded. A UCR is a 5-chunk message made up of the header and four content chunks: AUTOID (unique identifier of the automobile), COMP (the specific component on the automobile to access), ATTR (the attribute of the component we wish to modify), and VAL (the value we wish to set the attribute to). Using some sample user data, the following is an example of the User Authentication command:
+\paragraph{Utility Control Request}: A Utility Control Request (UCR) (header [5:4]) represents a command that a smart device wishes to ultimately forward to an automobile connected to the ACS server. The ACS server must acknowledge receipt of a Utility Control Request message but may choose whether or not to acknowledge if the command was successfully forwarded. A UCR is a 5-chunk message made up of the header and four content chunks: AUTOID (unique identifier of the automobile), COMP (the specific component on the automobile to access), ATTR (the attribute of the component we wish to modify), and VAL (the value we wish to set the attribute to). Using some sample user data, the following is an example of the User Authentication command:
 
 \begin{center}
 {\textsf{[5:4] : [AUTOID] [COMP] [ATTR] [VAL]}}
@@ -84,7 +82,7 @@ All RAUC implementations \textbf{MUST} implement the following  messages, as wel
 \end{center}
 
 \paragraph{Request Received}: A Command Received (CR) (header [15:0-1]) message is sent to the client when the server successfully receives a Utility Control Request command. The message does not contain any information
-about whether or not such commands were forwarded; only that the command was valid and accepted by the server. Command received messages may contain 0 or 1 content chunks. ACS servers \textbf{MAY} send 1-byte content chunks to verify whether or not a command was successfully forwarded to an automobile. A content chunk with a DATA portion of all 1s indicates success while a DATA portion of all 0s indicates failure.
+about whether or not such commands were forwarded; only that the command was valid and accepted by the server. Command received messages may contain 0 or 1 content chunks. ACS servers may send 1-byte content chunks to verify whether or not a command was successfully forwarded to an automobile. A content chunk with a DATA portion of all 1s indicates success while a DATA portion of all 0s indicates failure.
 
 \begin{center}
 {\textsf{[15:0] : []}}
@@ -95,7 +93,7 @@ about whether or not such commands were forwarded; only that the command was val
 {\textsf{[15:1] : [1 : 1111 1111]}}
 \end{center}
 
-\paragraph{Utility State Query}: A Utility State Query (USQ) (header [6:0-3]) message alerts the server that the device would like some information returned. This command has 0 to 4 CONTENT CHUNKs depending on the nature of the query, however a hierarchical rule must be followed when providing arguments. The arguments AUTO, COMP, ATTR, and VAL are detailed below.
+\paragraph{Utility State Query}: A Utility State Query (USQ) (header [6:0-4]) message alerts the server that the device would like some information returned. This command has 0 to 4 CONTENT CHUNKs depending on the nature of the query, however a hierarchical rule must be followed when providing arguments. The arguments AUTO, COMP, ATTR, and VAL are detailed below.
 
 If no arguments are provided, the server returns a list that uniquely identifies each automobile which has been registered to this account that is currently connected to the ACS server.  This list essentially provides a list of automobiles that the client can interact with at the present time.
 
@@ -157,7 +155,7 @@ RAUC supports two types of error messages: Permanent and Temporary.
 \subsection{Addressing}
 \label{sec:pdus:addr}
 \subsubsection{General Addressing Concerns}
-\textsf{RAUC} protocol uses TCP/IP for transportation. It uses stream-oriented channels to send messages with no fixed sizes. RAUC messages are passed only between a RAUC client and ACS server, however the ultimate destination of most RAUC messages sent by the client is an automobile simultaneously connected to the ACS server. For messages of this nature, the  first content chunk \textbf{MUST} contain the identifier of the connected automobile for which the command is ultimately destined. It is the duty of the ACS server to verify that the identifier provided by the RAUC client is a valid one for the current connection (user account).  The messages defined by this document which require addressing to an automobile are message types 5 (Utility Control request) and message type 6 (Utility State Query). The secure transmission of vehicle addresses is covered in the Security section of this document. Messages defined beyond the scope of this document which are intended for transmission to an automobile \textbf{MUST} require vehicle identification and only vehicle identification in the first content chunk of the message. All other messages are implicitly addressed to the ACS server or client only.  
+\textsf{RAUC} protocol uses TCP/IP for transportation. It uses stream-oriented channels to send messages with no fixed sizes. RAUC messages are passed only between a RAUC client and ACS server, however the ultimate destination of most RAUC messages sent by the client is an automobile simultaneously connected to the ACS server. For messages of this nature, the  first content chunk must contain the identifier of the connected automobile for which the command is ultimately destined. It is the duty of the ACS server to verify that the identifier provided by the RAUC client is a valid one for the current connection (user account).  The messages defined by this document which require addressing to an automobile are message types 5 (Utility Control request) and message type 6 (Utility State Query). The secure transmission of vehicle addresses is covered in the Security section of this document. Messages defined beyond the scope of this document which are intended for transmission to an automobile must require vehicle identification and only vehicle identification in the first content chunk of the message. All other messages are implicitly addressed to the ACS server or client only.  
 
 
 
@@ -165,20 +163,22 @@ RAUC supports two types of error messages: Permanent and Temporary.
 
 \subsection{Flow Control}
 \label{sec:pdus:flow}
-Flow control in RAUC is defined by a one-to-one client-message-to-server-message scheme, with the client initiating the connection and pushing messages to the server. The server acts as a passive listener and only sends messages to the client in response to a client request. Both the client and server \textbf{MUST NOT} send more than one message without receiving a response from the other host to preserve this granularity of communication. Therefore, the client is the primary driver of the conversation.
+Flow control in RAUC is defined by a one-to-one client-message-to-server-message scheme, with the client initiating the connection and pushing messages to the server. The server acts as a passive listener and only sends messages to the client in response to a client request. Both the client and server must not send more than one message without receiving a response from the other host to preserve this granularity of communication. Therefore, the client is the primary driver of the conversation.
 
 \subsection{Quality of Service}
 \subsubsection{Sending and Receiving Strategy}
-ACS servers \textbf{SHOULD} handle multiple incoming connections for RAUC on port 7070. Once a connection is established, RAUC clients and ACS servers \textbf{MAY} negotiate separate sending and receiving ports via a service extension.
+ACS servers should handle multiple incoming connections for RAUC on port 7070. Once a connection is established, RAUC clients and ACS servers may negotiate separate sending and receiving ports via a service extension.
 
-ACS serves \textbf{MUST} send, at minimum, either an error message or some type of acknowledgement for every message that a client sends. RAUC extensions which rely on multiple messages \textbf{MUST} have an intervening server message between each client message to maintain this basic protocol rule. 
+ACS serves must send, at minimum, either an error message or some type of acknowledgement for every message that a client sends. RAUC extensions which rely on multiple messages must have an intervening server message between each client message to maintain this basic protocol rule. 
 
 \subsubsection{Timeouts}
-Clients \textbf{MUST NOT} send more than one message to a server before receiving a response. However, in the event that a server takes too long to respond to a message (a policy decision), a client has two options.
+Clients must not send more than one message to a server before receiving a response. However, in the event that a server takes too long to respond to a message (a policy decision), a client has two options.
 \begin{itemize}
 \item{The client may re-send the message \textbf{once}. If this message is accepted, the outcome in this case is the same whether or not it was the original message that failed to deliver or the response: The server will execute the command again.}
 \item{The client may end the connection and attempt to reconnect and re-authenticate.}
 \end{itemize}
 
-If the client chooses to re-send a message and again does not receive a response from the server, the client \textbf{MUST} close the connection and initiate a new session with the server.
+If the client chooses to re-send a message and again does not receive a response from the server, the client must close the connection and initiate a new session with the server.
 
+\subsubsection{Performace Enhancement}
+ACS serves multiple to multiple different clients at a time. ACS provides this enhancement for not serializing other clients' requests when handling one's. We provide this enhancement via designing and implementing ACS as a multithreaded server where a server thread is created for each client connection request so that each client is served by server concurrently.
