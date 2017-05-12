@@ -95,7 +95,7 @@ about whether or not such commands were forwarded; only that the command was val
 {\textsf{[15:1] : [1 : 1111 1111]}}
 \end{center}
 
-\paragraph{Utility State Query}: A Utility State Query (USQ) (header [6:0-4]) message alerts the server that the device would like some information returned. This command has 0 to 4 CONTENT CHUNKs depending on the nature of the query, however a hierarchical rule must be followed when providing arguments. The arguments AUTO, COMP, ATTR, and VAL are detailed below.
+\paragraph{Utility State Query}: A Utility State Query (USQ) (header [6:0-3]) message alerts the server that the device would like some information returned. This command has 0 to 4 CONTENT CHUNKs depending on the nature of the query, however a hierarchical rule must be followed when providing arguments. The arguments AUTO, COMP, ATTR, and VAL are detailed below.
 
 If no arguments are provided, the server returns a list that uniquely identifies each automobile which has been registered to this account that is currently connected to the ACS server.  This list essentially provides a list of automobiles that the client can interact with at the present time.
 
@@ -120,7 +120,7 @@ The following message would provide a list of all radio presets [ATTR] saved on 
 \begin{center}
 {\textsf{[16:1] : [REGISTERED VEHICLES]}}
 
-{\textsf{16:1] : [64 : ... }}
+{\textsf{[16:1] : [64 : ... ]}
 \end{center}
 
 
