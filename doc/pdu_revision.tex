@@ -1,22 +1,12 @@
+\documentclass{article}
+\usepackage{ulem}
 
-\section{Message Definition -- PDU}
-\label{sec:pdus}
+\begin{document}
+
+\section{Common Themes Detailed}
+\label{sec:ct}
 
 In this section, we discuss the details of the \textsf{RAUC} protocol.
-
- \subsection{Addressing}
-\label{sec:pdus:addr}
-\textsf{RAUC} protocol uses TCP/IP for transportation. It uses stream-oriented channels to send messages with no fixed sizes. [Note: We can customize port numbers to for specific task done by a device on the car. For example: We may want to assign base\_port\_number + device\_port\_index ex: 1010+1 = 1011 port no for air conditioner. ].
-
-Based on port configuration we explained, a TCP connection is established to the \textsf{CCS} IP address and port number provided.
-
-\subsection{Flow Control}
-\label{sec:pdus:flow}
-Flow control is dispatched to TCP/IP layer. [Note: As future extension, we may mention that we can enhance the flow control with adding asychrony in communication such as when client sends a message  and returns but sender send feedback later on. This reduces the congestion of network. In addition, we may buffer requests and flush them to server to save reduce communication overhead for each command.]
-
-\subsubsection{Handshake}
-\label{sec:pdus:pdu:hs}
-All the handshaking is handled with [TODO]
 
 \subsection{PDU (Message) Definitions}
 RAUC uses a single generic, variable sized PDU comprised of two parts: A single HEADER CHUNK and an ordered set of up to 255 CONTENT CHUNKs. The PDU is delineated by the end of the final CONTENT CHUNK in the message. Determining the position of the end of the last CONTENT CHUNK is defined below. This same PDU is used for both client-to-server and server-to-client messages.
@@ -149,19 +139,50 @@ The following message would provide a list of all radio presets [ATTR] saved on 
 \label{sec:pdus:err}
 RAUC supports two types of error messages: Permanent and Temporary.
 
-\paragraph{Permanent Error}: (header [255:0]) Permanent errors are sent by the server to the client and instructs the client that the same message sent in the current state will never be accepted. Permanent errors may be sent under these conditions:
+\paragraph{Permanent Error}: (header [255:0]) Permanent errors are sent by the server to the client and instructs the client that the same message sent at the current protocol state will never be accepted. Permanent errors may be sent under these conditions:
 \begin{itemize}
 \item Malformed message received from client.
 \item Information provided with User Authentication command not verified.
 \item Message received for an invalid command (eg. User Authentication message sent at any point after authentication handshake)
+\item Incorrectly addressed message (eg. attempting to issue a command to an unregistered vehicle)
   \end{itemize}
   
 \begin{center}
 {\textsf{[255:0] : []}}
 \end{center}
 
-\paragraph{Temporary Error}: (header [254:0]) Temporary error messages are sent by the server when a command is not received by the server because of a temporal machine state problem. Temporary errors indicate that the client sent a valid command which can be tried again at a later time without modification. The most common reason that a server will send a temporary error message is due to a lack of resources to fulfill a command sent by the client.
+\paragraph{Temporary Error}: (header [254:0]) Temporary error messages are sent by the server when a command is not received by the server because of a temporal machine state problem. Temporary errors indicate that the client sent a valid command which can be tried again at a later time without modification. The most common reason that a server will send a temporary error message is due to a lack of resources to fulfill a command sent by the client. They may also be sent by the client if the server sends another message while the client expects the server to be listening or vice versa.
 
 \begin{center}
 {\textsf{[254:0] : []}}
 \end{center}
+
+\subsection{Addressing}
+\label{sec:pdus:addr}
+\subsubsection{General Addressing Concerns}
+\textsf{RAUC} protocol uses TCP/IP for transportation. It uses stream-oriented channels to send messages with no fixed sizes. RAUC messages are passed only between a RAUC client and ACS server, however the ultimate destination of most RAUC messages sent by the client is an automobile simultaneously connected to the ACS server. For messages of this nature, the  first content chunk \textbf{MUST} contain the identifier of the connected automobile for which the command is ultimately destined. It is the duty of the ACS server to verify that the identifier provided by the RAUC client is a valid one for the current connection (user account).  The messages defined by this document which require addressing to an automobile are message types 5 (Utility Control request) and message type 6 (Utility State Query). The secure transmission of vehicle addresses is covered in the Security section of this document. Messages defined beyond the scope of this document which are intended for transmission to an automobile \textbf{MUST} require vehicle identification and only vehicle identification in the first content chunk of the message. All other messages are implicitly addressed to the ACS server or client only.  
+
+
+
+\label{sec:ct}
+
+\subsection{Flow Control}
+\label{sec:pdus:flow}
+Flow control in RAUC is defined by a one-to-one client-message-to-server-message scheme, with the client initiating the connection and pushing messages to the server. The server acts as a passive listener and only sends messages to the client in response to a client request. Both the client and server \textbf{MUST NOT} send more than one message without receiving a response from the other host to preserve this granularity of communication. Therefore, the client is the primary driver of the conversation.
+
+\subsection{Quality of Service}
+\subsubsection{Sending and Receiving Strategy}
+ACS servers \textbf{SHOULD} handle multiple incoming connections for RAUC on port 7070. Once a connection is established, RAUC clients and ACS servers \textbf{MAY} negotiate separate sending and receiving ports via a service extension.
+
+ACS serves \textbf{MUST} send, at minimum, either an error message or some type of acknowledgement for every message that a client sends. RAUC extensions which rely on multiple messages \textbf{MUST} have an intervening server message between each client message to maintain this basic protocol rule. 
+
+\subsubsection{Timeouts}
+Clients \textbf{MUST NOT} send more than one message to a server before receiving a response. However, in the event that a server takes too long to respond to a message (a policy decision), a client has two options.
+\begin{itemize}
+\item{The client may re-send the message \textbf{once}. If this message is accepted, the outcome in this case is the same whether or not it was the original message that failed to deliver or the response: The server will execute the command again.}
+\item{The client may end the connection and attempt to reconnect and re-authenticate.}
+\end{itemize}
+
+If the client chooses to re-send a message and again does not receive a response from the server, the client \textbf{MUST} close the connection and initiate a new session with the server.
+
+\end{document}
