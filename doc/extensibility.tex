@@ -1,7 +1,4 @@
-\documentclass{article}
-\usepackage{ulem}
 
-\begin{document}
 \section{Extensibility}
 \label{sec:ext}
 RAUC employs a service extension model which allow a RAUC client and ACS server to make use of service extensions above and beyond the minimum implementation requirements provided in this document. We do not detail the service extension model in this document but instead provide a high level overview of the model's intended usage structure.
@@ -21,4 +18,3 @@ Currently, the only limit to the model is the fact that the HEADER CHUNK part of
 The generic nature of RAUC PDUs along with the protocol's one-to-one client-message-to-server-message flow control also allows for new protocol states to be easily added. In the same way that the ACS server refuses all messages from the client besides User Authentication during the initial state, the server may limit which messages are valid at any given time based on the protocol state. 
 
 For example, consider the popular security option of two-factor authentication. Policy decisions may limit a user's ability to query active components unless two-factor authentication has been used on this connection. This extension essentially places another state after the "auth provided" state which does not transition to the "query sequence" state when a Utility State Query message occurs.
-\end{document}
