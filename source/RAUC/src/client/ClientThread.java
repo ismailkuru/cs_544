@@ -99,7 +99,7 @@ class ClientThread extends Thread {
                 // Read the input from the user.
                 command = scanner.nextLine();
 
-                if(command.equals("5")) {
+                if(command.equals("1")) {
                 	
                     socketOutput.println(EXIT);
                     System.out.println("Exiting the program.");
@@ -158,11 +158,7 @@ class ClientThread extends Thread {
     private void displayMenu(){
         System.out.println("\n" + "-----------------");
         System.out.println("Enter the nr to:");
-        System.out.println("1: Download from the server");
-        System.out.println("2: Upload to the server");
-        System.out.println("3: Delete from the server");
-        System.out.println("4: Delete from the client");
-        System.out.println("5: Exit");
+        System.out.println("1: Exit");
         System.out.println("-----------------");
     }
 }
