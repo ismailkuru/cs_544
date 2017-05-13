@@ -10,7 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -47,7 +47,7 @@ class ClientThread extends Thread {
     
         SSLSocket socket = null;
         BufferedReader in = null;
-        OutputStream out = null;
+        OutputStreamWriter out = null;
         
         SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
         try {
@@ -72,8 +72,8 @@ class ClientThread extends Thread {
             socket = (SSLSocket) sf.createSocket(SERVER_HOSTNAME, SERVER_PORT);
             socket.setEnabledCipherSuites(socket.getEnabledCipherSuites());
           
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = socket.getOutputStream();
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream() , "UTF-8") );
+            out = new OutputStreamWriter(socket.getOutputStream(),"UTF-8");
             
             // TEST-WRITER
             PrintWriter socketOutput = new PrintWriter(socket.getOutputStream(), true );
