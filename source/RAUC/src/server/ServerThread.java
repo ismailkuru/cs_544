@@ -3,7 +3,7 @@ package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 
 
@@ -24,14 +24,14 @@ public class ServerThread extends Thread {
 	@Override
 	public void run() {
 		BufferedReader in = null;
-        OutputStream out = null;
+        OutputStreamWriter out = null;
      
         try {
         	
         	//Connection-Establishment
             System.out.println("\nConnected to client");
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out =socket.getOutputStream();
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+            out = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             
             //[TEST] : This is test of sending/receiving in between client/server
             String line = null;
@@ -39,7 +39,7 @@ public class ServerThread extends Thread {
     		if (((line = in.readLine()) != null)) {
     			System.out.println(line);
     			
-    			out.write("\nServer side is ready.\n\n".getBytes());
+    			out.write("\nServer side is ready.\n\n");
     			out.flush();
     		}
     		

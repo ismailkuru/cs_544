@@ -3,7 +3,9 @@ package pdu.MessageImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import pdu.Message;
 import pdu.MessageType;
@@ -31,7 +33,7 @@ public class QueryResultMessage extends Message{
 	}
 
 	public String toString(){
-		
+		/*
 		String strHeader = "";
 		String contHeader = "";
 		
@@ -41,11 +43,15 @@ public class QueryResultMessage extends Message{
 				contHeader += "["+ this.getContent().get(i).getSize() + ":"+ this.getContent().get(i).getContent()+  "]";
 			}
 		
-		return strHeader + "#" + contHeader;
+		return strHeader + "#" + contHeader;*/
+		Gson gson = new Gson();
+		String json = gson.toJson(this);
+		return json;
 	}
 	public JsonElement toJson() {
-		// TODO Auto-generated method stub
-		return null;
+		JsonParser jp = new JsonParser();
+		JsonElement element = jp.parse(this.toString());
+		return element;
 	}
 
 	@Override

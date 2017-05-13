@@ -3,7 +3,9 @@ package pdu.MessageImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import pdu.Message;
 import pdu.MessageType;
@@ -50,24 +52,47 @@ public class UtilityStateQueryMessage extends Message{
 		}
 			
 	}
+	
+	
+	/*
+	 * 
+	 * 
+	 * { 
+	 * 	"header" : {"command_type":"num_chunks"},
+	 * 	"data_chunks" : [{"size","content"}]  	
+	 * 
+	 * }
+	 * 
+	 * */
 	public String toString(){
-		
+		/*
 		String strHeader = "";
 		String contHeader = "";
 		
-			strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
-			contHeader = "Content=";
+			strHeader = "{\"_header\":" + "{\""+ this.getHeader().getMessageType() + "\":\"" + this.getHeader().getChunkCount() + "\"},";
+			contHeader = "\"_content\":" + "[";
 			for(int i = 0 ; i<this.getContent().size(); i ++){
-				contHeader += "["+ this.getContent().get(i).getSize() + ":"+ this.getContent().get(i).getContent()+  "]";
+				contHeader += "{\""+this.getContent().get(i).getSize() + "\":\""+ this.getContent().get(i).getContent()+ "\"},"  ;
 			}
 		
-			
+			int index = contHeader.lastIndexOf(',');
+			if(index != -1) {
+			    contHeader = contHeader.substring(0,index);
+			}
+			contHeader+= "]}";
 	
-		return strHeader + "#" + contHeader;
+		return strHeader + contHeader;*/
+		Gson gson = new Gson();
+		String json = gson.toJson(this);
+		return json;
+		
 	}
 	public JsonElement toJson() {
-		// TODO Auto-generated method stub
-		return null;
+		JsonParser jp = new JsonParser();
+		JsonElement element = jp.parse(this.toString());
+		//We can use this
+		//UtilityStateQueryMessage um = gson.fromJson(this.toString(), UtilityStateQueryMessage.class);
+		return element;
 	}
 	public MessageType getMessageType() {
 		// TODO Auto-generated method stub
