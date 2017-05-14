@@ -25,8 +25,8 @@ public class Server {
     private static final int SERVER_PORT = 8080;
     // These strings are the names of the keystore and truststore files, as weIl
     // as the password for accessing these two files (both files have the same password in this example)
-    static final String KEYSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/server/LIUkeystore.ks"; // [TODO] change them to relative paths. Eclipse screwed up
-    static final String TRUSTSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/server/LIUtruststore.ks";// [TODO] change them to relative paths. Eclipse screwed up
+    static final String KEYSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/server/serverkeystore.ks"; // [TODO] change them to relative paths. Eclipse screwed up
+    static final String TRUSTSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/server/servertruststore.ks";// [TODO] change them to relative paths. Eclipse screwed up
     static final String STOREPASSWD = "123456";
     static final String ALIASPASSWD = "123456";
     

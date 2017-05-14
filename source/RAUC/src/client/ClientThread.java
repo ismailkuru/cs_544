@@ -28,8 +28,8 @@ class ClientThread extends Thread {
     private static final String SERVER_HOSTNAME = "localhost";
     private static final int SERVER_PORT = 8080;
     
-    private static final String KEYSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/client/PIERkeystore.ks"; // [TODO] change them to relative paths. Eclipse screwed up
-    private static final String TRUSTSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/client/PIERtruststore.ks";// [TODO] change them to relative paths. Eclipse screwed up
+    private static final String KEYSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/client/clientkeystore.ks"; // [TODO] change them to relative paths. Eclipse screwed up
+    private static final String TRUSTSTORE = "/home/ismail/Repos/cs_544/source/RAUC/src/client/clienttruststore.ks";// [TODO] change them to relative paths. Eclipse screwed up
     private static final String STOREPASSWD = "123456";
     private static final String ALIASPASSWD = "123456";
 
