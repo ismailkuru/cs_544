@@ -1,12 +1,15 @@
 package specs;
 
 public enum DFAState {
-	CLOSED				("Closed"),
-	S_AWAITS_INIT 		("Server awaits init"),
-	S_AWAITS_AUTHEN 	("Server awaits authentication request"),
-	C_AWAITS_CONFIRM 	("Client awaits confirmation"),
-	S_AWAITS_ACTION		("Server awaits command/query"),
-	C_AWAITS_RESPONSE	("Client awaits response");
+	CLOSED						("Closed"),
+	S_AWAITS_CONN_REQUEST		("Server awaits connection"),
+	S_AWAITS_AUTHEN_REQUEST 	("Server awaits authentication request"),
+	C_AWAITS_AUTHEN_RESPONSE 	("Client awaits authentication response"),
+	S_AWAITS_COMM_REQUEST		("Server awaits command request"),
+	C_AWAITS_COMM_RESPONSE		("Client awaits command response"),
+	
+	S_AWAITS_QUERY_REQUEST		("Server awaits query request"),
+	C_AWAITS_QUERY_RESPONSE		("Client awaits query response");
 
 	private String desc;
 	

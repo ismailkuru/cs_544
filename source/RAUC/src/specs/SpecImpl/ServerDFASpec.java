@@ -1,5 +1,13 @@
 package specs.SpecImpl;
 
+/*
+* Ismail Kuru - Max Matthes - Lewis Cannalongo
+* 
+* File : Server.java
+* Aim : This file includes the machinery specified for
+* Server DFA in design document.
+*
+* */
 import pdu.Message;
 import specs.DFASpec;
 
@@ -12,31 +20,43 @@ public class ServerDFASpec extends DFASpec{
 	}
 
 	@Override
-	protected Message processClientAwaitsResponse(Message m) {
+	protected Message processClientAwaitsCommResponse(Message m) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected Message processServerAwaitsInit(Message m) {
+	protected Message processServerAwaitsConnRequest(Message m) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected Message processServerAwaitsAction(Message m) {
+	protected Message processServerAwaitsCommandRequest(Message m) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected Message processServerAwaitsAuthen(Message m) {
+	protected Message processServerAwaitsAuthenRequest(Message m) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	protected Message processClientAwaitsConfirm(Message m) {
+	protected Message processClientAwaitsAuthenResponse(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Message processServerAwaitsQueryRequest(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected Message processClientAwaitsQueryResponse(Message m) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -53,4 +73,5 @@ public class ServerDFASpec extends DFASpec{
 		return null;
 	}
 
+	
 }

@@ -1,5 +1,14 @@
 package utils;
 
+/*
+ * Ismail Kuru - Max Matthes - Lewis Cannalongo
+ * 
+ * File : DatayTypeConverter.java
+ * Aim : This file implements transformatinos in between 
+ * String( Hex representation) and Byte types  
+ *
+ * */
+
 import java.util.*;
 
 	public class DataTypeConverter {
