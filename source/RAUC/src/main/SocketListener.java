@@ -15,9 +15,9 @@ public class SocketListener {
 	public static void main(String[] args) {
 		// set keystore and trust store location/home/ismail/Repos/cs_544/source/RAUC/src
 
-		System.setProperty("javax.net.ssl.keyStore", "/home/ismail/Repos/cs_544/source/RAUC/src/sslserverkeys");
+		System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/Repos/cs_544/source/RAUC/src/sslservertrust");
+		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		// create socket
 		SSLServerSocket sslserversocket = null;

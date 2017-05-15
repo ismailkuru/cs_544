@@ -5,19 +5,32 @@
 1. Compile & prepare files
 
   ```
-  javac -d ../bin src/main/*.java
-  cp src/ssl* ../bin
-  cd ../bin
+  Make sure that you have externally linked your gson.jar. 
+  ```
+  
+  ```
+  TODO: Giving complete paths of certificates in source.
+  ```
+  
+  ```
+  Use eclipse and export as runnable-jar. Before this, make sure that 
+  you set two mains (Client.java, SocketListener.java) in you Run-Configurations.
+  ```
+  
+  
+  ```
+  Export Client and Server (whose main is in SocketListener.java) as executable
+  jars. Reference : http://www.wikihow.com/Create-an-Executable-File-from-Eclipse
   ```
 2. Start server & client
 
   server:
   ```
-  java main.SocketListener
+  java -jar Server
   ```
   client:
   ```
-  java main.Client
+  java -jar Client
   ```
 3. Customize SSL
 

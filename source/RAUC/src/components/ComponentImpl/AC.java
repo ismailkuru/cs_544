@@ -17,8 +17,8 @@ public class AC extends Component {
 
 			// map for commands and its parameters
 			_commandParamMap = new HashMap<ACAttribute, String>();
-			_commandParamMap.put(ACAttribute.ON, null);
-			_commandParamMap.put(ACAttribute.OFF, null);
+			_commandParamMap.put(ACAttribute.ON, "1");
+			_commandParamMap.put(ACAttribute.OFF, "0");
 			
 		}
 	
@@ -43,7 +43,12 @@ public class AC extends Component {
 		
 		return this._autoId;
 	}
-
+	public String getValueOfAttrb(String attrb){
+		
+		ACAttribute atrb = ACAttribute.typeFromStringCode(attrb);	
+		return AC._commandParamMap.get(atrb);
+		
+	}
 	@Override	
 	public void applyCommand(Command cmd) {
 			
@@ -53,7 +58,9 @@ public class AC extends Component {
 		
 	}
 	
-	
+	public Map<ACAttribute,String> getComponentMap(){
+		return AC._commandParamMap;
+	}
 	
 	
 }
@@ -72,17 +79,14 @@ enum ACAttribute {
 		return _status;
 	}
 	public static ACAttribute typeFromStringCode(String code) {
-		if(code == "OFF"){		
-			return OFF;
-		}
-		else if(code == "OFF"){
-			return OFF;
-			
-		}else{
-			
+		Integer sc = Integer.parseInt(code);
+		switch (sc) {
+		case 0: return OFF;
+		case 1: return ON;
+		default: {
 			throw new RuntimeException("Invalid state : " + code);
 		}
-
+	}
 	}
 	
 	public static ACAttribute typeFromIntegerCode(Integer code) {

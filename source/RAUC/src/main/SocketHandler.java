@@ -8,10 +8,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import javax.net.ssl.SSLSocket;
 
+import com.google.gson.Gson;
 import components.Command;
+import components.ComponentImpl.AC;
 
-import pdu.Message;
-import pdu.MessageImpl.UtilityStateQueryMessage;
+import pdu.MessageImpl.UtilityControlReqMessage;
+
 
 public class SocketHandler extends Thread {
 	private SSLSocket socket = null;
@@ -41,15 +43,25 @@ public class SocketHandler extends Thread {
 			try {
 				//read a line
 				str = br.readLine();
-				//[TODO]
-				//Server gets the str 
-				//UtilityControlReqMessage as = gson.fromJson(str, UtilityControlReqMessage.class);
-				//Then create command from Message a with Command createCommand(Message msg)
-				//At the same time create component, ex: AC then apply command.
-				// Return to client ...
-				//[TODO]
+				//[TEST - Mini test showing how one of the process methods in DFA (w/o packet format
+				// checking) looks like etc... ]
+				Gson gson = new Gson();
+				UtilityControlReqMessage as = gson.fromJson(str, UtilityControlReqMessage.class);
+				Command cmd = Command.createCommand(as);
+				System.out.println("Command: autoID "  + cmd.getAutoId() + " - attrb " + cmd.getAttribute() );
+				//[TODO] component type should be passed as String ?
+				AC ac = new AC("1",cmd.getComponentType(), "0");
 				
-				//if it is "END", disconnect
+				ac.applyCommand(cmd);
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				
+				System.out.println("Value of attrib 0 is now " +  ac.getValueOfAttrb("0"));
+				//[TEST -ENDS]
+				
+				//if it is "END", disconnect [TODO: All these are going to be pushed neatly
+				// to SERVER DFA. process message is going to be called only]
 				if (str.equals("END")) {
 					pw.println("END");
 					System.out.println("close......");

@@ -14,6 +14,8 @@ import com.google.gson.Gson;
 import pdu.MessageImpl.UtilityControlReqMessage;
 
 
+
+
 public class Client {
 	
 	/*
@@ -39,11 +41,6 @@ public class Client {
 			pw.println(message);
 			pw.flush();
 			str += (br.readLine() + "\n");
-			for (int i = 0; i < 10; i++) {
-				pw.println("howdy " + i);
-				pw.flush();
-				str += (br.readLine() + "\n");
-			}
 			System.out.println(str);
 			pw.println("END");
 			pw.flush();
@@ -72,13 +69,19 @@ public class Client {
 	 * @print received responses
 	 */
 	public static void main(String[] args) {
-		System.setProperty("javax.net.ssl.trustStore", "sslclienttrust");
+		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslclienttrust");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-		//[TODO] Test
-		//UtilityControlReqMessage umcr = new UtilityControlReqMessage("1", "2", "3", "4"); // Sure with proper paramters
-		// String msgToSend = umcr.toString(); // which is : Gson gson = new Gson();String json = gson.toJson(usm) 
+		//[TEST] Mini Client
+		UtilityControlReqMessage umcr = new UtilityControlReqMessage("1", "0" , "0", "4");
+		Gson gson = new Gson();
+		String json = gson.toJson(umcr);
+		System.out.println(json);
+		System.out.println();
+		System.out.println();
+		System.out.println();
 		//Send this string to server
-		//[TODO]
-		System.out.println(sendSocket(args[0], Integer.parseInt(args[1]), args[2]));
+		//[TEST] Mini Client ends
+		System.out.println(sendSocket("localhost", 9999, json ));
 	}
 }
+
