@@ -5,9 +5,9 @@
 1. Compile & prepare files
 
   ```
-  javac -d bin src/main/*.java
-  cp src/ssl* bin
-  cd bin
+  javac -d ../bin src/main/*.java
+  cp src/ssl* ../bin
+  cd ../bin
   ```
 2. Start server & client
 
