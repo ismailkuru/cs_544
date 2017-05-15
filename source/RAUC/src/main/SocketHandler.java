@@ -8,6 +8,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import javax.net.ssl.SSLSocket;
 
+import components.Command;
+
+import pdu.Message;
+import pdu.MessageImpl.UtilityStateQueryMessage;
+
 public class SocketHandler extends Thread {
 	private SSLSocket socket = null;
 	private BufferedReader br = null;
@@ -36,6 +41,14 @@ public class SocketHandler extends Thread {
 			try {
 				//read a line
 				str = br.readLine();
+				//[TODO]
+				//Server gets the str 
+				//UtilityControlReqMessage as = gson.fromJson(str, UtilityControlReqMessage.class);
+				//Then create command from Message a with Command createCommand(Message msg)
+				//At the same time create component, ex: AC then apply command.
+				// Return to client ...
+				//[TODO]
+				
 				//if it is "END", disconnect
 				if (str.equals("END")) {
 					pw.println("END");
