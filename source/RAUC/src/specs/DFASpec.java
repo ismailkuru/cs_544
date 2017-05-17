@@ -35,17 +35,11 @@ public abstract class DFASpec {
 			// otherwise, process the message in the respective state of the protocol
 			switch (state) {
 				case CLOSED:					return processClose(m);
-				case S_AWAITS_CONN_REQUEST:		return processServerAwaitsConnRequest(m);
-				
-				case C_AWAITS_AUTHEN_RESPONSE:	return processClientAwaitsAuthenResponse(m);	
+				case SC_INIT:					return processInit(m);
 				case S_AWAITS_AUTHEN_REQUEST:	return processServerAwaitsAuthenRequest(m);
-						
-				case C_AWAITS_COMM_RESPONSE:	return processClientAwaitsCommResponse(m);	
 				case S_AWAITS_COMM_REQUEST:		return processServerAwaitsCommandRequest(m);
-		
 				case S_AWAITS_QUERY_REQUEST:	return processServerAwaitsQueryRequest(m);
-				case C_AWAITS_QUERY_RESPONSE:	return processClientAwaitsQueryResponse(m);
-				
+				case C_AWAITS_RESPONSE:			return processClientAwaitsResponse(m);
 				default:						return  processError(m); // should not get here error state
 			}
 		}
@@ -63,19 +57,21 @@ public abstract class DFASpec {
 		
 		/**
 		 * Processes the given message when the protocol is in client awaits
-		 * command response.
+		 * command/query response.
 		 * @param m the message to process.
 		 * @return the response message to pass to the other end.
 		 */
-		protected abstract Message processClientAwaitsCommResponse (Message m);
+		protected abstract Message processClientAwaitsResponse (Message m);
 		
 		/**
+		 * 
 		 * Processes the given message when the protocol is in server awaits init
-		 * state.
+		 * state. * Processes the given message when the protocol is in init state and client awaits
+		 * authentication confirmation.
 		 * @param m the message to process.
 		 * @return the response message to pass to the other end.
 		 */
-		protected abstract Message processServerAwaitsConnRequest		(Message m);
+		protected abstract Message processInit		(Message m);
 		
 		/**
 		 * Processes the given message when the protocol is in server awaits command
@@ -90,16 +86,7 @@ public abstract class DFASpec {
 		 * @param m the message to process.
 		 * @return the response message to pass to the other end.
 		 */
-		protected abstract Message processServerAwaitsAuthenRequest	(Message m);
-		
-		/**
-		 * Processes the given message when the protocol is in client awaits
-		 * action confirmation.
-		 * @param m the message to process.
-		 * @return the response message to pass to the other end.
-		 */
-		protected abstract Message processClientAwaitsAuthenResponse	(Message m);
-		
+		protected abstract Message processServerAwaitsAuthenRequest	(Message m);	
 		
 		/**
 		 * Processes the given message when the protocol is in server awaits
@@ -108,14 +95,6 @@ public abstract class DFASpec {
 		 * @return the response message to pass to the other end.
 		 */
 		protected abstract Message processServerAwaitsQueryRequest (Message m);
-		
-		/**
-		 * Processes the given message when the protocol is in client awaits
-		 * query result.
-		 * @param m the message to process.
-		 * @return the response message to pass to the other end.
-		 */
-		protected abstract Message processClientAwaitsQueryResponse (Message m);	
 		
 		
 		// [TODO]These two can be removed later for optimization

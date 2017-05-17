@@ -19,17 +19,7 @@ public class ClientDFASpec extends DFASpec {
 		return null;
 	}
 
-	@Override
-	protected Message processClientAwaitsCommResponse(Message m) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	protected Message processServerAwaitsConnRequest(Message m) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	protected Message processServerAwaitsCommandRequest(Message m) {
@@ -43,23 +33,7 @@ public class ClientDFASpec extends DFASpec {
 		return null;
 	}
 
-	@Override
-	protected Message processClientAwaitsAuthenResponse(Message m) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected Message processServerAwaitsQueryRequest(Message m) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected Message processClientAwaitsQueryResponse(Message m) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
 	protected Message processError(Message m) {
@@ -69,6 +43,30 @@ public class ClientDFASpec extends DFASpec {
 
 	@Override
 	protected Message processFailure(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	protected Message processClientAwaitsResponse(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	protected Message processInit(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	protected Message processServerAwaitsQueryRequest(Message m) {
 		// TODO Auto-generated method stub
 		return null;
 	}
