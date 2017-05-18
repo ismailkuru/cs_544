@@ -13,6 +13,25 @@ import specs.DFASpec;
 
 public class ClientDFASpec extends DFASpec {
 
+	/**
+	 * The client username
+	 */
+	private String _user = null;
+	/**
+	 * The client password
+	 */
+	private String _pass = null;
+	/**
+	 * Response for the authentication phase
+	 */
+	private Message _response;
+
+	public ClientDFASpec(String usern, String passw){
+		this._pass = passw;
+		this._user = usern;
+		
+	}
+	
 	@Override
 	protected Message processClose(Message m) {
 		// TODO Auto-generated method stub

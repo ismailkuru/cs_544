@@ -1,8 +1,8 @@
 package pdu;
 
 public enum MessageType {
+	INVALID_MESSAGE (-20),
 	OP_SHUTDOWN 	(-1),
-	OP_CONNECTION	(0),
 	OP_INFO 		(16),
 	OP_QUERY 		(6),
 	OP_ERROR 		(255),
@@ -25,5 +25,30 @@ public enum MessageType {
 	public Integer getOpcode() {
 		return opcode;
 	}
-	
+	public static MessageType getMessageTypeFromString(String mstype)throws Exception{
+		
+		if(mstype == "OP_SHUTDOWN") {
+			return OP_SHUTDOWN;
+		}else if(mstype == "OP_INFO"){
+			return OP_INFO;
+		}else if(mstype == "OP_QUERY"){
+			return  OP_QUERY;
+		}else if(mstype == "OP_ERROR"){
+			return OP_ERROR;
+		}else if(mstype == "OP_TMP_ERROR"){
+			return OP_TMP_ERROR;			
+		}else if(mstype == "OP_COMMAND_RECEIVED"){
+			return OP_COMMAND_RECEIVED;
+		}else if(mstype == "OP_FAILURE"){
+			return OP_FAILURE;
+		}else if(mstype == "OP_AUTH"){
+			return OP_AUTH;
+		}else if(mstype == "OP_COMMAND"){
+			return OP_COMMAND;
+		}else if(mstype == "OP_SUCCESS_VER"){
+			return OP_SUCCESS_VER;
+		}else throw new Exception("Invalid message type: " + INVALID_MESSAGE);
+		
+	}
+
 }

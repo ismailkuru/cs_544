@@ -11,13 +11,20 @@ import javax.net.ssl.SSLSocketFactory;
 
 import com.google.gson.Gson;
 
+import pdu.Message;
+import pdu.MessageFactory;
+import pdu.MessageType;
+import pdu.MessageImpl.AuthenAckMessage;
+import pdu.MessageImpl.UserAuthenMessage;
 import pdu.MessageImpl.UtilityControlReqMessage;
+import specs.SpecImpl.ClientDFASpec;
 
 
 
 
 public class Client {
 	
+	ClientDFASpec dfa = null;
 	/*
 	 * SendSocket - send a socket to a target
 	 * 
@@ -27,7 +34,7 @@ public class Client {
 	 * 
 	 * @return - received responses
 	 */
-	public static String sendSocket(String server, int port, String message) {
+	public static void CommSocket(String server, int port, String uname, String pass) {
 		SSLSocket sslsocket = null;
 		BufferedReader br = null;
 		PrintWriter pw = null;
@@ -36,14 +43,60 @@ public class Client {
 			SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
 			sslsocket = (SSLSocket) sslsocketfactory.createSocket(server, port);
 			System.out.println("sslsocket=" + sslsocket);
+			
 			br = new BufferedReader(new InputStreamReader(sslsocket.getInputStream()));
 			pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(sslsocket.getOutputStream())));
-			pw.println(message);
-			pw.flush();
-			str += (br.readLine() + "\n");
-			System.out.println(str);
-			pw.println("END");
-			pw.flush();
+			
+			ClientDFASpec dfa = new ClientDFASpec(uname, pass);
+			
+			UserAuthenMessage authm = new UserAuthenMessage(uname, pass);
+			
+			String authconfim = br.readLine();
+			
+			Message authresp = MessageFactory.createMessage(authconfim);
+			
+			if(authresp.getMessageType() == MessageType.OP_SUCCESS){
+			
+				while (true) {
+					// read next message from input
+					String line = br.readLine();
+					if (line == null) return;
+					
+					// process input message
+					// ---------------------
+					Message inMsg = MessageFactory.createMessage(line);
+					
+					//shutdown
+					// handle shutdown
+					if (inMsg.getMessageType() == MessageType.OP_SHUTDOWN ||
+							inMsg.getMessageType() == MessageType.OP_ERROR) {
+						
+						break;
+					}
+					// process output message
+					// ---------------------
+					Message outMsg = dfa.process(inMsg);
+					// error
+					if (outMsg == null) {
+						throw new RuntimeException("Invalid Out Message.");
+					}
+					
+					// send message to server
+					else {
+						pw.print(outMsg.toString());
+						pw.flush();
+						
+						// shutdown if user selected to shutdown
+						if (outMsg.getMessageType() == MessageType.OP_SHUTDOWN) {
+							break;
+						}
+					}					
+				}
+		  }			
+		  else{
+			System.out.println("Authentication is not provided. ");
+			
+		  }
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -56,7 +109,7 @@ public class Client {
 				e.printStackTrace();
 			}
 		}
-		return str;
+	
 	}
 	
 	/*
@@ -71,17 +124,22 @@ public class Client {
 	public static void main(String[] args) {
 		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslclienttrust");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-		//[TEST] Mini Client
-		UtilityControlReqMessage umcr = new UtilityControlReqMessage("1", "0" , "0", "4");
-		Gson gson = new Gson();
-		String json = gson.toJson(umcr);
-		System.out.println(json);
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		//Send this string to server
-		//[TEST] Mini Client ends
-		System.out.println(sendSocket("localhost", 9999, json ));
+		
+		CommSocket("localhost", 9999, "ismail", "123");
 	}
 }
 
+/////////////////
+
+/*****MINI TEST********/
+//[TEST] Mini Client
+//UtilityControlReqMessage umcr = new UtilityControlReqMessage("1", "0" , "0", "4");
+//Gson gson = new Gson();
+//String json = gson.toJson(umcr);
+//System.out.println(json);
+//System.out.println();
+//System.out.println();
+//System.out.println();
+//Send this string to server
+//[TEST] Mini Client ends
+/****** MINI TEST ENDS****/

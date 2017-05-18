@@ -12,7 +12,15 @@ import pdu.Message;
 import specs.DFASpec;
 
 public class ServerDFASpec extends DFASpec{
+	/**
+	 * Confirm message for client actions
+	 */
+	private Message _response;
+	
 
+	public ServerDFASpec(){
+		
+	}
 	@Override
 	protected Message processClose(Message m) {
 		// TODO Auto-generated method stub
