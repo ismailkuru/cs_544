@@ -29,6 +29,10 @@ public class ServerDFASpec extends DFASpec{
 
 	@Override
 	protected Message processServerAwaitsCommandRequest(Message m) {
+	    //change state from waiting commad to command received etc .
+		//As in the ACTest create a command from the message
+		// apply command 
+		// create a ack message to be sent to server
 		// TODO Auto-generated method stub
 		return null;
 	}
