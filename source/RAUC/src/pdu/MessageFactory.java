@@ -1,10 +1,6 @@
 package pdu;
 
-
-import com.fasterxml.jackson.*;
 import com.google.gson.Gson;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import pdu.MessageImpl.AuthenAckMessage;
@@ -30,11 +26,17 @@ public class MessageFactory{
 	       JSONObject header = jObject.getJSONObject("_header");
 	       String messageType = header.getString("_first");
 	       
+	       //Debug print 
+	      // System.out.print("Type of the message is : "+messageType );
+	       
 	       MessageType mt = MessageType.getMessageTypeFromString(messageType);
+	       
 	       Gson gson = new Gson();
 	       
 	       if(mt == MessageType.OP_AUTH)
 	       {
+	    	   //Debug print
+	    	  // System.out.println("\n Message type is authentication");
 	   			m = gson.fromJson(jString, UserAuthenMessage.class);
 	   			return m; 
 
@@ -66,13 +68,16 @@ public class MessageFactory{
 	   			return m;
 	    	   
 	       }else if(mt == MessageType.OP_SUCCESS){
+	    	  // System.out.println("\n Message type is success ack");
 	    	   m = gson.fromJson(jString, AuthenAckMessage.class);
 	   			return m;
 	    	   
 	       }else if(mt == MessageType.OP_SUCCESS_VER){
 	    	   m = gson.fromJson(jString, AuthenAckMessage.class);
 	   			return m;
-	       }else {
+	       }
+	       else
+	       {
 	    	   m = gson.fromJson(jString, TemporaryErrorMessage.class);
 	   			return m;
 	       }

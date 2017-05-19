@@ -36,7 +36,7 @@ public class Client {
 	 * 
 	 * @return - received responses
 	 */
-	public static String sendSocket(String server, int port, String uname, String pass) {
+	public static void sendSocket(String server, int port, String uname, String pass) {
 		SSLSocket sslsocket = null;
 		BufferedReader br = null;
 		PrintWriter pw = null;
@@ -50,18 +50,17 @@ public class Client {
 			ClientDFASpec dfa = new  ClientDFASpec(uname,pass);
 			
 			
-			//[TEST - THIS IS A MINI CLIENT -- WILL BE REPLACED WITH while(true){dfa.process} ]
+			//[TEST - THIS IS A MINI CLIENT -- WILL BE REPLACED WITH while(true){dfa.process} ] 
+			//This mimics one of messages processing of dfa.process
 			UserAuthenMessage uauth = new UserAuthenMessage(uname, pass);
 			
 			pw.println(uauth.toString() + "\n");
 			pw.flush();
 			
-			str += (br.readLine() + "\n");
-			//[TODO: Test - Json String validation and creating java object]Message ackm = MessageFactory.createMessage(str);
-			System.out.println(str);
-			
-			pw.println("END");
-			pw.flush();
+			str = (br.readLine() + "\n");
+			//[TODO: Test - Json String validation and creating java object]
+			Message ackm = MessageFactory.createMessage(str);
+			System.out.println("Message received from server " + ackm.toString());
 			//[MINI-CLIENT-ENDS]
 			
 			
@@ -69,7 +68,7 @@ public class Client {
 			e.printStackTrace();
 		} finally {
 			try {
-				System.out.println("close......");
+				System.out.println("Closing Client...");
 				br.close();
 				pw.close();
 				sslsocket.close();
@@ -77,7 +76,7 @@ public class Client {
 				e.printStackTrace();
 			}
 		}
-		return str;
+		return;
 	}
 	
 	/*
@@ -93,6 +92,6 @@ public class Client {
 		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslclienttrust");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		
-		System.out.println(sendSocket("localhost", 9999, "ismail", "123" ));
+		sendSocket("localhost", 9999, "ismail", "123" );
 	}
 }

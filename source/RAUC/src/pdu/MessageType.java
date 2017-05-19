@@ -27,27 +27,30 @@ public enum MessageType {
 	}
 	public static MessageType getMessageTypeFromString(String mstype)throws Exception{
 		
-		if(mstype == "OP_SHUTDOWN") {
+		if(mstype.equals("OP_SHUTDOWN")){
 			return OP_SHUTDOWN;
-		}else if(mstype == "OP_INFO"){
+		}else if(mstype.equals("OP_INFO")){
 			return OP_INFO;
-		}else if(mstype == "OP_QUERY"){
+		}else if(mstype.equals("OP_QUERY")){
 			return  OP_QUERY;
-		}else if(mstype == "OP_ERROR"){
+		}else if(mstype.equals("OP_ERROR")){
 			return OP_ERROR;
-		}else if(mstype == "OP_TMP_ERROR"){
+		}else if(mstype.equals("OP_TMP_ERROR")){
 			return OP_TMP_ERROR;			
-		}else if(mstype == "OP_COMMAND_RECEIVED"){
+		}else if(mstype.equals("OP_COMMAND_RECEIVED")){
 			return OP_COMMAND_RECEIVED;
-		}else if(mstype == "OP_FAILURE"){
+		}else if(mstype.equals("OP_FAILURE")){
 			return OP_FAILURE;
-		}else if(mstype == "OP_AUTH"){
+		}else if(mstype.equals("OP_AUTH")){
 			return OP_AUTH;
-		}else if(mstype == "OP_COMMAND"){
+		}else if(mstype.equals("OP_COMMAND")){
 			return OP_COMMAND;
-		}else if(mstype == "OP_SUCCESS_VER"){
+		}else if(mstype.equals("OP_SUCCESS_VER")){
 			return OP_SUCCESS_VER;
-		}else throw new Exception("Invalid message type: " + INVALID_MESSAGE);
+		}else if(mstype.equals("OP_SUCCESS")){
+			return OP_SUCCESS;		
+		}else 
+			throw new Exception("Invalid message type: " + INVALID_MESSAGE);
 		
 	}
 

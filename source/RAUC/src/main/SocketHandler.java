@@ -11,6 +11,9 @@ import java.net.SocketTimeoutException;
 import javax.net.ssl.SSLSocket;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
 import components.Command;
 import components.ComponentImpl.AC;
 
@@ -29,6 +32,7 @@ public class SocketHandler extends Thread {
 	 * 
 	 * @param s - an ssl socket created by SocketListener
 	 */
+
 	public SocketHandler(SSLSocket s) {
 		socket = s;
 		try {
@@ -43,42 +47,55 @@ public class SocketHandler extends Thread {
 
 	@Override
 	public void run() {
+		
 		while (true) {
-			String str;
-			try {
+			
+			// read user input
+			String input = null ;
+			try{
 
-				str = br.readLine();
+				while (input == null) {
+					input = br.readLine();
+					if (input == null) {
+						//client closed connection.
+						socket.close();
+						return;
+					}
+				}
+				// process client message and generate response
+				Message inMsg = MessageFactory.createMessage(input);
+				System.out.println(inMsg.toString());
 				
-				//[THIS IS MINI TEST] : will be repaced with dfa.process() ////////////////
-				//TODO: Test - Json String validation and creating java object] Message m = MessageFactory.createMessage(str);
-				System.out.println("Message received from client:" + str);
+				//[TODO] Processing needs to be done in dfa -- Message outMsg = dfa.process(inMsg);
+				//For not suppose we processed it in dfa and return outMsg
+				Message outMsg = new AuthenAckMessage(); // version 
 				
-				if (str.equals("END")) {
-					pw.println("END");
+				// check for shutdown / error				
+				if (outMsg.getMessageType() == MessageType.OP_SHUTDOWN ||	outMsg.getMessageType() == MessageType.OP_ERROR) {
+					//pw.println("END");
 					System.out.println("close......");
 					br.close();
 					pw.close();
 					socket.close();
 					break;
 				}
-				
 				//else, send "Message Received"
-				AuthenAckMessage authack = new AuthenAckMessage(null);
-				System.out.println(authack.toString());
-				
-				pw.println(authack.toString());
+				// send response to client
+				pw.write(outMsg.toString());
 				pw.flush();
-				//[MINI TEST ENDS] /////////////////////////
-				
-			} catch (Exception e) {
-				try {
-					br.close();
-					pw.close();
-					socket.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				pw.write("\n");
+				//pw.println("Message Received");
+				pw.flush();
+				} catch (Exception e) {
+					try {
+						br.close();
+						pw.close();
+						socket.close();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
 				}
+			
 			}
 		}
-	}
 }
