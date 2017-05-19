@@ -66,6 +66,7 @@ public class SocketHandler extends Thread {
 				Message inMsg = MessageFactory.createMessage(input);
 				System.out.println(inMsg.toString());
 				
+				//[MINI TEST mimics one of the case of dfa.process(inMsg)]
 				//[TODO] Processing needs to be done in dfa -- Message outMsg = dfa.process(inMsg);
 				//For not suppose we processed it in dfa and return outMsg
 				Message outMsg = new AuthenAckMessage(); // version 
