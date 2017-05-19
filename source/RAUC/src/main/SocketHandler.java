@@ -6,20 +6,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.SocketTimeoutException;
+
 import javax.net.ssl.SSLSocket;
 
 import com.google.gson.Gson;
 import components.Command;
 import components.ComponentImpl.AC;
 
+import pdu.*;
+import pdu.MessageImpl.AuthenAckMessage;
 import pdu.MessageImpl.UtilityControlReqMessage;
-
+import specs.SpecImpl.ServerDFASpec;
 
 public class SocketHandler extends Thread {
 	private SSLSocket socket = null;
 	private BufferedReader br = null;
 	private PrintWriter pw = null;
-
+	private ServerDFASpec dfa;
 	/*
 	 * Constructor - initialize variables
 	 * 
@@ -28,8 +32,9 @@ public class SocketHandler extends Thread {
 	public SocketHandler(SSLSocket s) {
 		socket = s;
 		try {
-			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+			br = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
+			pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8")), true);
+			dfa = new ServerDFASpec();
 			start();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,27 +46,13 @@ public class SocketHandler extends Thread {
 		while (true) {
 			String str;
 			try {
-				//read a line
+
 				str = br.readLine();
-				//[TEST - Mini test showing how one of the process methods in DFA (w/o packet format
-				// checking) looks like etc... ]
-				Gson gson = new Gson();
-				UtilityControlReqMessage as = gson.fromJson(str, UtilityControlReqMessage.class);
-				Command cmd = Command.createCommand(as);
-				System.out.println("Command: autoID "  + cmd.getAutoId() + " - attrb " + cmd.getAttribute() );
-				//[TODO] component type should be passed as String ?
-				AC ac = new AC("1",cmd.getComponentType(), "0");
 				
-				ac.applyCommand(cmd);
-				System.out.println();
-				System.out.println();
-				System.out.println();
+				//[THIS IS MINI TEST] : will be repaced with dfa.process() ////////////////
+				//TODO: Test - Json String validation and creating java object] Message m = MessageFactory.createMessage(str);
+				System.out.println("Message received from client:" + str);
 				
-				System.out.println("Value of attrib 0 is now " +  ac.getValueOfAttrb("0"));
-				//[TEST -ENDS]
-				
-				//if it is "END", disconnect [TODO: All these are going to be pushed neatly
-				// to SERVER DFA. process message is going to be called only]
 				if (str.equals("END")) {
 					pw.println("END");
 					System.out.println("close......");
@@ -70,10 +61,15 @@ public class SocketHandler extends Thread {
 					socket.close();
 					break;
 				}
+				
 				//else, send "Message Received"
-				pw.println("Message Received");
+				AuthenAckMessage authack = new AuthenAckMessage(null);
+				System.out.println(authack.toString());
+				
+				pw.println(authack.toString());
 				pw.flush();
-				System.out.println("Client Socket Message:" + str);
+				//[MINI TEST ENDS] /////////////////////////
+				
 			} catch (Exception e) {
 				try {
 					br.close();

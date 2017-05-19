@@ -2,6 +2,7 @@ package pdu.TestMessageImpl;
 
 import static org.junit.Assert.*;
 
+import org.json.JSONObject;
 import org.junit.Test;
 
 import com.google.gson.Gson;
@@ -28,7 +29,16 @@ public class UtilityStateQueryMessageTest {
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(usm);
-		System.out.println(json);
+		
+		
+		JSONObject jObject = new JSONObject(json);
+	       JSONObject header = jObject.getJSONObject("_header");
+	       String code = header.getString("_first");
+
+	
+		
+		
+		System.out.println(code);
 		
 		UtilityStateQueryMessage as = gson.fromJson(json, UtilityStateQueryMessage.class);
 		System.out.println(as.toString());

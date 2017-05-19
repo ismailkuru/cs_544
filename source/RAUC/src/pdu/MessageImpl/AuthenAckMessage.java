@@ -35,7 +35,7 @@ public class AuthenAckMessage extends Message{
 		else
 			return MessageType.OP_SUCCESS;
 	}
-
+	
 	public String toString(){
 		/*
 		String strHeader = "";
