@@ -5,7 +5,7 @@
 1. Compile & prepare files
 
   ```
-  Make sure that you have externally linked your gson.jar. 
+  Make sure that you have externally linked your gson.jar and org.json.jar. 
   ```
   
   ```
