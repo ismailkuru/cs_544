@@ -22,8 +22,8 @@ public class AC extends Component {
 			
 		}
 	
-	public AC(String name, ComponentType compType, String autoId){	
-		super(name,compType,autoId);
+	public AC(String name, ComponentType compType){	
+		super(name,compType);
 		
 	}
 
@@ -37,12 +37,13 @@ public class AC extends Component {
 	public ComponentType getComponentCode() {		
 		return this._typeCode;
 	}
-
+/*
 	@Override
 	public String getComponentAutoId() {
 		
 		return this._autoId;
 	}
+	*/
 	public String getValueOfAttrb(String attrb){
 		
 		ACAttribute atrb = ACAttribute.typeFromStringCode(attrb);	
@@ -61,7 +62,7 @@ public class AC extends Component {
 	public Map<ACAttribute,String> getComponentMap(){
 		return AC._commandParamMap;
 	}
-	
+
 	
 }
 
