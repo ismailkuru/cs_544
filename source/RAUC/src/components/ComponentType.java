@@ -26,4 +26,5 @@ public enum ComponentType {
 	public Integer getComponentCode() {
 		return compCode;
 	}
+	
 }

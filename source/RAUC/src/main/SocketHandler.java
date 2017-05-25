@@ -15,6 +15,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import components.Command;
+import components.Factory;
 import components.ComponentImpl.AC;
 
 import pdu.*;
@@ -38,7 +39,8 @@ public class SocketHandler extends Thread {
 		try {
 			br = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF-8"));
 			pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF-8")), true);
-			dfa = new ServerDFASpec();
+			//[TODO] we don't need to pass whole db to each user but keep this for a while.
+			dfa = new ServerDFASpec(new Factory());
 			start();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -64,13 +66,8 @@ public class SocketHandler extends Thread {
 				}
 				// process client message and generate response
 				Message inMsg = MessageFactory.createMessage(input);
-				System.out.println(inMsg.toString());
-				
-				//[MINI TEST mimics one of the case of dfa.process(inMsg)]
-				//[TODO] Processing needs to be done in dfa -- Message outMsg = dfa.process(inMsg);
-				//For not suppose we processed it in dfa and return outMsg
-				Message outMsg = new AuthenAckMessage(); // version 
-				
+				Message outMsg = dfa.process(inMsg);
+
 				// check for shutdown / error				
 				if (outMsg.getMessageType() == MessageType.OP_SHUTDOWN ||	outMsg.getMessageType() == MessageType.OP_ERROR) {
 					//pw.println("END");

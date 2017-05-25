@@ -32,6 +32,7 @@ public abstract class DFASpec {
 			
 			// if the incoming message is a shutdown request, return immediately
 			if (m.getMessageType() == MessageType.OP_SHUTDOWN) return m;
+			System.out.println("--- Type of message is " + m.getMessageType());
 			// otherwise, process the message in the respective state of the protocol
 			switch (state) {
 				case CLOSED:					return processClose(m);

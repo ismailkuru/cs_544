@@ -50,7 +50,7 @@ public class Client {
 			ClientDFASpec dfa = new  ClientDFASpec(uname,pass);
 			
 			
-			//[TEST - THIS IS A MINI CLIENT -- WILL BE REPLACED WITH while(true){dfa.process} ] 
+			//[TEST - THIS IS A MINI CLIENT -- WILL BE REPLACED WITH while(true){dfa.process()} ] 
 			//This mimics one of messages processing of dfa.process
 			UserAuthenMessage uauth = new UserAuthenMessage(uname, pass);
 			

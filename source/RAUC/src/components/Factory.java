@@ -10,12 +10,11 @@ import users.User;
 import components.ComponentImpl.AC;
 
 public class Factory {
-	
-	private Factory(){}
-	public static void initDB(){
+	HashMap<String, HashMap<String , ArrayList<Component>>> _db;
+	public Factory(){
 		
 		//Initial DB
-		HashMap<String, HashMap<String , ArrayList<Component>>> _db = new HashMap<String, HashMap<String, ArrayList<Component>>>();
+		_db = new HashMap<String, HashMap<String, ArrayList<Component>>>();
 		//automobile --> components  map
 		HashMap<String, ArrayList<Component>> acomps = new HashMap<String, ArrayList<Component>>();
 	
@@ -45,7 +44,11 @@ public class Factory {
 		
 	}
 	
-	
+	public HashMap<String, ArrayList<Component>> loadUserDB(String uname){
+		
+		return _db.get(uname) ;
+		
+	}
 	
 
 

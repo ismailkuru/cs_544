@@ -23,7 +23,7 @@ public class ACTest {
 		Command cmd = Command.createCommand(as);
 		System.out.println("Command: autoID "  + cmd.getAutoId() + " - attrb " + cmd.getAttribute() );
 		//[TODO] component type should be passed as String ?
-		AC ac = new AC("1",cmd.getComponentType(), "0");
+		AC ac = new AC("0", cmd.getComponentType());
 		
 		ac.applyCommand(cmd);
 		System.out.println();
