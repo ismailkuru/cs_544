@@ -17,7 +17,7 @@ public class AuthenAckMessageTest {
 	@Test
 	public void test() throws Exception {
 		String ver= null;
-		AuthenAckMessage am = new AuthenAckMessage();
+		AuthenAckMessage am = new AuthenAckMessage(null);
 		assertNotNull(am);
 		System.out.println(am.toString());
 		

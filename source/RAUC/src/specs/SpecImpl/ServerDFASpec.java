@@ -94,7 +94,7 @@ public class ServerDFASpec extends DFASpec{
 		_acomps = _db.loadUserDB(aum.getUserName());
 		
 		//Create a AuthenAckMessage
-		_response = new AuthenAckMessage(); // version
+		_response = new AuthenAckMessage(null); // without a verion. w/version passes "vernum"
 		
 		//[TODO] Set the state // this.state = DFAState.X
 		//[TODO] I guess I have put  redundant state 

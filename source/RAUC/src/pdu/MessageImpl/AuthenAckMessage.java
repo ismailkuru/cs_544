@@ -15,17 +15,17 @@ import pdu.ChunkImpl.HeaderChunk;
 public class AuthenAckMessage extends Message{
 	
 	//[TODO Add later]String _ver; 
-	public AuthenAckMessage(/*String ver*/){
+	public AuthenAckMessage(String ver){
 		this._content = new ArrayList<ContentChunk>();
-	/*	this._ver = ver;
-		if(versionExists()){
+	/*	this._ver = ver;*/
+		if(ver != null){
 			this._header = new HeaderChunk(MessageType.OP_SUCCESS_VER,"1");
 			ContentChunk vernum = new ContentChunk("32", ver);
 			this._content.add(0, vernum);
 		}
-		else{*/
+		else{
 			this._header = new HeaderChunk(MessageType.OP_SUCCESS,"0");
-		//}
+		}
 	}
 	
 	public MessageType getMessageType(){
