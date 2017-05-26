@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
-public class SocketListener {
+public class Server {
 	/*
 	 * main - listen a specific port. When receiving socket, start a new thread
 	 * to process data so that the program can process multiple socket at the
