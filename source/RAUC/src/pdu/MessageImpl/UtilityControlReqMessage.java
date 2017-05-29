@@ -1,16 +1,11 @@
 package pdu.MessageImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
-import pdu.Message;
-import pdu.MessageType;
 import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
+import pdu.Message;
+import pdu.MessageType;
+
+import java.util.ArrayList;
 
 public class UtilityControlReqMessage extends Message{
 
@@ -45,40 +40,6 @@ public class UtilityControlReqMessage extends Message{
 		return MessageType.OP_COMMAND;
 	}
 
-	public String toString(){
-		/*
-		String strHeader = "";
-		String contHeader = "";
-		
-			strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
-			contHeader = "Content=";
-			for(int i = 0 ; i<this.getContent().size(); i ++){
-				contHeader += "["+ this.getContent().get(i).getSize() + ":"+ this.getContent().get(i).getContent()+  "]";
-			}
-		
-		return strHeader + "#" + contHeader;*/
-		Gson gson = new Gson();
-		String json = gson.toJson(this);
-		return json;
-	}
-	
-	public JsonElement toJson() {
-		JsonParser jp = new JsonParser();
-		JsonElement element = jp.parse(this.toString());
-		//We can use this
-		//UtilityControlReqMessage um = gson.fromJson(this.toString(), UtilityControlReqMessage.class);
-		return element;
-	}
-
-	@Override
-	public HeaderChunk getHeader() {
-		return _header;
-	}
-
-	@Override
-	public List<ContentChunk> getContent() {	
-		return _content;
-	}
 
 	public String getAutoId(){
 		return _autoid;

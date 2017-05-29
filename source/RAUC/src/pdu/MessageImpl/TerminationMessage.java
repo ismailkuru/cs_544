@@ -1,16 +1,11 @@
 package pdu.MessageImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
-import pdu.Message;
-import pdu.MessageType;
 import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
+import pdu.Message;
+import pdu.MessageType;
+
+import java.util.ArrayList;
 
 public class TerminationMessage extends Message{
 	
@@ -24,36 +19,7 @@ public class TerminationMessage extends Message{
 
 	
 	public MessageType getMessageType() {
-		// TODO Auto-generated method stub
 		return MessageType.OP_SHUTDOWN;
 	}
 
-	public String toString(){
-		/*
-		String strHeader;
-		strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
-		return strHeader;*/
-		Gson gson = new Gson();
-		String json = gson.toJson(this);
-		return json;
-		
-	}
-	public JsonElement toJson() {
-		JsonParser jp = new JsonParser();
-		JsonElement element = jp.parse(this.toString());
-		return element;
-	}
-
-	@Override
-	public HeaderChunk getHeader() {
-		// TODO Auto-generated method stub
-		return this._header;
-	}
-
-	@Override
-	public List<ContentChunk> getContent() {
-		// TODO Auto-generated method stub
-		return this._content;
-	}
-	//[TODO ]
 }

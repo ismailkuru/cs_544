@@ -1,16 +1,11 @@
 package pdu.MessageImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
-import pdu.Message;
-import pdu.MessageType;
 import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
+import pdu.Message;
+import pdu.MessageType;
+
+import java.util.ArrayList;
 
 public class AuthenAckMessage extends Message{
 	
@@ -35,46 +30,7 @@ public class AuthenAckMessage extends Message{
 		//else
 			return MessageType.OP_SUCCESS;
 	}
-	
-	public String toString(){
-		/*
-		String strHeader = "";
-		String contHeader = "";
-	
-			if(versionExists()){
-				strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
 
-				contHeader = "Content=";
-				for(int i = 0 ; i<this.getContent().size(); i ++){
-					contHeader += "["+ this.getContent().get(i).getSize() + ":"+ this.getContent().get(i).getContent()+  "]";
-				}
-				return strHeader + "#" + contHeader;
-			}
-			else{
-				strHeader = "Header=[" + this.getHeader().getMessageType() + ":" + this.getHeader().getChunkCount() + "]";
-				return strHeader;
-			}
-			*/
-		Gson gson = new Gson();
-		String json = gson.toJson(this);
-		return json;
-		
-	}
-	public JsonElement toJson() {
-		JsonParser jp = new JsonParser();
-		JsonElement element = jp.parse(this.toString());
-		return element;
-	}
-
-	@Override
-	public HeaderChunk getHeader() {
-		return _header;
-	}
-
-	@Override
-	public List<ContentChunk> getContent() {	
-		return _content;
-	}	
 	/*
 	public void setVer(String vn){
 		this._ver = vn;
