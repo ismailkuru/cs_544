@@ -3,7 +3,7 @@ package pdu;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 
-import pdu.MessageImpl.AuthenAckMessage;
+import pdu.MessageImpl.AckMessage;
 import pdu.MessageImpl.PermanentErrorMessage;
 import pdu.MessageImpl.QueryResultMessage;
 import pdu.MessageImpl.RequestReceivedMessage;
@@ -69,11 +69,11 @@ public class MessageFactory{
 	    	   
 	       }else if(mt == MessageType.OP_SUCCESS){
 	    	  // System.out.println("\n Message type is success ack");
-	    	   m = gson.fromJson(jString, AuthenAckMessage.class);
+	    	   m = gson.fromJson(jString, AckMessage.class);
 	   			return m;
 	    	   
 	       }else if(mt == MessageType.OP_SUCCESS_VER){
-	    	   m = gson.fromJson(jString, AuthenAckMessage.class);
+	    	   m = gson.fromJson(jString, AckMessage.class);
 	   			return m;
 	       }
 	       else

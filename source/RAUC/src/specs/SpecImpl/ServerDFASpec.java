@@ -17,7 +17,7 @@ import components.Factory;
 
 import pdu.Message;
 import pdu.MessageFactory;
-import pdu.MessageImpl.AuthenAckMessage;
+import pdu.MessageImpl.AckMessage;
 import pdu.MessageImpl.PermanentErrorMessage;
 import pdu.MessageImpl.UserAuthenMessage;
 import pdu.MessageImpl.UtilityControlReqMessage;
@@ -94,7 +94,7 @@ public class ServerDFASpec extends DFASpec{
 		_acomps = _db.loadUserDB(aum.getUserName());
 		
 		//Create a AuthenAckMessage
-		_response = new AuthenAckMessage(null); // without a verion. w/version passes "vernum"
+		_response = new AckMessage(null); // without a verion. w/version passes "vernum"
 		
 		//[TODO] Set the state // this.state = DFAState.X
 		//[TODO] I guess I have put  redundant state 

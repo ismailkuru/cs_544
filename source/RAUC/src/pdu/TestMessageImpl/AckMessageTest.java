@@ -10,14 +10,14 @@ import com.google.gson.Gson;
 import pdu.Message;
 import pdu.MessageFactory;
 import pdu.MessageType;
-import pdu.MessageImpl.AuthenAckMessage;
+import pdu.MessageImpl.AckMessage;
 
-public class AuthenAckMessageTest {
+public class AckMessageTest {
 
 	@Test
 	public void test() throws Exception {
 		String ver= null;
-		AuthenAckMessage am = new AuthenAckMessage(null);
+		AckMessage am = new AckMessage(null);
 		assertNotNull(am);
 		System.out.println(am.toString());
 		
@@ -29,7 +29,7 @@ public class AuthenAckMessageTest {
 	    MessageType mt = MessageType.getMessageTypeFromString(messageType);
 	       
 	       Gson gson = new Gson();
-	    Message m = gson.fromJson(am.toString(), AuthenAckMessage.class);
+	    Message m = gson.fromJson(am.toString(), AckMessage.class);
 		System.out.println(m.toString());
 		
 		

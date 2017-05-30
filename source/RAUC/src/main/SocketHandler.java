@@ -19,7 +19,7 @@ import components.Factory;
 import components.ComponentImpl.AC;
 
 import pdu.*;
-import pdu.MessageImpl.AuthenAckMessage;
+import pdu.MessageImpl.AckMessage;
 import pdu.MessageImpl.UtilityControlReqMessage;
 import specs.SpecImpl.ServerDFASpec;
 

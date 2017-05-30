@@ -12,10 +12,10 @@ import pdu.MessageType;
 import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
 
-public class AuthenAckMessage extends Message{
+public class AckMessage extends Message{
 	
 	//[TODO Add later]String _ver; 
-	public AuthenAckMessage(String ver){
+	public AckMessage(String ver){
 		this._content = new ArrayList<ContentChunk>();
 	/*	this._ver = ver;*/
 		if(ver != null){
