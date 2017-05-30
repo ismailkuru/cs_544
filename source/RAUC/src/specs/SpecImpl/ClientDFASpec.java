@@ -10,6 +10,7 @@ package specs.SpecImpl;
 * */
 import pdu.Message;
 import specs.DFASpec;
+import specs.DFAState;
 
 public class ClientDFASpec extends DFASpec {
 
@@ -29,7 +30,11 @@ public class ClientDFASpec extends DFASpec {
 	public ClientDFASpec(String usern, String passw){
 		this._pass = passw;
 		this._user = usern;
-		
+	}
+	
+	// set the correct state when a connection is opened
+	public void connectionOpened() {
+		state = DFAState.S_AWAITS_AUTHEN_REQUEST;
 	}
 	
 	@Override
@@ -37,8 +42,6 @@ public class ClientDFASpec extends DFASpec {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 
 	@Override
 	protected Message processServerAwaitsCommandRequest(Message m) {
