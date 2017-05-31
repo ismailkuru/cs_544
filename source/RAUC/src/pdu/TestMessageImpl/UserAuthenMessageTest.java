@@ -16,17 +16,16 @@ public class UserAuthenMessageTest {
 	public void test() throws Exception {
 
 		UserAuthenMessage um = new UserAuthenMessage("ismail", "1234");
+		UserAuthenMessage m = null;
 		List<byte[]> bl = um.serialize();
 		byte[][] bb = um.crunchToBytes(bl);
-		UserAuthenMessage m = null;
 		
-		
-			 m  = (UserAuthenMessage) MessageFactory.createMessage(bb);
-			 assertNotNull(m);
-		
+		m  = (UserAuthenMessage) MessageFactory.createMessage(bb);
+		System.out.println(m.toString());
+		assertNotNull(m);
 		
 		assertNotNull(um);
-		System.out.println(m.toString());
+		//System.out.println(m.getUserName());
 	}
 
 }

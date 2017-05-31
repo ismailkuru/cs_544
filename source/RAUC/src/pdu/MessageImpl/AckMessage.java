@@ -111,7 +111,8 @@ public class AckMessage extends Message{
 			for (ContentChunk c  : this.getContent()) {
 				byte[] cByte = new byte[1];
 				//Add size of the content chunk
-				cByte[0] = (byte)Integer.parseInt(c.getSize());
+				int sz = Integer.parseInt(c.getSize());
+				cByte[0] = (byte)sz;
 				l.add(cByte);
 				
 				//Add content of the chunk

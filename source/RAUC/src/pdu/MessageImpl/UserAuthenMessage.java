@@ -1,6 +1,7 @@
 package pdu.MessageImpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -28,7 +29,7 @@ public class UserAuthenMessage extends Message{
 			//Add pass and uname content in addition to header
 			ContentChunk unameContent = new ContentChunk("32", uname);
 			this._content.add(0,unameContent );
-			ContentChunk passContent = new ContentChunk("256", pass);
+			ContentChunk passContent = new ContentChunk("128", pass);
 			this._content.add(1,passContent);
 		}catch(Exception e){
 			System.out.println("");
@@ -104,12 +105,20 @@ public class UserAuthenMessage extends Message{
 		for (ContentChunk c  : this.getContent()) {
 			byte[] cByte = new byte[1];
 			//Add size of the content chunk
-			cByte[0] = (byte)Integer.parseInt(c.getSize());
+			
+			int sz = Integer.parseInt(c.getSize());
+			cByte[0] = (byte)sz;
+			
+			
 			l.add(cByte);
 			
 			//Add content of the chunk
+			
 			byte[] cByteCnt = new byte[c.getContent().length()];
-			cByte	 = c.getContent().getBytes();
+			cByteCnt	 = c.getContent().getBytes();
+			//String s = new String(cByteCnt);
+			//System.out.println("Again String is " + s);
+			
 			l.add(cByteCnt);
 		} 
 		return l;
