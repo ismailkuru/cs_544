@@ -9,6 +9,7 @@ package specs.SpecImpl;
 *
 * */
 import pdu.Message;
+import pdu.MessageType;
 import specs.DFASpec;
 import specs.DFAState;
 
@@ -27,15 +28,56 @@ public class ClientDFASpec extends DFASpec {
 	 */
 	private Message _response;
 
+
 	public ClientDFASpec(String usern, String passw){
 		this._pass = passw;
 		this._user = usern;
 	}
 	
-	// set the correct state when a connection is opened
-	public void connectionOpened() {
-		state = DFAState.S_AWAITS_AUTHEN_REQUEST;
+	// set the currentDFA state
+	public void setState(DFAState s) {
+		_prev = state;
+		state = s;
 	}
+	
+	/**
+	 *  called when client sends a message to update DFA conversation state. client can ONLY send in these two states.
+	 * @param m the message to send
+	 * @return whether or not the message is valid to send
+	 */
+	public boolean send(Message m) {
+		MessageType mt = m.getMessageType();
+		if (mt.equals(MessageType.OP_SHUTDOWN)) { // client may disconnect at any time
+			setState(DFAState.CLOSED);
+			return true;
+		}
+		switch (state) {
+		
+			case S_AWAITS_AUTHEN_REQUEST: { // only an OP_AUTH message can change state while server is awaiting auth
+				if (mt.equals(MessageType.OP_AUTH)) {
+					setState(DFAState.SC_INIT);
+					return true;
+				}
+				else {
+					break;
+				}
+			}
+
+			case S_AWAITS_REQUEST: { // state only changes when a UCR or QRY is sent in this state
+				if (!(mt.equals(MessageType.OP_COMMAND) || mt.equals(MessageType.OP_QUERY))) {
+					setState(DFAState.C_AWAITS_RESPONSE);
+					return true;
+				}
+			}
+			
+			default: { // client cannot send a message from any other state
+				return false;
+			}
+		}
+		// not reachable unless there is an error
+		return false;
+	}
+	
 	
 	@Override
 	protected Message processClose(Message m) {

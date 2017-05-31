@@ -10,6 +10,9 @@ public abstract class DFASpec {
 	
 		//State of the protocol initialized with CLOSED
 		protected DFAState state = DFAState.CLOSED;
+		
+		// previous state of protocol (needed for protocol timeout)
+		protected DFAState _prev = DFAState.CLOSED;
 	
 		public DFASpec() {
 		
@@ -38,8 +41,11 @@ public abstract class DFASpec {
 				case CLOSED:					return processClose(m);
 				case SC_INIT:					return processInit(m);
 				case S_AWAITS_AUTHEN_REQUEST:	return processServerAwaitsAuthenRequest(m);
+				case S_AWAITS_REQUEST:			return processServerAwaitsRequest(m);
+				/* following 2 are deprecated
 				case S_AWAITS_COMM_REQUEST:		return processServerAwaitsCommandRequest(m);
 				case S_AWAITS_QUERY_REQUEST:	return processServerAwaitsQueryRequest(m);
+				*/
 				case C_AWAITS_RESPONSE:			return processClientAwaitsResponse(m);
 				default:						return  processError(m); // should not get here error state
 			}
@@ -77,21 +83,35 @@ public abstract class DFASpec {
 		/**
 		 * Processes the given message when the protocol is in server awaits command
 		 * state.
+		 * TODO: REMOVE ME
+		 * ** TO BE DEPRECTATED
 		 * @param m the message to process.
 		 * @return the response message to pass to the other end.
 		 */
 		protected abstract Message processServerAwaitsCommandRequest	(Message m);
+		
+		
 		/**
 		 * Processes the given message when the protocol is in server awaits
 		 * action authentication req.
 		 * @param m the message to process.
 		 * @return the response message to pass to the other end.
 		 */
-		protected abstract Message processServerAwaitsAuthenRequest	(Message m);	
+		protected abstract Message processServerAwaitsAuthenRequest	(Message m);
+		
+		/**
+		 * Processes the given message when the protocol is in server awaits
+		 * request (either query QRY or command UCR)
+		 * @param m the message to process.
+		 * @return the response message to pass to the other end.
+		 */
+		protected abstract Message processServerAwaitsRequest (Message m);
 		
 		/**
 		 * Processes the given message when the protocol is in server awaits
 		 * query requests.
+		 * TODO: REMOVE ME
+		 * ** TO BE DEPRECATED
 		 * @param m the message to process.
 		 * @return the response message to pass to the other end.
 		 */

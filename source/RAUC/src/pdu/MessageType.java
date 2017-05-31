@@ -2,7 +2,7 @@ package pdu;
 
 public enum MessageType {
 	INVALID_MESSAGE (-20),
-	OP_SHUTDOWN 	(-1),
+	OP_SHUTDOWN 	(9),
 	OP_INFO 		(16),
 	OP_QUERY 		(6),
 	OP_ERROR 		(255),
