@@ -14,12 +14,14 @@ import pdu.ChunkImpl.HeaderChunk;
 
 public class RequestReceivedMessage extends Message{
 	
-	Boolean isFailure;
+	public RequestReceivedMessage(HeaderChunk h, ArrayList<ContentChunk> c){
+		super(h, c);
+	}
 	
 	public RequestReceivedMessage(Boolean f){
 		try{
 			this._content = new ArrayList<ContentChunk>();
-			this.isFailure = f;
+			//this.isFailure = f;
 			
 			if(!f){
 				this._header = new HeaderChunk(MessageType.OP_FAILURE,"0");
@@ -38,7 +40,7 @@ public class RequestReceivedMessage extends Message{
 		
 	}
 	public MessageType getMessageType() {
-		if(!this.isFailure)
+		if(this.getContent().size() == 0)
 			return MessageType.OP_FAILURE;
 		else
 			return MessageType.OP_COMMAND_RECEIVED;
@@ -83,7 +85,47 @@ public class RequestReceivedMessage extends Message{
 		// TODO Auto-generated method stub
 		return this._content;
 	}
-
+	
+	@Override
+	public List<byte[]> serialize() {
+		int cc = Integer.parseInt(this.getHeader().getChunkCount());
+		int optype = this.getHeader().getMessageType().getOpcode();
+		List<byte[]> l = new ArrayList<byte[]>();
+		byte[] hdr = new byte[2];
+		hdr[0]= (byte)optype;
+		hdr[1] = (byte)cc;
+		
+		//Add Header Chunk
+		l.add(hdr);
+		
+		if(this.getMessageType().equals(MessageType.OP_COMMAND_RECEIVED)){
+			//Add Content Chunk
+			for (ContentChunk c  : this.getContent()) {
+				byte[] cByte = new byte[1];
+				//Add size of the content chunk
+				cByte[0] = (byte)Integer.parseInt(c.getSize());
+				l.add(cByte);
+				
+				//Add content of the chunk
+				byte[] cByteCnt = new byte[c.getContent().length()];
+				cByte	 = c.getContent().getBytes();
+				l.add(cByteCnt);
+			} 
+		}
+		return l;
+	}
+	
+	public byte[][] crunchToBytes(List<byte[]> lb){
+		
+		byte[][] bb = new byte[lb.size()][];
+		
+		for(int i =0 ; i<lb.size(); i++) {
+			bb[i] = lb.get(i);
+		}
+		
+		return bb;
+		
+	}
 	
 
 }
