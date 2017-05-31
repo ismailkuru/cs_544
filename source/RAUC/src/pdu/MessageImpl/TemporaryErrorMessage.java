@@ -14,6 +14,10 @@ import pdu.ChunkImpl.HeaderChunk;
 
 public class TemporaryErrorMessage extends Message{
 
+	public TemporaryErrorMessage(HeaderChunk h, ArrayList<ContentChunk> c){
+		super(h, c);
+	}
+	
 	public TemporaryErrorMessage(){
 		
 		this._content = new ArrayList<ContentChunk>();
@@ -50,7 +54,30 @@ public class TemporaryErrorMessage extends Message{
 		// TODO Auto-generated method stub
 		return this._content;
 	}
-
+	@Override
+	public List<byte[]> serialize() {
+		int cc = Integer.parseInt(this.getHeader().getChunkCount());
+		int optype = this.getHeader().getMessageType().getOpcode();
+		List<byte[]> l = new ArrayList<byte[]>();
+		byte[] hdr = new byte[2];
+		hdr[0]= (byte)optype;
+		hdr[1] = (byte)cc;
+		
+		//Add Header Chunk
+		l.add(hdr);
+		return l;
+	}
+	public byte[][] crunchToBytes(List<byte[]> lb){
+		
+		byte[][] bb = new byte[lb.size()][];
+		
+		for(int i =0 ; i<lb.size(); i++) {
+			bb[i] = lb.get(i);
+		}
+		
+		return bb;
+		
+	}
 
 
 }

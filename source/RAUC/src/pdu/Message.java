@@ -12,9 +12,11 @@ public abstract class Message{
 	public ArrayList<ContentChunk> _content;
 		
 	public 	Message(){}	
+	public Message(HeaderChunk h, ArrayList<ContentChunk>c){this._content = c; this._header= h;}
 	public abstract HeaderChunk getHeader();
 	public abstract List<ContentChunk> getContent();
 	public abstract MessageType getMessageType();
 	public abstract JsonElement toJson();
+	public abstract List<byte[]> serialize();
 	
 }

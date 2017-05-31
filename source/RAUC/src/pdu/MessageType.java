@@ -25,6 +25,33 @@ public enum MessageType {
 	public Integer getOpcode() {
 		return opcode;
 	}
+	public static MessageType getMType(Integer op)throws Exception{
+		if(op == -1){
+			return OP_SHUTDOWN;
+		}else if(op == 16){
+			return OP_INFO;
+		}else if(op == 6){
+			return  OP_QUERY;
+		}else if(op == 255){
+			return OP_ERROR;
+		}else if(op == 254){
+			return OP_TMP_ERROR;			
+		}else if(op == 15){
+			return OP_COMMAND_RECEIVED;
+		}else if(op == 17){
+			return OP_FAILURE;
+		}else if(op == 3){
+			return OP_AUTH;
+		}else if(op == 5){
+			return OP_COMMAND;
+		}else if(op == 12){
+			return OP_SUCCESS_VER;
+		}else if(op == 4){
+			return OP_SUCCESS;		
+		}else 
+			throw new Exception("Invalid message type: " + INVALID_MESSAGE);
+		
+	}
 	public static MessageType getMessageTypeFromString(String mstype)throws Exception{
 		
 		if(mstype.equals("OP_SHUTDOWN")){

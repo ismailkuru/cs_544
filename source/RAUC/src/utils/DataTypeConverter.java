@@ -12,9 +12,16 @@ package utils;
 import java.util.*;
 
 	public class DataTypeConverter {
-
+	
+	public static List<byte[]> toByteList(byte[][] bytes) {
+		List<byte[]> l = new ArrayList<byte[]>();
+		for (int i = 0; i < bytes.length; i++) {
+			l.add(bytes[i]);
+		}
+		return l;
+	}
 	/**
-	 * @return concats the given character to the given name until reached the
+	 * concats the given character to the given name until reached the
 	 * given string length.
 	 */
 	public static String bufferLeft(char c, int i, String name) {
@@ -23,35 +30,9 @@ import java.util.*;
 		}
 		return name;
 	}
-
-	/**
-	 * @param a byte sequence 
-	 * @return a hexadecimal representation of byte stream.
-	 */
-	public static String toHexString(byte[] seq) {
-		String shex = "";
-		
-		for (byte b: seq) {
-			shex += String.format("%02x ", b);
-		}
-		shex = shex.substring(0, shex.length() - 1);
-		return shex;
-	}
 	
 	/**
-	 * @param hexStr hexadecimal space-delimited representation of a byte stream.
-	 * @return the actual byte stream.
-	 */
-	public static byte[] toByteStream(String hexStr) {
-		String[] sbyte = hexStr.split(" ");
-		byte[] res = new byte[sbyte.length];
-		for (int i = 0; i < sbyte.length; i++)
-			res[i] = (byte) Integer.parseInt(sbyte[i], 16);
-		return res;
-	}
-	
-	/**
-	 * @return a list of bytes constructed from the given array of bytes.
+	 * list of bytes constructed from the given array of bytes.
 	 */
 	public static List<Byte> toByteList(byte[] bytes) {
 		List<Byte> l = new ArrayList<Byte>();
@@ -60,9 +41,18 @@ import java.util.*;
 		}
 		return l;
 	}
+	/**
+	 * array of bytes constructed from the given list of bytes.
+	 */
+	public static byte[] toByteArray(List<Byte> bytel){
+		byte[] res = new byte[bytel.size()];
+		for (int i = 0; i < bytel.size(); i++)
+			res[i] = bytel.get(i);
+		return res;
+	}
 
 	/**
-	 * @return the given stream of bytes with the ordinal and parameters
+	 * given stream of bytes with the ordinal and parameters
 	 * concatenated to it.
 	 */
 	public static byte[] cat(byte[] bytes, byte ordinal, byte[] params) {
