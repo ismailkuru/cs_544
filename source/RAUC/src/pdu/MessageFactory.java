@@ -54,12 +54,15 @@ public class MessageFactory{
 				if(i%2 == 0){
 					byte[] bcntnt = byteL.get(i);
 					cntnt = new String(bcntnt);
-					
+					//System.out.println("i is even and content is " + cntnt);
 				}
 				else{
 					byte[] bsz = byteL.get(i);
 					Byte bbsz = bsz[0];
-					size = Integer.toString(bbsz.intValue());
+					//System.out.println("size of content as int " + bbsz.intValue());
+					int sz = bbsz.intValue() & 0xFF;
+					size = Integer.toString(sz);
+					//System.out.println("i is odd and size of content is " + size);
 						
 				}
 				cnt = new ContentChunk(size, cntnt);
