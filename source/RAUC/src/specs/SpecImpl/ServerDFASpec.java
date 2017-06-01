@@ -136,6 +136,11 @@ public class ServerDFASpec extends DFASpec{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	protected Message processServerAwaitsRequest(Message m) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	
 }

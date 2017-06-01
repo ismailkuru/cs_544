@@ -9,6 +9,7 @@ package specs.SpecImpl;
 *
 * */
 import pdu.Message;
+import pdu.MessageImpl.*;
 import pdu.MessageType;
 import specs.DFASpec;
 import specs.DFAState;
@@ -87,7 +88,23 @@ public class ClientDFASpec extends DFASpec {
 		 * if auth ack: dfa.state = server awaits request
 		 * if error: dfa.state = server awaits auth request 
 		 */
-		return null;
+		
+		MessageType mt = m.getMessageType();
+		
+		if (mt.equals(MessageType.OP_SUCCESS)) {
+			// if an authentication acknowledgement was sent, move the DFA state and pass along the message
+			setState(DFAState.S_AWAITS_REQUEST);
+			return m;
+		} else if (mt.equals(MessageType.OP_TMP_ERROR) || mt.equals(MessageType.OP_ERROR) ) {
+			// if an error message was returned, we are still in init stage and want to pass on the error.
+			setState(DFAState.SC_INIT);
+			return m;
+		} else {
+			// if any other message was received, something went wrong.
+			// do not update state, and send special client-only "unexpected message" error
+			return new PermanentErrorMessage();
+		}
+
 	}
 	
 	@Override
@@ -97,7 +114,18 @@ public class ClientDFASpec extends DFASpec {
 		 * message must be either request received, query result, termination, or an error to be passed through.
 		 * in all cases: dfa.state = server awaits request  
 		 */
-		return null;
+		
+		MessageType mt = m.getMessageType();
+		
+		if (mt.equals(MessageType.OP_COMMAND_RECEIVED) || mt.equals(MessageType.OP_INFO) || mt.equals(MessageType.OP_TMP_ERROR) || mt.equals(MessageType.OP_ERROR)) {
+			// accept an error message, command response or qry result message
+			setState(DFAState.S_AWAITS_REQUEST);
+			return m;
+		} else {
+			// if any other message was received, something went wrong.
+			// do not update state, and send special client-only "unexpected message" error. client should probably disconnect.
+			return new PermanentErrorMessage();
+		}
 	}
 
 
