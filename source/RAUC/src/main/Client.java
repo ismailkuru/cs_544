@@ -154,15 +154,15 @@
 
 		
 		/*
-		 * A thread to listen for delivered messages from the server and display them after processing through the DFA
+		 * A thread to listen for bytestreams from the server and display them after processing through the DFA
 		 */
 		private class ListenThread extends Thread {
 			// the loop to hear a message when delivered
 			public void run() {
 				while(true) {
 					try {
-						// when a message is received, process it through the DFA and display it
-						receiveMessage((Message) sInput.readObject());
+						// when a bytestream is received, process it through the DFA and display it
+						receiveMessage((byte[][]) sInput.readObject());
 					}
 					catch (IOException e) {
 						display("Connection closed unexpectedly: " + e);
@@ -176,10 +176,20 @@
 				
 			}
 			
-			// process a message through the DFA and display it
-			private void receiveMessage(Message m) {
-				Message msg = dfa.process(m);
-				display(msg);
+			// process a bytestream into a message and display it
+			private void receiveMessage(byte[][] bb) {
+				try {
+				// reassemble bytestream into message 
+				Message inMsg = MessageFactory.createMessage(bb);
+				// process message to make sure it is valid
+				Message outMsg = dfa.process(inMsg);
+				// display error or valid message
+				display(outMsg);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 				// if dfa.state == ok to send, reenable sending of messages from client
 			}
 		}
