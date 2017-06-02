@@ -1,26 +1,14 @@
 package main;
 
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.security.sasl.AuthorizeCallback;
-
-import com.google.gson.Gson;
-
 import pdu.Message;
 import pdu.MessageFactory;
-import pdu.MessageType;
-
 import pdu.MessageImpl.UserAuthenMessage;
-import pdu.MessageImpl.UtilityControlReqMessage;
-
 import specs.SpecImpl.ClientDFASpec;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import java.io.*;
 
 
 
@@ -69,14 +57,19 @@ public class Client {
 		} finally {
 			try {
 				System.out.println("Closing Client...");
-				br.close();
-				pw.close();
-				sslsocket.close();
+				if (br != null) {
+					br.close();
+				}
+				if (pw != null) {
+					pw.close();
+				}
+				if (sslsocket != null) {
+					sslsocket.close();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		return;
 	}
 	
 	/*
@@ -89,9 +82,14 @@ public class Client {
 	 * @print received responses
 	 */
 	public static void main(String[] args) {
-		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslclienttrust");
+		//System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslclienttrust");
+		// TODO: REMOVE ALL RELATIVE PATHS!
+		System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslclientkeys");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-		
-		sendSocket("localhost", 9999, "ismail", "123" );
+		try {
+			sendSocket("localhost", 9999, "ismail", "123");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

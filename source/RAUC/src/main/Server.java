@@ -1,10 +1,9 @@
 package main;
 
-import java.io.IOException;
-
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
+import java.io.IOException;
 public class Server {
 	/*
 	 * main - listen a specific port. When receiving socket, start a new thread
@@ -14,9 +13,12 @@ public class Server {
 	public static void main(String[] args) {
 		// set keystore and trust store location/home/ismail/Repos/cs_544/source/RAUC/src
 
-		System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
+		// TODO: REMOVE ALL RELATIVE PATHS!
+		//System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
+		System.setProperty("javax.net.ssl.keyStore", "/home/maxm/Documents/cs_544/cert/sslclientkeys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
+		//System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
+		System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslclienttrust");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		// create socket
 		SSLServerSocket sslserversocket = null;
@@ -35,7 +37,10 @@ public class Server {
 			}
 		} catch (Exception e) {
 			try {
-				sslsocket.close();
+				if (sslsocket != null) {
+					sslsocket.close();
+				}
+				e.printStackTrace();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
