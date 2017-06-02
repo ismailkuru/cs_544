@@ -18,5 +18,6 @@ public abstract class Message{
 	public abstract MessageType getMessageType();
 	public abstract JsonElement toJson();
 	public abstract List<byte[]> serialize();
+	public abstract byte[][] crunchToBytes(List<byte[]> lb);
 	
 }

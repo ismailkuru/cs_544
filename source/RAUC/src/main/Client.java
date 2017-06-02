@@ -103,10 +103,15 @@
 		protected void sendMessage(Message msg) {
 			// send the message across the connection and log it in output window
 			try {
-				//TODO disable client from sending messages until dfa.state is resolved
-				//TODO change msg to JSON
 				if (dfa.send(msg)) { // if current state allows for sending a message
-					sOutput.writeObject(msg); // send the message
+					// convert message to bytestream
+					List<byte[]> bl = msg.serialize();
+					byte[][] bb = msg.crunchToBytes(bl);
+					
+					// send the message
+					sOutput.writeObject(bb); 
+					
+					// print the message to client log
 					display(">>> " + msg.toString()); 
 				} else { // yell at the user
 					display("Message not sent. Current protocol state not valid for sending.");
@@ -170,7 +175,6 @@
 						break;
 					}
 					catch(ClassNotFoundException e2) {
-						display("Unexpected error " + e2);
 					}
 				}
 				
@@ -196,7 +200,9 @@
 		
 		
 		
-		
+		// extraneous code below this line		
+		// -------------------------------------------------------
+
 		
 		/* here implement main() for CLI
 		
