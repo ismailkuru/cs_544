@@ -41,7 +41,6 @@ public class Server {
 	 */
 	public Server(int port) {
 		this(port, null);
-		connections = new HashMap<String, ConnectionThread>();
 	}
 	
 	/*
@@ -50,12 +49,16 @@ public class Server {
 	public Server (int port, ServerGUI sg) {
 		// TODO: Fix me with stuff from the certificatemoving branch!!!!
 		// Needs the new files generated placed in a new directory; fix rel path
-		System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
+		// TODO: REMOVE ALL RELATIVE PATHS!
+		//System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
+		System.setProperty("javax.net.ssl.keyStore", "/home/maxm/Documents/cs_544/cert/sslclientkeys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
-		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
+		//System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
+		System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslclienttrust");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		this.sg = sg;
 		this.port = port;
+		connections = new HashMap<>();
 	}
 	
 	
@@ -68,15 +71,15 @@ public class Server {
 		while(true) {
 			Socket cSocket = sSocket.accept();
 			
-			// fork a new thread when a connection is accepted
-			ConnectionThread ct = new ConnectionThread(cSocket);
-
-			// keep it in collection with an identifier
-			connections.put(ct.identify(), ct);
-			
 			// if using gui, add connection to it
 			if (sg != null) {
-				ct.setGui(sg.addConnection(ct.identify()));
+				ConnectionPanel p = sg.addConnection(cSocket.toString());
+
+				// fork a new thread when a connection is accepted
+				ConnectionThread ct = new ConnectionThread(cSocket, p);
+
+				// keep it in collection with an identifier
+				connections.put(ct.identify(), ct);
 			}
 
 		}
@@ -124,9 +127,10 @@ public class Server {
 		ConnectionThread(Socket socket, ConnectionPanel cp) {
 			try {
 				// establish direct connection
+				out = cp;
 				dfa = new ServerDFASpec(new Factory());
 				this.identifier = socket.getInetAddress() + ":" + socket.getPort();
-				display("Connection accepted " + identifier);
+				// display("Connection accepted " + identifier);
 				
 				// establish streams;
 				sInput  = new ObjectInputStream(socket.getInputStream());
@@ -136,7 +140,7 @@ public class Server {
 				connected = true;
 				}
 				catch (IOException eIO) {
-					display("Error creating in/out streams: " + eIO);
+					// display("Error creating in/out streams: " + eIO);
 				}
 			}
 
