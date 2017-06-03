@@ -102,6 +102,14 @@ public class ServerGUI {
 		
 	}
 	
+	protected ConnectionPanel addConnection(String id){
+		ConnectionPanel cp = new ConnectionPanel(id);
+		// add cp to cards panel
+		
+		// return cp to client so thread knows where to write
+		return cp;
+	}
+	
 	protected class ConnectionPanel extends JPanel {
 		JTextArea convo;
 		String connectionId;

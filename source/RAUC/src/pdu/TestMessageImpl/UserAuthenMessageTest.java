@@ -2,6 +2,19 @@ package pdu.TestMessageImpl;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
 
 import org.junit.Test;
@@ -20,7 +33,20 @@ public class UserAuthenMessageTest {
 		List<byte[]> bl = um.serialize();
 		byte[][] bb = um.crunchToBytes(bl);
 		
-		m  = (UserAuthenMessage) MessageFactory.createMessage(bb);
+		
+		
+		 // create a new output stream
+        OutputStream os = new FileOutputStream("test.txt");
+
+        // craete a new input stream
+        InputStream is = new FileInputStream("test.txt");
+		
+			
+		writeSocket(os, bb);
+		byte[][] bt = readSocket(is);
+		
+		
+		m  = (UserAuthenMessage) MessageFactory.createMessage(bt);
 		System.out.println(m.toString());
 		assertNotNull(m);
 		
@@ -28,4 +54,14 @@ public class UserAuthenMessageTest {
 		//System.out.println(m.getUserName());
 	}
 
+	
+	public static byte[][] readSocket(InputStream in) throws IOException, ClassNotFoundException {
+	    ObjectInputStream ois = new ObjectInputStream(in);
+	    return (byte[][]) ois.readObject();
+	}
+
+	public static void writeSocket(OutputStream out, byte[][] board) throws IOException {
+	    ObjectOutputStream oos = new ObjectOutputStream(out);
+	    oos.writeObject(board);
+	}
 }

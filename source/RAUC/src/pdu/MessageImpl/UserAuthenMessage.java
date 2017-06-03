@@ -29,7 +29,7 @@ public class UserAuthenMessage extends Message{
 			//Add pass and uname content in addition to header
 			ContentChunk unameContent = new ContentChunk("32", uname);
 			this._content.add(0,unameContent );
-			ContentChunk passContent = new ContentChunk("128", pass);
+			ContentChunk passContent = new ContentChunk("255", pass);
 			this._content.add(1,passContent);
 		}catch(Exception e){
 			System.out.println("");
@@ -112,10 +112,10 @@ public class UserAuthenMessage extends Message{
 			
 			l.add(cByte);
 			
-			//Add content of the chunk
-			
-			byte[] cByteCnt = new byte[c.getContent().length()];
-			cByteCnt	 = c.getContent().getBytes();
+			//Add content of the chunk	
+			byte[] cByteCnt = new byte[Integer.parseInt(c.getSize())];
+			System.arraycopy(c.getContent().getBytes(), 0, cByteCnt, 0, c.getContent().getBytes().length);
+			//cByteCnt	 = c.getContent().getBytes();
 			//String s = new String(cByteCnt);
 			//System.out.println("Again String is " + s);
 			

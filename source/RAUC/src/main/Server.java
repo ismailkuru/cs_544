@@ -9,6 +9,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import components.Factory;
 import main.ServerGUI.ConnectionPanel;
 import pdu.Message;
 import pdu.MessageFactory;
@@ -67,9 +68,15 @@ public class Server {
 			
 			// fork a new thread when a connection is accepted
 			ConnectionThread ct = new ConnectionThread(cSocket);
-				
+
+			// keep it in collection with an identifier
+			connections.put(ct.identify(), ct);
 			
-			
+			// if using gui, add connection to it
+			if (sg != null) {
+				ct.setGui(sg.addConnection(ct.identify()));
+			}
+
 		}
 		
 		} catch (IOException e) {
@@ -83,7 +90,7 @@ public class Server {
 	}
 	
 	private void display(String msg) {
-		if(sg == null)
+		if(sg == null)	
 			System.out.println(msg);
 		else
 			sg.display(msg + "\n");
@@ -96,7 +103,12 @@ public class Server {
 			sg.display(connection, msg);
 	}
 		
-	
+	protected void shutdown() {
+		// disconnect all connected clients
+		for (String id : connections.keySet()) {
+			connections.get(id).disconnect();
+		}
+	}
 	
 	private class ConnectionThread extends Thread {
 		private ObjectInputStream sInput;		// read from socket
@@ -110,14 +122,14 @@ public class Server {
 		ConnectionThread(Socket socket, ConnectionPanel cp) {
 			try {
 				// establish direct connection
+				dfa = new ServerDFASpec(new Factory());
 				this.identifier = socket.getInetAddress() + ":" + socket.getPort();
 				display("Connection accepted " + identifier);
 				
+				// establish streams;
 				sInput  = new ObjectInputStream(socket.getInputStream());
 				sOutput = new ObjectOutputStream(socket.getOutputStream());
 				
-				// create server dfa
-				// set dfa to S_AWAITS_AUTHEN_REQUES
 				
 				connected = true;
 				}
@@ -135,7 +147,8 @@ public class Server {
 			while(connected) {
 				try {
 					// when a bytestream is received, process it through the DFA and display it
-					receiveMessage((byte[][]) sInput.readObject());
+					Message outM = receiveMessage((byte[][]) sInput.readObject());
+					sendMessage(outM);
 				}
 				catch (IOException e) {
 					display("Connection closed unexpectedly: " + e);
@@ -149,27 +162,25 @@ public class Server {
 		}
 		
 		// process a bytestream into a message and display it
-		private void receiveMessage(byte[][] bb) {
+		private Message receiveMessage(byte[][] bb) {
 			try {
 			// reassemble bytestream into message 
 			Message inMsg = MessageFactory.createMessage(bb);
+			display("<<< " + inMsg);
 			// process message to make sure it is valid
-			Message outMsg = dfa.process(inMsg);
-			// display error or valid message
-			display(outMsg);
-			sendMessage(outMsg);
+			return dfa.process(inMsg);
 			}
 			catch (Exception e)
 			{
 				e.printStackTrace();
 			}
-			// if dfa.state == ok to send, reenable sending of messages from client
+			return null;
 		}
 		
 		protected void sendMessage(Message msg) {
 			// send the message across the connection and log it in output window
 			try {
-				if (true /*dfa.send(msg)*/) { // if current state allows for sending a message
+				if (dfa.send(msg)) { // if current state allows for sending a message
 					// convert message to bytestream
 					List<byte[]> bl = msg.serialize();
 					byte[][] bb = msg.crunchToBytes(bl);
@@ -188,16 +199,16 @@ public class Server {
 				display("Exception writing to server: " + e);
 			}
 		}
-		
-		protected void display(Message msg) {
-			display(msg.toString());
+
+		protected void setGui(ConnectionPanel cp) {
+			this.out = cp;
 		}
 		
 		protected void disconnect() {
 			// send the termination message
 			//TODO use MessageFactory
-			Message m = new TerminationMessage();
-			sendMessage(m);
+			sendMessage(new TerminationMessage());
+			connected = false;
 			//flush the streams
 			try {
 				sInput.close();
@@ -229,7 +240,7 @@ public class Server {
 	// legacy section below
 	
 	
-	
+	/*
 	public static void main(String[] args) {
 		// set keystore and trust store location/home/ismail/Repos/cs_544/source/RAUC/src
 
@@ -259,5 +270,5 @@ public class Server {
 				e1.printStackTrace();
 			}
 		}
-	}
+	}*/
 }

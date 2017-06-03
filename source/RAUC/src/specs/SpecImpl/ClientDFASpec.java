@@ -35,11 +35,6 @@ public class ClientDFASpec extends DFASpec {
 		this._user = usern;
 	}
 	
-	// set the currentDFA state
-	public void setState(DFAState s) {
-		_prev = state;
-		state = s;
-	}
 	
 	/**
 	 *  called when client sends a message to update DFA conversation state. client can ONLY send in these two states.

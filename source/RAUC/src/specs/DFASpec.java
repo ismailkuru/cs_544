@@ -20,6 +20,16 @@ public abstract class DFASpec {
 		
 		// common procedures
 		
+		
+		// quickly set previous and current dfa state 
+		public void setState(DFAState s) {
+			_prev = state;
+			state = s;
+		}
+		
+		// checks if message is valid to send. updates state and returns TRUE if valid
+		public abstract boolean send(Message m);
+		
 		/*Procedure called when a message is taken. It it dispatches the processing
 		 * of the message to state specific message processing procedure. A message is
 		 * is consumed and transition in the DFA happens and returns a message to other
