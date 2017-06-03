@@ -3,20 +3,17 @@ package main;
 import components.Factory;
 import main.ServerGUI.ConnectionPanel;
 import pdu.Message;
-import pdu.MessageFactory;
+import pdu.MessageImpl.PermanentErrorMessage;
 import pdu.MessageImpl.TerminationMessage;
 import specs.SpecImpl.ServerDFASpec;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;
 import javax.net.ssl.SSLSocket;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
 public class Server {
 	/*
 	 * main - listen a specific port. When receiving socket, start a new thread
@@ -47,14 +44,11 @@ public class Server {
 	 * common constructor for cli or GUI mode
 	 */
 	public Server (int port, ServerGUI sg) {
-		// TODO: Fix me with stuff from the certificatemoving branch!!!!
-		// Needs the new files generated placed in a new directory; fix rel path
-		// TODO: REMOVE ALL RELATIVE PATHS!
 		//System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
-		System.setProperty("javax.net.ssl.keyStore", "/home/maxm/Documents/cs_544/cert/sslserverkeys");
+		System.setProperty("javax.net.ssl.keyStore", "./cert/sslserverkeys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		//System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
-		System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslservertrust");
+		System.setProperty("javax.net.ssl.trustStore", "./cert/sslserverkeys");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		this.sg = sg;
 		this.port = port;
@@ -97,7 +91,7 @@ public class Server {
 	
 	// return a list of connection identifiers
 	public ArrayList<String> getConnections() {
-		return  new ArrayList<String>(connections.keySet());
+		return  new ArrayList<>(connections.keySet());
 	}
 	
 	private void display(String msg) {
@@ -122,8 +116,8 @@ public class Server {
 	}
 	
 	private class ConnectionThread extends Thread {
-		private ObjectInputStream sInput;		// read from socket
-		private ObjectOutputStream sOutput;		// write to socket
+		private InputStream sInput;		// read from socket
+		private OutputStream sOutput;		// write to socket
 		private SSLSocket socket;
 		private String identifier;
 		private ConnectionPanel out;
@@ -139,8 +133,8 @@ public class Server {
 				// display("Connection accepted " + identifier);
 				
 				// establish streams;
-				sInput  = new ObjectInputStream(socket.getInputStream());
-				sOutput = new ObjectOutputStream(socket.getOutputStream());
+				sInput  = socket.getInputStream();
+				sOutput = socket.getOutputStream();
 				
 				
 				connected = true;
@@ -159,7 +153,7 @@ public class Server {
 			while(connected) {
 				try {
 					// when a bytestream is received, process it through the DFA and display it
-					Message outM = receiveMessage((byte[][]) sInput.readObject());
+					Message outM = receiveMessage(sInput);
 					sendMessage(outM);
 				}
 				catch (IOException e) {
@@ -167,38 +161,32 @@ public class Server {
 					disconnect();
 					break;
 				}
-				catch(ClassNotFoundException e2) {
-				}
 			}
 			
 		}
 		
 		// process a bytestream into a message and display it
-		private Message receiveMessage(byte[][] bb) {
+		private Message receiveMessage(InputStream stream) {
 			try {
-			// reassemble bytestream into message 
-			Message inMsg = MessageFactory.createMessage(bb);
-			display("<<< " + inMsg);
-			// process message to make sure it is valid
-			return dfa.process(inMsg);
+				// reassemble bytestream into message
+				Message inMsg = Message.fromStream(stream);
+				display("<<< " + inMsg);
+				// process message to make sure it is valid
+				return dfa.process(inMsg);
 			}
-			catch (Exception e)
+			catch (IOException e)
 			{
-				e.printStackTrace();
+				display("Exception in processing input from client: " + e);
+				// Serious processing error, inform other side
+				return new PermanentErrorMessage();
 			}
-			return null;
 		}
 		
-		protected void sendMessage(Message msg) {
+		protected void sendMessage(Message msg) throws IOException {
 			// send the message across the connection and log it in output window
 			try {
 				if (dfa.send(msg)) { // if current state allows for sending a message
-					// convert message to bytestream
-					List<byte[]> bl = msg.serialize();
-					byte[][] bb = msg.crunchToBytes(bl);
-					
-					// send the message
-					sOutput.writeObject(bb); 
+					sOutput.write(msg.toBytes());
 					
 					// print the message to client log
 					display(">>> " + msg.toString()); 
@@ -208,7 +196,8 @@ public class Server {
 				
 			}
 			catch(IOException e) {
-				display("Exception writing to server: " + e);
+				display("Exception in processing client output: " + e);
+				throw e;
 			}
 		}
 
@@ -219,7 +208,11 @@ public class Server {
 		protected void disconnect() {
 			// send the termination message
 			//TODO use MessageFactory
-			sendMessage(new TerminationMessage());
+			try {
+				sendMessage(new TerminationMessage());
+			} catch (IOException e) {
+				display("IOError during disconnect: " + e);
+			}
 			connected = false;
 			//flush the streams
 			try {

@@ -11,9 +11,6 @@
 	import javax.net.ssl.SSLSocket;
 	import javax.net.ssl.SSLSocketFactory;
 	import java.io.*;
-	import java.util.List;
-
-
 
 
 	@SuppressWarnings("unused")
@@ -102,12 +99,7 @@
 			// send the message across the connection and log it in output window
 			try {
 				if (dfa.send(msg)) { // if current state allows for sending a message
-					// convert message to bytestream
-					List<byte[]> bl = msg.serialize();
-					byte[][] bb = msg.crunchToBytes(bl);
-					
-					// send the message
-					sOutput.write();
+					sOutput.write(msg.toBytes());
 					
 					// print the message to client log
 					display(">>> " + msg.toString()); 
@@ -116,7 +108,7 @@
 				}
 				
 			}
-			catch(IOException e) {
+			catch(Exception e) {
 				display("Exception writing to server: " + e);
 			}
 		}
@@ -136,8 +128,6 @@
 		}
 		
 		protected void disconnect() {
-			// send the termination message
-			//TODO use MessageFactory
 			Message m = new TerminationMessage();
 			sendMessage(m);
 			//flush the streams
@@ -165,32 +155,31 @@
 				while(true) {
 					try {
 						// when a bytestream is received, process it through the DFA and display it
-						receiveMessage((byte[][]) sInput.readObject());
+						receiveMessage(sInput);
 					}
 					catch (IOException e) {
 						display("Connection closed unexpectedly: " + e);
 						disconnect();
 						break;
 					}
-					catch(ClassNotFoundException e2) {
-					}
 				}
 				
 			}
 			
 			// process a bytestream into a message and display it
-			private void receiveMessage(byte[][] bb) {
+			private void receiveMessage(InputStream stream) throws IOException {
 				try {
 				// reassemble bytestream into message 
-				Message inMsg = MessageFactory.createMessage(bb);
+				Message inMsg = Message.fromStream(stream);
 				// process message to make sure it is valid
 				Message outMsg = dfa.process(inMsg);
 				// display error or valid message
 				display(outMsg);
 				}
-				catch (Exception e)
+				catch (IOException e)
 				{
-					e.printStackTrace();
+					display("Exception in processing input from server: " + e);
+					throw e;
 				}
 				// if dfa.state == ok to send, reenable sending of messages from client
 			}
@@ -201,11 +190,23 @@
 		// extraneous code below this line		
 		// -------------------------------------------------------
 
-		
-		/* here implement main() for CLI
-		
-		
-		
+		// here implement main() for CLI
+
+		/*
+		 * main - send a socket from system command
+		 *
+		 * @param args[0] target address
+		 * @param args[1] target port
+		 * @param args[2] message
+		 *
+		 * @print received responses
+		 */
+		public static void main(String[] args) {
+			System.setProperty("javax.net.ssl.trustStore", "./cert/sslserverkeys");
+			System.setProperty("javax.net.ssl.trustStorePassword", "123456");
+
+			sendSocket("localhost", 1500, "ismail", "123" );
+		}
 		
 		
 		/* LEGACY SECTION */
@@ -260,21 +261,5 @@
 				}
 			}
 			return;
-		}
-		
-		/*
-		 * main - send a socket from system command
-		 * 
-		 * @param args[0] target address
-		 * @param args[1] target port
-		 * @param args[2] message
-		 * 
-		 * @print received responses
-		 */
-		public static void main(String[] args) {
-			System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslclienttrust");
-			System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-			
-			sendSocket("localhost", 1500, "ismail", "123" );
 		}
 	}

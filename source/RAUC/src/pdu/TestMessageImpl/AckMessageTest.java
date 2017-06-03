@@ -17,7 +17,7 @@ public class AckMessageTest {
 	@Test
 	public void test() throws Exception {
 		String ver= null;
-		AckMessage am = new AckMessage(null);
+		AckMessage am = new AckMessage();
 		assertNotNull(am);
 		System.out.println(am.toString());
 		
@@ -26,7 +26,7 @@ public class AckMessageTest {
 	    String messageType = header.getString("_first");
 		
 	//	Message m = MessageFactory.createMessage(am.toString());
-	    MessageType mt = MessageType.getMessageTypeFromString(messageType);
+	    MessageType mt = MessageType.valueOf(messageType);
 	       
 	       Gson gson = new Gson();
 	    Message m = gson.fromJson(am.toString(), AckMessage.class);

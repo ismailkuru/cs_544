@@ -3,15 +3,12 @@ package pdu.ChunkImpl;
 import pdu.Chunk;
 
 public class ContentChunk extends Chunk<String, String>{
-
-		
 	public ContentChunk(String sz ,String cnt) {
 		super(sz, cnt);
-		// TODO Auto-generated constructor stub
 	}
 	
-	public String getSize(){
-		return this.getFirst();
+	public int getSize(){
+		return Integer.parseInt(this.getFirst());
 		
 	}
 	

@@ -101,7 +101,7 @@ public class ServerDFASpec extends DFASpec{
 		_acomps = _db.loadUserDB(aum.getUserName());
 		
 		//Create a AuthenAckMessage
-		_response = new AckMessage(null); // without a verion. w/version passes "vernum"
+		_response = new AckMessage(); // without a verion. w/version passes "vernum"
 		
 		//[TODO] Set the state // this.state = DFAState.X
 		//[TODO] I guess I have put  redundant state 
@@ -143,7 +143,7 @@ public class ServerDFASpec extends DFASpec{
 			setState(DFAState.S_AWAITS_REQUEST);
 			
 			// return the command result
-			return new RequestReceivedMessage(true);
+			return new RequestReceivedMessage();
 		}
 		
 		if (mt.equals(MessageType.OP_QUERY)) {
