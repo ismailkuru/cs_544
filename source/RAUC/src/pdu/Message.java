@@ -1,11 +1,11 @@
 package pdu;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.gson.JsonElement;
 import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Message{
 	public HeaderChunk _header;
@@ -19,5 +19,4 @@ public abstract class Message{
 	public abstract JsonElement toJson();
 	public abstract List<byte[]> serialize();
 	public abstract byte[][] crunchToBytes(List<byte[]> lb);
-	
 }

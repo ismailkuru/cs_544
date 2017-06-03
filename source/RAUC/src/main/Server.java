@@ -51,10 +51,10 @@ public class Server {
 		// Needs the new files generated placed in a new directory; fix rel path
 		// TODO: REMOVE ALL RELATIVE PATHS!
 		//System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
-		System.setProperty("javax.net.ssl.keyStore", "/home/maxm/Documents/cs_544/cert/sslclientkeys");
+		System.setProperty("javax.net.ssl.keyStore", "/home/maxm/Documents/cs_544/cert/sslserverkeys");
 		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
 		//System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
-		System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslclienttrust");
+		System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslservertrust");
 		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		this.sg = sg;
 		this.port = port;
@@ -69,19 +69,25 @@ public class Server {
 		SSLServerSocket sSocket = (SSLServerSocket) sf.createServerSocket(port);
 		
 		while(true) {
+			display("Connecting to socket");
 			Socket cSocket = sSocket.accept();
-			
+
+			display("Connected to socket");
+
+			// fork a new thread when a connection is accepted
+			ConnectionThread ct = new ConnectionThread(cSocket);
+
+			// keep it in collection with an identifier
+			connections.put(ct.identify(), ct);
+
 			// if using gui, add connection to it
 			if (sg != null) {
-				ConnectionPanel p = sg.addConnection(cSocket.toString());
-
-				// fork a new thread when a connection is accepted
-				ConnectionThread ct = new ConnectionThread(cSocket, p);
-
-				// keep it in collection with an identifier
-				connections.put(ct.identify(), ct);
+				ct.setGui(sg.addConnection(cSocket.toString()));
 			}
 
+			display("Starting client thread");
+
+			ct.run();
 		}
 		
 		} catch (IOException e) {
@@ -228,7 +234,11 @@ public class Server {
 			}
         
         void display(String s) {
-        	out.display(s);
+        	if (out == null) {
+        		System.out.println(s);
+			} else {
+				out.display(s);
+			}
         }
         
         String identify() {
@@ -240,7 +250,10 @@ public class Server {
         }
 	}
 	
-	
+	public static void main(String[] args) {
+		Server server = new Server(1500);
+		server.start();
+	}
 	
 	
 	// legacy section below

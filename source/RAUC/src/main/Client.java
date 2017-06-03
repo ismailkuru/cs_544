@@ -1,24 +1,17 @@
 	package main;
 
 
-	import java.io.BufferedReader;
-	import java.io.BufferedWriter;
-	import java.io.IOException;
-	import java.io.InputStreamReader;
-	import java.io.OutputStreamWriter;
-	import java.io.PrintWriter;
-	import java.io.*;
-	import java.net.*;
-	import java.util.*;
+	import pdu.Message;
+	import pdu.MessageFactory;
+	import pdu.MessageImpl.TerminationMessage;
+	import pdu.MessageImpl.UserAuthenMessage;
+	import specs.DFAState;
+	import specs.SpecImpl.ClientDFASpec;
 
 	import javax.net.ssl.SSLSocket;
 	import javax.net.ssl.SSLSocketFactory;
-
-	import pdu.Message;
-	import pdu.MessageFactory;
-	import pdu.MessageImpl.*;
-	import specs.*;
-	import specs.SpecImpl.ClientDFASpec;
+	import java.io.*;
+	import java.util.List;
 
 
 
@@ -26,8 +19,8 @@
 	@SuppressWarnings("unused")
 	public class Client {
 		// for I/O
-		private ObjectInputStream sInput;		// read from socket
-		private ObjectOutputStream sOutput;		// write to socket
+		private InputStream sInput;		// read from socket
+		private OutputStream sOutput;		// write to socket
 		private SSLSocket socket;	
 
 		// connection details
@@ -77,8 +70,10 @@
 			
 			// establish the data streams
 			try {
-				sInput  = new ObjectInputStream(socket.getInputStream());
-				sOutput = new ObjectOutputStream(socket.getOutputStream());
+				display("Connecting Input");
+				sInput  = socket.getInputStream();
+				display("Connecting Output");
+				sOutput = socket.getOutputStream();
 			}
 			catch (IOException eIO) {
 				display("Error creating in/out streams: " + eIO);
@@ -86,14 +81,17 @@
 			}
 			
 			// all further DFA state changes will be handled by dfa.process(message)
+			display("Starting DFA");
 			dfa.setState(DFAState.SC_INIT);
 			dfa.setState(DFAState.S_AWAITS_AUTHEN_REQUEST);
 			
 			// create the thread that listens for server responses
+			display("Starting Listening thread");
 			new ListenThread().start();
 			
 			//TODO use the message factory
 			// send the authentication message
+			display("Sending AUTH");
 			Message auth = new UserAuthenMessage(username, pass);
 			sendMessage(auth);
 
@@ -109,7 +107,7 @@
 					byte[][] bb = msg.crunchToBytes(bl);
 					
 					// send the message
-					sOutput.writeObject(bb); 
+					sOutput.write();
 					
 					// print the message to client log
 					display(">>> " + msg.toString()); 
@@ -274,9 +272,9 @@
 		 * @print received responses
 		 */
 		public static void main(String[] args) {
-			System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslclienttrust");
+			System.setProperty("javax.net.ssl.trustStore", "/home/maxm/Documents/cs_544/cert/sslclienttrust");
 			System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 			
-			sendSocket("localhost", 9999, "ismail", "123" );
+			sendSocket("localhost", 1500, "ismail", "123" );
 		}
 	}

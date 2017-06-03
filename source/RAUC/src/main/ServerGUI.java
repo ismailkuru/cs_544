@@ -62,8 +62,7 @@ public class ServerGUI {
 		txtPort.setColumns(10);
 		
 		stopStart = new JButton("Start");
-		// this starts the server with 'this' server gui as an argument
-		stopStart.addActionListener(ae -> new Server(Integer.valueOf(txtPort.getText()), this).start());
+		//stopStart.addActionListener(this);
 		north.add(stopStart);
 		
 		center = new JPanel();
