@@ -1,14 +1,5 @@
 package main;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-
 import components.Factory;
 import main.ServerGUI.ConnectionPanel;
 import pdu.Message;
@@ -16,11 +7,16 @@ import pdu.MessageFactory;
 import pdu.MessageImpl.TerminationMessage;
 import specs.SpecImpl.ServerDFASpec;
 
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.net.*;
 public class Server {
 	/*
 	 * main - listen a specific port. When receiving socket, start a new thread
@@ -52,6 +48,12 @@ public class Server {
 	 * common constructor for cli or GUI mode
 	 */
 	public Server (int port, ServerGUI sg) {
+		// TODO: Fix me with stuff from the certificatemoving branch!!!!
+		// Needs the new files generated placed in a new directory; fix rel path
+		System.setProperty("javax.net.ssl.keyStore", "/home/ismail/sslserverkeys");
+		System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+		System.setProperty("javax.net.ssl.trustStore", "/home/ismail/sslservertrust");
+		System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 		this.sg = sg;
 		this.port = port;
 	}
