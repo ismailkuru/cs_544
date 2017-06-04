@@ -1,23 +1,22 @@
 package pdu.ChunkImpl;
 
-
-import pdu.Chunk;
 import pdu.MessageType;
 
-public class HeaderChunk extends Chunk<MessageType, String>{
-	public HeaderChunk(MessageType mt, String cc) {
-		super(mt, cc);
+public class HeaderChunk {
+	private MessageType type;
+	private int chunks;
+
+	public HeaderChunk(MessageType type, int cc) {
+		this.type = type;
+		this.chunks = cc;
 	}
 	
 	public MessageType getMessageType(){
-		return this.getFirst();
+		return type;
 	}
 	
 	public int getChunkCount(){
-		return Integer.parseInt(this.getSecond());
+		return chunks;
 		
 	}
-	public void setMessageType(MessageType mt){this.setFirst(mt);}
-	public void setChunkCount(String cc){ this.setSecond(cc);}
-
 }

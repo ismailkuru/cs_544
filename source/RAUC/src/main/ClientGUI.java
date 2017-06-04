@@ -146,7 +146,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		Object o = e.getSource();
 		// if it is the Logout button
 		if(o == logout) {
-			client.disconnect();
+			client.disconnect(true);
 			return;
 		}
 

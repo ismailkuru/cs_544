@@ -18,18 +18,22 @@ import pdu.MessageImpl.TemporaryErrorMessage;
 import pdu.MessageImpl.UserAuthenMessage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 
 import static dfa.DFAState.*;
+import static pdu.MessageType.OP_AUTH;
 
 public class ServerDFASpec extends DFASpec {
+    // Ideally we'd be connecting to a real database for these, but this works for the prototype
     // automobile --> components  map
     // Loaded inside authentication process
-    private HashMap<String, ArrayList<Component>> componentMap;
+    private Map<String, ArrayList<Component>> componentMap;
+    private Map<String, String> users;
     private Factory db;
 
-    public ServerDFASpec(Factory db) {
+    public ServerDFASpec(Factory db, Map<String, String> users) {
         this.db = db;
+        this.users = users;
         this.state = DFAState.INIT;
     }
 
@@ -74,6 +78,25 @@ public class ServerDFASpec extends DFASpec {
     }
 
     /**
+     * Allows response to query execution in WAITQRY state, and transitions DFA
+     *
+     * @param m Message to send to client
+     * @return true if message can be sent
+     */
+    @Override
+    protected boolean sendWaitqry(Message m) {
+        switch (m.getMessageType()) {
+            case OP_ERROR:
+            case OP_TMP_ERROR:
+            case OP_INFO:
+                setState(ESTABLISHED);
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
      * Confirms authentication and sends response, and transitions DFA
      *
      * @param m Message received from client
@@ -81,14 +104,19 @@ public class ServerDFASpec extends DFASpec {
      */
     @Override
     protected Message receiveInit(Message m) {
+        if (m.getMessageType() != OP_AUTH) {
+            return receiveUnexpected(m);
+        }
         UserAuthenMessage am = (UserAuthenMessage) m;
         setState(AUTH);
-
-        // TODO: Checks for username and passwords
-        componentMap = db.loadUserDB(am.getUserName());
-
-        // Build response
-        return new AckMessage();
+        // Scary string password matching for PROTOTYPE ONLY. THIS SHOULD NEVER HAPPEN IN PRODUCTION CODE
+        if (users.containsKey(am.getUserName()) && users.get(am.getUserName()).equals(am.getPassword())) {
+            componentMap = db.loadUserDB(am.getUserName());
+            // Build response
+            return new AckMessage();
+        } else {
+            return new TemporaryErrorMessage();
+        }
     }
 
     /**
@@ -101,11 +129,11 @@ public class ServerDFASpec extends DFASpec {
     protected Message receiveEstablished(Message m) {
         switch (m.getMessageType()) {
             case OP_COMMAND:
-                setState(ESTABLISHED);
+                setState(WAITCMD);
                 // TODO: actually execute command
                 return new RequestReceivedMessage();
             case OP_QUERY:
-                setState(ESTABLISHED);
+                setState(WAITQRY);
                 // TODO: get requested information
                 // Not yet implemented, just return temp error
                 return new TemporaryErrorMessage();

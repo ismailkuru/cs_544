@@ -7,8 +7,8 @@ import static pdu.MessageType.OP_SHUTDOWN;
 
 
 public abstract class DFASpec {
-    protected DFAState state;
-    protected DFAState _prev;
+    protected volatile DFAState state;
+    protected volatile DFAState _prev;
 
     public DFASpec() {
         state = CLOSED;
@@ -57,7 +57,7 @@ public abstract class DFASpec {
      */
     public Message receive(Message m) {
         // if the incoming message is a shutdown request, return immediately
-        if (m.getMessageType() == OP_SHUTDOWN) return m;
+        if (m.getMessageType() == OP_SHUTDOWN) return null;
         // otherwise, process the message in the respective state of the protocol
         switch (state) {
             case INIT:
