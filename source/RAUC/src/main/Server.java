@@ -71,6 +71,7 @@ public class Server {
     public void run() {
         /* create a server socket to listen for connections */
         try {
+            // ServerSocket sSocket = ServerSocketFactory.getDefault().createServerSocket(port);
             ServerSocket sSocket = SSLServerSocketFactory.getDefault().createServerSocket(port);
             while (true) {
                 display("Connecting to socket");

@@ -8,11 +8,12 @@ import pdu.MessageImpl.TerminationMessage;
 import pdu.MessageImpl.UserAuthenMessage;
 import pdu.MessageImpl.UtilityStateQueryMessage;
 
-import javax.net.ssl.SSLSocket;
+import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.Socket;
 
 import static dfa.DFAState.ESTABLISHED;
 
@@ -25,7 +26,7 @@ public class Client {
     // for I/O
     private InputStream sInput;        // read from socket
     private OutputStream sOutput;        // write to socket
-    private SSLSocket socket;
+    private Socket socket;
 
     // connection details
     private String server, username, pass;
@@ -76,11 +77,11 @@ public class Client {
     public boolean start() {
         // Establish the SSL connection
         try {
-            SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            socket = (SSLSocket) sf.createSocket(server, port);
+            //SocketFactory sf = SocketFactory.getDefault();
+            SocketFactory sf = SSLSocketFactory.getDefault();
+            socket = sf.createSocket(server, port);
             display("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             display("Error connecting to server");
             e.printStackTrace();
             return false;
@@ -175,9 +176,9 @@ public class Client {
             }
         }
         try {
-            if(sInput != null) sInput.close();
-            if(sOutput != null) sOutput.close();
-            if(socket != null) socket.close();
+            if (sInput != null) sInput.close();
+            if (sOutput != null) sOutput.close();
+            if (socket != null) socket.close();
         } catch (IOException e) {
             display("IOError during socket closing");
             e.printStackTrace();
