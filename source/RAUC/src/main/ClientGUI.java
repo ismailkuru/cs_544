@@ -1,20 +1,9 @@
 package main;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 
 public class ClientGUI extends JFrame implements ActionListener {
@@ -164,7 +153,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		// ok it is coming from the JTextField
 		if(connected) {
 			// just have to send the message
-			client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, userTF.getText()));				
+			//client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, userTF.getText()));
 			userTF.setText("");
 			return;
 		}

@@ -1,22 +1,9 @@
 package main;
 
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
-import java.awt.BorderLayout;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JTextPane;
-import java.awt.CardLayout;
-import javax.swing.JComboBox;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 public class ServerGUI {
 
