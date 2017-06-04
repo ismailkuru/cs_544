@@ -1,27 +1,13 @@
 package main;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.SocketTimeoutException;
+import components.Factory;
+import dfa.ServerDFASpec;
+import pdu.Message;
+import pdu.MessageFactory;
+import pdu.MessageType;
 
 import javax.net.ssl.SSLSocket;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-
-import components.Command;
-import components.Factory;
-import components.ComponentImpl.AC;
-
-import pdu.*;
-import pdu.MessageImpl.AckMessage;
-import pdu.MessageImpl.UtilityControlReqMessage;
-import specs.SpecImpl.ServerDFASpec;
+import java.io.*;
 
 public class SocketHandler extends Thread {
 	private SSLSocket socket = null;
@@ -66,7 +52,7 @@ public class SocketHandler extends Thread {
 				}
 				// process client message and generate response
 				Message inMsg = MessageFactory.createMessage(input);
-				Message outMsg = dfa.process(inMsg);
+				Message outMsg = dfa.receive(inMsg);
 
 				// check for shutdown / error				
 				if (outMsg.getMessageType() == MessageType.OP_SHUTDOWN ||	outMsg.getMessageType() == MessageType.OP_ERROR) {

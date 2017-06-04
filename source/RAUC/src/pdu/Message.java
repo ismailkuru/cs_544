@@ -60,8 +60,8 @@ public abstract class Message{
     }
 
     public static Message fromStream(InputStream stream) throws IOException {
-        int chunkCount = stream.read();
-        int opCode = stream.read();
+        int chunkCount = readOrError(stream);
+        int opCode = readOrError(stream);
         MessageType type;
         try {
             type = MessageType.getMType(opCode);
@@ -71,12 +71,20 @@ public abstract class Message{
         HeaderChunk header = new HeaderChunk(type, Integer.toString(chunkCount));
         List<ContentChunk> chunks = new ArrayList<>(chunkCount);
         for(;chunkCount > 0; chunkCount--) {
-            int chunkSize = stream.read();
+            int chunkSize = readOrError(stream);
             byte[] content = new byte[chunkSize];
             stream.read(content, 0, chunkSize);
             chunks.add(new ContentChunk(Integer.toString(chunkSize), new String(content)));
         }
         return fromType(type, header, chunks);
+    }
+
+    private static int readOrError(InputStream stream) throws IOException {
+        int result = stream.read();
+        if (result == -1) {
+            throw new IOException("Unexpected end of stream");
+        }
+        return result;
     }
 
     private static Message fromType(MessageType type, HeaderChunk header, List<ContentChunk> content) {

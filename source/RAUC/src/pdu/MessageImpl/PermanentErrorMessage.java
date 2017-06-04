@@ -1,16 +1,12 @@
 package pdu.MessageImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-
-import pdu.Message;
-import pdu.MessageType;
 import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
+import pdu.Message;
+import pdu.MessageType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PermanentErrorMessage extends Message{
 	public PermanentErrorMessage(HeaderChunk h, List<ContentChunk> c){
@@ -22,7 +18,6 @@ public class PermanentErrorMessage extends Message{
 		this._header = new HeaderChunk(MessageType.OP_ERROR,"0");
 	}
 	public MessageType getMessageType() {
-		// TODO Auto-generated method stub
 		return MessageType.OP_ERROR;
 	}
 }

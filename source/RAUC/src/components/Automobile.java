@@ -7,7 +7,6 @@ public class Automobile {
 	
 	public Automobile(String id ) {
 		_id = id;
-		// TODO Auto-generated constructor stub
 	}
 
 	public String get_id() {

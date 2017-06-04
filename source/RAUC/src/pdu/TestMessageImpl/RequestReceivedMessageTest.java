@@ -1,10 +1,9 @@
 package pdu.TestMessageImpl;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
-
 import pdu.MessageImpl.RequestReceivedMessage;
+
+import static org.junit.Assert.assertNotNull;
 
 public class RequestReceivedMessageTest {
 
@@ -12,7 +11,7 @@ public class RequestReceivedMessageTest {
 	public void test() {
 	
 		Boolean b = false;
-		RequestReceivedMessage rrm = new RequestReceivedMessage(b);
+		RequestReceivedMessage rrm = new RequestReceivedMessage();
 		assertNotNull(rrm);
 		System.out.println(rrm.toString());
 		
