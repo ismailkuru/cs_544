@@ -2,7 +2,7 @@ package main;
 
 import components.Factory;
 import dfa.ServerDFASpec;
-import main.ServerGUI.ConnectionPanel;
+import main.ServerGUI.LogPanel;
 import pdu.Message;
 import pdu.MessageImpl.TerminationMessage;
 
@@ -77,16 +77,13 @@ public class Server {
                 display("Connecting to socket");
                 Socket cSocket = sSocket.accept();
                 display("Connected to socket");
-
+                
                 // fork a new thread when a connection is accepted
-                ConnectionThread ct = new ConnectionThread(cSocket);
+                ConnectionThread ct = new ConnectionThread(cSocket, sg);
                 // keep it in collection with an identifier
                 connections.put(ct.identify(), ct);
-                // if using gui, add connection to it
-                if (sg != null) {
-                    ct.setGui(sg.addConnection(cSocket.toString()));
-                }
-                display("Starting client thread");
+                
+                display("Starting client thread " + ct.identify());
                 ct.start();
             }
         } catch (IOException e) {
@@ -110,19 +107,7 @@ public class Server {
         if (sg == null)
             System.out.println(msg);
         else
-            sg.display(msg + "\n");
-    }
-
-    /**
-     * Prints to GUI or CLI
-     *
-     * @param msg Message to display to user
-     */
-    private void display(String connection, String msg) {
-        if (sg == null)
-            System.out.println(connection + " >>> " + msg);
-        else
-            sg.display(connection, msg);
+            sg.getServerLog().display(msg);
     }
 
     /**
@@ -138,14 +123,15 @@ public class Server {
     /**
      * Handles a single connection between server and client
      */
-    private class ConnectionThread extends Thread {
+    private class ConnectionThread extends Thread {        
         private InputStream sInput;
         private OutputStream sOutput;
         private Socket socket;
         private String identifier;
-        private ConnectionPanel out;
+        private LogPanel out;
         private ServerDFASpec dfa;
         boolean connected;
+
 
         /**
          * Creates a new thread for the connection
@@ -153,11 +139,8 @@ public class Server {
          * @param socket Socket to connect to
          * @param cp     GUI handle if applicable, else null
          */
-        ConnectionThread(Socket socket, ConnectionPanel cp) {
+        ConnectionThread(Socket socket, ServerGUI sg) {
             this.socket = socket;
-            this.out = cp;
-            this.dfa = new ServerDFASpec(new Factory(), users);
-            this.identifier = socket.getInetAddress() + ":" + socket.getPort();
             try {
                 // establish streams
                 this.sInput = socket.getInputStream();
@@ -167,9 +150,15 @@ public class Server {
                 display("Error creating in/out streams");
                 e.printStackTrace();
             }
+            finally {
+                this.dfa = new ServerDFASpec(new Factory(), users);
+                this.identifier = socket.getInetAddress() + ":" + socket.getPort();
+                this.out = sg.addConnection(identifier);
+            }
         }
 
-        ConnectionThread(Socket socket) {
+        @SuppressWarnings("unused")
+		ConnectionThread(Socket socket) {
             // create a common ConnectionThread without a gui panel
             this(socket, null);
         }
@@ -236,15 +225,6 @@ public class Server {
                 display("Exception in processing client output");
                 throw e;
             }
-        }
-
-        /**
-         * Sets the GUI
-         *
-         * @param cp GUI handle
-         */
-        protected void setGui(ConnectionPanel cp) {
-            this.out = cp;
         }
 
         /**
