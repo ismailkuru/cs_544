@@ -145,6 +145,7 @@ public class ServerGUI {
 			serverLog.display("Server listening on port " + port + "...");
 			
 			// disable start button / enable stop button
+			txtPort.setEditable(false);
 			btnStart.setVisible(false);
 			btnStart.setEnabled(false);;
 			btnStop.setVisible(true);
