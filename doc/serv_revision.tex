@@ -3,5 +3,21 @@
 \label{sec:serv_desc}
 
 The Remote Automobile Utility Control \textbf{(RAUC)} protocol specifies communication between smart-devices and Automobile Control Server \textbf{(ACS)} machines through variable-sized messages sent across a TCP connection with all communications encrypted through TLS. These messages represent commands that instruct the ACS machine to either forward the command to or perform a query against some automobile connected to the ACS server. RAUC connections require clients to authenticate themselves with the ACS server before any commands or queries may be issued.
-\par
-ACS hosts act as middlemen between smart-devices and automobiles, translating commands from smart devices and sending them to the utility components (radio, HVAC system, etc.) of connected autos, while simultaneously formatting utility component metadata (radio volume, tuner setting, temperature, etc.) into messages which can be relayed back to connected smart-devices. Thus, ACS hosts implementing RAUC \textbf{MUST} implement both RAUC and some other protocol for final transmission to the automobile. Essentially, RAUC provides a unified protocol only for communication between smart devices and ACS servers. Final transmission to the auto is handled by the ACS server as automakers may provide proprietary protocols for such networked communication. This document contains no specifications for communication between an ACS machine and an automobile.
+\begin{itemize}
+\item  RAUC provides a unified protocol only for communication between smart devices and ACS servers
+\item RAUC is  an application layer protocol which provides the specifies the mechanisim for implementing an application to control the states of the components (radio volume, tuner setting, temperature, etc.) in an automobile. It defines 
+\begin{itemize}
+\item Specification of valid message formats used in communication of Client with ACS in Section \ref{}.
+\item Specification of valid states of communication between Client and ACS via defining a Deterministic Finite Automaton in Section \ref{}. 
+\item Client and ACS implements RAUC according to the specifications of messages and DFA.
+\end{itemize}
+\end{itemize}
+
+To make the environment on which protocol is running clearer, we assume that 
+\begin{itemize}
+\item Communication which is established through the Internet connection. Client and ACS is connected to the Internet.
+\item ACS hosts act as middlemen between smart-devices and automobiles, translating commands from smart devices and sending them to the utility components (radio, HVAC system, etc.) of connected autos, while simultaneously formatting utility component metadata (radio volume, tuner setting, temperature, etc.) into messages which can be relayed back to connected smart-devices.  Thus, ACS hosts implementing RAUC must implement both RAUC and some other protocol for final transmission to the automobile. Final transmission to the auto is handled by the ACS server as automakers may provide proprietary protocols for such networked communication. 
+\item This document contains no specifications for communication between an ACS machine and an automobile.
+\end{itemize}
+
+
