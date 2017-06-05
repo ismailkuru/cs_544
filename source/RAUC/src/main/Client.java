@@ -77,8 +77,8 @@ public class Client {
     public boolean start() {
         // Establish the SSL connection
         try {
-            //SocketFactory sf = SocketFactory.getDefault();
-            SocketFactory sf = SSLSocketFactory.getDefault();
+            SocketFactory sf = SocketFactory.getDefault();
+            //SocketFactory sf = SSLSocketFactory.getDefault();
             display("Socket created");
             socket = sf.createSocket(server, port);
             display("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
@@ -176,6 +176,7 @@ public class Client {
                 display("IOError during shutdown");
                 e.printStackTrace();
             }
+            display("Disconnecting...");
         }
         try {
             if (sInput != null) sInput.close();

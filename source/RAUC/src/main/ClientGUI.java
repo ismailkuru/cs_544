@@ -122,6 +122,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 	// called by the client if the connection failed
 	// reset our buttons, labels, etc
 	void reset() {
+		portTF.setEnabled(true);
+		userTF.setEnabled(true);
+		passTF.setEnabled(true);
 		login.setEnabled(true);
 		logout.setEnabled(false);
 		//reset login info panel
@@ -132,8 +135,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 		portTF.setText("" + defaultPort);
 		serverTF.setText(defaultHost);
 		// let the user change them
-		serverTF.setEditable(false);
-		portTF.setEditable(false);
+		serverTF.setEditable(true);
+		portTF.setEditable(true);
 		// don't react to a <CR> after the username
 		userTF.removeActionListener(this);
 		connected = false;
@@ -147,9 +150,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 		// if it is the Logout button
 		if(o == logout) {
 			client.disconnect(true);
-			portTF.setEnabled(true);
-			userTF.setEnabled(true);
-			passTF.setEnabled(true);
 			return;
 		}
 

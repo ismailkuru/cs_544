@@ -74,8 +74,8 @@ public class Server {
     	running = true;
         /* create a server socket to listen for connections */
         try {
-            //ServerSocket sSocket = ServerSocketFactory.getDefault().createServerSocket(port);
-            ServerSocket sSocket = SSLServerSocketFactory.getDefault().createServerSocket(port);
+            ServerSocket sSocket = ServerSocketFactory.getDefault().createServerSocket(port);
+            //ServerSocket sSocket = SSLServerSocketFactory.getDefault().createServerSocket(port);
             while (running) {
                 display("Waiting for clients on port " + port + "...");
                 Socket cSocket = sSocket.accept();
