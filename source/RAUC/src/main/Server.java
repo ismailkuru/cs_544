@@ -6,6 +6,7 @@ import main.ServerGUI.LogPanel;
 import pdu.Message;
 import pdu.MessageImpl.TerminationMessage;
 
+import javax.net.ServerSocketFactory;
 import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,6 +23,7 @@ import java.util.Set;
 public class Server {
     private Map<String, ConnectionThread> connections; // <Identifier, client thread>
     private Map<String, String> users; // <username, password>
+    private boolean running;
 
     // For the prototype
     private static final Map<String, String> testUsers = new HashMap<>();
@@ -69,14 +71,18 @@ public class Server {
      * process multiple connections at the same time
      */
     public void run() {
+    	running = true;
         /* create a server socket to listen for connections */
         try {
-            // ServerSocket sSocket = ServerSocketFactory.getDefault().createServerSocket(port);
+            //ServerSocket sSocket = ServerSocketFactory.getDefault().createServerSocket(port);
             ServerSocket sSocket = SSLServerSocketFactory.getDefault().createServerSocket(port);
-            while (true) {
-                display("Connecting to socket");
+            while (running) {
+                display("Waiting for clients on port " + port + "...");
                 Socket cSocket = sSocket.accept();
-                display("Connected to socket");
+                if (!running) {
+                	break;
+                }
+                display("Connected to client " + cSocket.getInetAddress() + ":" + cSocket.getPort());
                 
                 // fork a new thread when a connection is accepted
                 ConnectionThread ct = new ConnectionThread(cSocket, sg);
@@ -111,9 +117,10 @@ public class Server {
     }
 
     /**
-     * Shuts down all connected clients
+     * Shuts down all connected clients and stop the server.
      */
     protected void shutdown() {
+    	running = false;
         // disconnect all connected clients
         for (String id : connections.keySet()) {
             connections.get(id).disconnect(true);
@@ -153,7 +160,9 @@ public class Server {
             finally {
                 this.dfa = new ServerDFASpec(new Factory(), users);
                 this.identifier = socket.getInetAddress() + ":" + socket.getPort();
-                this.out = sg.addConnection(identifier);
+                if (sg != null) {
+                	this.out = sg.addConnection(identifier);
+                }
             }
         }
 
@@ -278,9 +287,9 @@ public class Server {
      */
     public static void main(String[] args) {
         int port = 1500;
-        if (args.length > 1) {
+       /*if (args.length > 1) {
             port = Integer.valueOf(args[1]);
-        }
+        }*/
         Server server = new Server(port);
         server.run();
     }

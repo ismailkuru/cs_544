@@ -7,8 +7,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 
-import com.sun.prism.paint.Stop;
-
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
@@ -16,8 +14,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class ServerGUI {
+public class ServerGUI extends JFrame implements ActionListener {
 
+	private static final long serialVersionUID = 1L;
+	
 	private JFrame frmAcsServer;
 	private JTextField txtPort;
 	private JButton btnStart;
@@ -29,6 +29,8 @@ public class ServerGUI {
 	private DefaultComboBoxModel<String> connModel;
 	private JPanel logCard;
 	private LogPanel serverLog;
+	public Server server;
+	private ServerThread initThread;
 	
 	
 
@@ -39,20 +41,24 @@ public class ServerGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ServerGUI window = new ServerGUI();
+					ServerGUI window = new ServerGUI(1500);
 					window.frmAcsServer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		
+		
 	}
 
 	/**
 	 * Create the application.
 	 */
-	public ServerGUI() {
+	public ServerGUI(int port) {
+		server = null;
 		initialize();
+		txtPort.setText(Integer.toString(port));
 	}
 
 	/**
@@ -79,17 +85,7 @@ public class ServerGUI {
 		txtPort.setColumns(10);
 		
 		btnStart = new JButton("Start");
-		btnStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnStart.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				startServer();
-			}
-		});
-		//start.addActionListener(this);
+		btnStart.addActionListener(this);
 		north.add(btnStart);
 		
 		btnStop = new JButton("Stop");
@@ -113,7 +109,6 @@ public class ServerGUI {
 		
 		south = new JPanel();
 		frmAcsServer.getContentPane().add(south, BorderLayout.SOUTH);
-;
 		
 		//switch cards based on combobox choice
 		cmbConn.addItemListener(new ItemListener() {
@@ -129,6 +124,17 @@ public class ServerGUI {
 		south.add(cmbConn);
 	}
 	
+	// start/stop the server
+	public void actionPerformed(ActionEvent e) {
+		// stop the server if already running
+		if(server != null) {
+			stopServer();
+		} else {
+		// start it otherwise
+			startServer();
+		}
+	}
+	
 	private void startServer() {
 		int port = 0;
 		String portString = txtPort.getText().trim();
@@ -139,24 +145,28 @@ public class ServerGUI {
 		}
 		
 		try {
-			// if port is valid, create a new server hooked to this gui
 			port = Integer.parseInt(portString);
-			Server server = new Server(port, this);
-			serverLog.display("Server listening on port " + port + "...");
-			
-			// disable start button / enable stop button
-			txtPort.setEditable(false);
-			btnStart.setVisible(false);
-			btnStart.setEnabled(false);;
-			btnStop.setVisible(true);
-			btnStop.setEnabled(true);;
-		} catch (Exception e) {
-			// if port is invalid, can't do anything
+		} catch (Exception e2) {
 			serverLog.display("Error starting server. Please provide a valid port number.");
+			return;
 		}
+		
+		server = new Server(port, this);
+		new ServerThread().start();
+		btnStart.setText("Stop");
+		txtPort.setEditable(false);
 	}
 	
-	protected LogPanel addConnection(String conn) {
+	private void stopServer() {
+		
+			server.shutdown();
+			server = null;
+			txtPort.setEditable(true);
+			btnStart.setText("Start");
+			return;
+	}
+	
+	public LogPanel addConnection(String conn) {
 		LogPanel lp = addLog(conn);
 		serverLog.display("Connection accepted from " + conn + ", starting new connection thread...");
 		lp.display("Waiting for auth");
@@ -170,7 +180,7 @@ public class ServerGUI {
 		return cp;
 	}
 	
-	protected LogPanel getServerLog() {
+	public LogPanel getServerLog() {
 		return serverLog;
 		
 	}
@@ -203,5 +213,20 @@ public class ServerGUI {
 			return id;
 		}
 
+	}
+	
+	private class ServerThread extends Thread {
+		public void run() {
+		server.run(); // runs main server loop
+		
+		// reached when server stops running
+		btnStop.setVisible(false);
+		btnStop.setEnabled(false);
+		btnStart.setVisible(true);
+		btnStart.setEnabled(true);
+		txtPort.setEditable(true);
+		serverLog.display("Server stopped running unexpectedly.");
+		server = null;
+		}
 	}
 }

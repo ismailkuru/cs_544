@@ -79,6 +79,7 @@ public class Client {
         try {
             //SocketFactory sf = SocketFactory.getDefault();
             SocketFactory sf = SSLSocketFactory.getDefault();
+            display("Socket created");
             socket = sf.createSocket(server, port);
             display("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
         } catch (Exception e) {
@@ -108,10 +109,11 @@ public class Client {
         new ListenThread().start();
 
         // send the authentication message
-        display("Sending AUTH");
         Message auth = new UserAuthenMessage(username, pass);
         try {
+        	display("Sending AUTH");
             sendMessage(auth);
+            display("Auth sent, waiting reply");
         } catch (IOException e) {
             display("Error sending AUTH");
             e.printStackTrace();
