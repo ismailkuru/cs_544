@@ -1,14 +1,14 @@
 package pdu.MessageImpl;
 
+import pdu.ChunkImpl.ContentChunk;
+import pdu.ChunkImpl.HeaderChunk;
+import pdu.Message;
+import pdu.MessageType;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import pdu.Message;
-import pdu.MessageType;
-import pdu.ChunkImpl.ContentChunk;
-import pdu.ChunkImpl.HeaderChunk;
-
-public class UtilityControlReqMessage extends Message{
+public class UtilityControlReqMessage extends Message {
 	//String _autoid;
 	//String _component;
 	//String _attribute;
@@ -19,18 +19,18 @@ public class UtilityControlReqMessage extends Message{
 	}
 
 	public UtilityControlReqMessage(String aid, String comp, String attr, String val){
-        this._header = new HeaderChunk(MessageType.OP_COMMAND, "4");
+        this._header = new HeaderChunk(MessageType.OP_COMMAND, 4);
         this._content = new ArrayList<>();
 
         //Add pass and uname content in addition to header
-        ContentChunk autoId = new ContentChunk("32", aid);
-        this._content.add(0,autoId );
-        ContentChunk compnt = new ContentChunk("32", comp);
-        this._content.add(1,compnt);
-        ContentChunk attrb = new ContentChunk("32", attr);
-        this._content.add(2,attrb);
-        ContentChunk vl = new ContentChunk("32", val);
-        this._content.add(3,vl);
+        ContentChunk autoId = new ContentChunk(aid);
+        this._content.add(autoId );
+        ContentChunk compnt = new ContentChunk(comp);
+        this._content.add(compnt);
+        ContentChunk attrb = new ContentChunk(attr);
+        this._content.add(attrb);
+        ContentChunk vl = new ContentChunk(val);
+        this._content.add(vl);
 	}
 		
 	public MessageType getMessageType() {

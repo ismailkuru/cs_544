@@ -15,7 +15,7 @@ public class PermanentErrorMessage extends Message{
 
 	public PermanentErrorMessage(){
 		this._content = new ArrayList<>();
-		this._header = new HeaderChunk(MessageType.OP_ERROR,"0");
+		this._header = new HeaderChunk(MessageType.OP_ERROR, 0);
 	}
 	public MessageType getMessageType() {
 		return MessageType.OP_ERROR;

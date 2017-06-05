@@ -1,21 +1,17 @@
 package pdu.ChunkImpl;
 
-import pdu.Chunk;
+public class ContentChunk {
+	String content;
 
-public class ContentChunk extends Chunk<String, String>{
-	public ContentChunk(String sz ,String cnt) {
-		super(sz, cnt);
+	public ContentChunk(String content) {
+	    this.content = content;
 	}
 	
 	public int getSize(){
-		return Integer.parseInt(this.getFirst());
-		
+		return content.length();
 	}
 	
 	public String getContent(){
-		return this.getSecond();
+		return content;
 	}
-	public void setSize(String sz){this.setFirst(sz);}
-	public void setContent(String cnt){this.setSecond(cnt);}
-
 }

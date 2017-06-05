@@ -4,22 +4,29 @@ package main;
 import dfa.ClientDFASpec;
 import dfa.DFAState;
 import pdu.Message;
-import pdu.MessageFactory;
 import pdu.MessageImpl.TerminationMessage;
 import pdu.MessageImpl.UserAuthenMessage;
+import pdu.MessageImpl.UtilityStateQueryMessage;
 
-import javax.net.ssl.SSLSocket;
+import javax.net.SocketFactory;
 import javax.net.ssl.SSLSocketFactory;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
+import static dfa.DFAState.ESTABLISHED;
 
 /**
  * Main client driver. Handles DFA, socket connection, reading/writing threads, and printing info for the user
  */
 public class Client {
+    private volatile boolean connected;
+
     // for I/O
     private InputStream sInput;        // read from socket
     private OutputStream sOutput;        // write to socket
-    private SSLSocket socket;
+    private Socket socket;
 
     // connection details
     private String server, username, pass;
@@ -29,7 +36,7 @@ public class Client {
     private ClientGUI cg;
 
     // dfa to make client respect RAUC protocol
-    private ClientDFASpec dfa;
+    private final ClientDFASpec dfa;
 
     /**
      * Common constructor / Constructor used via a GUI. In CLI mode the ClientGUI parameter is null
@@ -47,6 +54,7 @@ public class Client {
         this.pass = pass;
         this.cg = cg;
         this.dfa = new ClientDFASpec();
+        this.connected = true;
     }
 
     /**
@@ -69,11 +77,12 @@ public class Client {
     public boolean start() {
         // Establish the SSL connection
         try {
-            SSLSocketFactory sf = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            socket = (SSLSocket) sf.createSocket(server, port);
+            //SocketFactory sf = SocketFactory.getDefault();
+            SocketFactory sf = SSLSocketFactory.getDefault();
+            display("Socket created");
+            socket = sf.createSocket(server, port);
             display("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             display("Error connecting to server");
             e.printStackTrace();
             return false;
@@ -81,17 +90,16 @@ public class Client {
 
         // Establish the data streams
         try {
-            display("Connecting Input");
+            display("Connecting Input stream");
             sInput = socket.getInputStream();
-            display("Connecting Output");
+            display("Connecting Output stream");
             sOutput = socket.getOutputStream();
         } catch (IOException e) {
-            display("Error creating in/out streams");
+            display("Error creating I/O streams");
             e.printStackTrace();
             return false;
         }
 
-        // all further DFA state changes will be handled by dfa.receive(message)
         display("Starting DFA");
         // TODO: ??? dfa.setState(DFAState.AUTH);
         dfa.setState(DFAState.INIT);
@@ -101,33 +109,23 @@ public class Client {
         new ListenThread().start();
 
         // send the authentication message
-        display("Sending AUTH");
         Message auth = new UserAuthenMessage(username, pass);
-        sendMessage(auth);
-
+        try {
+        	display("Sending AUTH");
+            sendMessage(auth);
+            display("Auth sent, waiting reply");
+        } catch (IOException e) {
+            display("Error sending AUTH");
+            e.printStackTrace();
+        }
         return true;
     }
 
-    protected void sendMessage(Message msg) {
-        // send the message across the connection and log it in output window
-        try {
-            if (dfa.send(msg)) { // if current state allows for sending a message
-                sOutput.write(msg.toBytes());
-
-                // print the message to client log
-                display(">>> " + msg.toString());
-            } else { // yell at the user
-                display("Message not sent. Current protocol state not valid for sending.");
-            }
-
-        } catch (IOException e) {
-            display("Exception writing to server");
-            e.printStackTrace();
-        }
-    }
-
-
-    // prints a string to output
+    /**
+     * Prints to GUI or CLI
+     *
+     * @param msg Message to display to user
+     */
     protected void display(String msg) {
         if (cg == null)
             System.out.println(msg);      // print to sout in in CLI mode
@@ -135,130 +133,123 @@ public class Client {
             cg.display(msg + "\n");        // append to the ClientGUI conversation window
     }
 
-    // prints a message to output
+    /**
+     * Prints to GUI or CLI
+     *
+     * @param msg Message to display to user
+     */
     protected void display(Message msg) {
         display("<<< " + msg.toString());
     }
 
-    protected void disconnect() {
-        Message m = new TerminationMessage();
-        sendMessage(m);
-        //flush the streams
+    /**
+     * Sends a message to the server if it is valid in the current state
+     *
+     * @param msg Message to send to server
+     */
+    protected void sendMessage(Message msg) throws IOException {
         try {
-            sInput.close();
-            sOutput.close();
-            socket.close();
-        } catch (Exception e) {
-        } finally {
-            //if using gui, reset to initial state
-            if (cg != null) {
-                cg.reset();
+            // if current state allows for sending this message
+            if (dfa.send(msg)) {
+                display(">>> " + msg.toString());
+                sOutput.write(msg.toBytes());
+                sOutput.flush();
+            } else {
+                display("Message not sent. Current protocol state not valid for sending.");
             }
+
+        } catch (IOException e) {
+            display("Exception writing to server");
+            throw e;
+        }
+    }
+
+    /**
+     * Attempts to send SHUTDOWN message and closes the connection to the server
+     */
+    protected void disconnect(boolean sendShutdown) {
+        connected = false;
+        if (sendShutdown) {
+            try {
+                sendMessage(new TerminationMessage());
+            } catch (IOException e) {
+                display("IOError during shutdown");
+                e.printStackTrace();
+            }
+        }
+        try {
+            if (sInput != null) sInput.close();
+            if (sOutput != null) sOutput.close();
+            if (socket != null) socket.close();
+        } catch (IOException e) {
+            display("IOError during socket closing");
+            e.printStackTrace();
+        }
+        if (cg != null) {
+            cg.reset();
         }
     }
 
 
-    /*
-     * A thread to listen for bytestreams from the server and display them after processing through the DFA
+    /**
+     * Listening thread. Processes messages from the server through the DFA
      */
     private class ListenThread extends Thread {
-        // the loop to hear a message when delivered
+        @Override
         public void run() {
-            while (true) {
+            while (connected) {
                 try {
                     // when a bytestream is received, process it through the DFA and display it
                     receiveMessage(sInput);
                 } catch (IOException e) {
-                    display("Connection closed unexpectedly");
-                    e.printStackTrace();
-                    disconnect();
-                    break;
+                    // Stream might end abruptly during shutdown if server closes connection first
+                    if (connected) {
+                        display("Exception in processing input from server");
+                        e.printStackTrace();
+                        disconnect(true);
+                    }
                 }
             }
-
         }
 
-        // process a bytestream into a message and display it
+        /**
+         * Receive message from server, process it through the DFA, and display it
+         *
+         * @param stream Input stream from socket
+         * @throws IOException When unexpected error occurs in connection
+         */
         private void receiveMessage(InputStream stream) throws IOException {
-            try {
-                // reassemble bytestream into message
-                Message inMsg = Message.fromStream(stream);
-                // process message to make sure it is valid
-                Message outMsg = dfa.receive(inMsg);
+            // reassemble bytestream into message
+            Message inMsg = Message.fromStream(stream);
+            // process message to make sure it is valid
+            Message outMsg = dfa.receive(inMsg);
+            if (outMsg == null) {
+                // Received shutdown from server
+                disconnect(false);
+            } else {
                 // display error or valid message
                 display(outMsg);
-            } catch (IOException e) {
-                display("Exception in processing input from server");
-                e.printStackTrace();
-                throw e;
             }
-            // if dfa.state == ok to send, reenable sending of messages from client
         }
     }
 
-
-    // extraneous code below this line
-    // -------------------------------------------------------
-
-    public static void main(String[] args) {
+    /**
+     * Simulation of Client for testing purposes
+     */
+    public static void main(String[] args) throws IOException {
         System.setProperty("javax.net.ssl.trustStore", "./cert/sslclienttrust");
         System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 
         Client client = new Client("localhost", 1500, "user", "pass");
         System.out.println("Starting");
         client.start();
-    }
 
-		/* LEGACY SECTION */
+        while (client.dfa.state() != ESTABLISHED) { /* Busy loop, but it's just for testing */ }
+        System.out.println("Sending query");
+        client.sendMessage(new UtilityStateQueryMessage("test", "test"));
 
-    /*
-     * SendSocket - send a socket to a target
-     *
-     * @param server - target server
-     * @param port - target port
-     * @param message - message
-     *
-     * @return - received responses
-     */
-    public static void sendSocket(String server, int port, String uname, String pass) {
-        SSLSocket sslsocket = null;
-        BufferedReader br = null;
-        PrintWriter pw = null;
-        String str = "";
-        try {
-            SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
-            sslsocket = (SSLSocket) sslsocketfactory.createSocket(server, port);
-            System.out.println("sslsocket=" + sslsocket);
-            br = new BufferedReader(new InputStreamReader(sslsocket.getInputStream(), "UTF-8"));
-            pw = new PrintWriter(new BufferedWriter(new OutputStreamWriter(sslsocket.getOutputStream(), "UTF-8")));
-            ClientDFASpec dfa = new ClientDFASpec();
-
-
-            //[TEST - THIS IS A MINI CLIENT -- WILL BE REPLACED WITH while(true){dfa.receive()} ]
-            //This mimics one of messages processing of dfa.receive
-            UserAuthenMessage uauth = new UserAuthenMessage(uname, pass);
-
-            pw.println(uauth.toString() + "\n");
-            pw.flush();
-
-            str = (br.readLine() + "\n");
-            Message ackm = MessageFactory.createMessage(str);
-            System.out.println("Message received from server " + ackm.toString());
-            //[MINI-CLIENT-ENDS]
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                System.out.println("Closing Client...");
-                br.close();
-                pw.close();
-                sslsocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return;
+        while (client.dfa.state() != ESTABLISHED) { /* Busy loop, but it's just for testing */ }
+        System.out.println("Sending shutdown");
+        client.disconnect(true);
     }
 }

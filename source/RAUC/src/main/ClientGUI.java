@@ -140,25 +140,20 @@ public class ClientGUI extends JFrame implements ActionListener {
 	}
 		
 	/*
-	* Button or JTextField clicked
+	* Button clicked
 	*/
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		// if it is the Logout button
 		if(o == logout) {
-			client.disconnect();
+			client.disconnect(true);
+			portTF.setEnabled(true);
+			userTF.setEnabled(true);
+			passTF.setEnabled(true);
 			return;
 		}
 
-		// ok it is coming from the JTextField
-		if(connected) {
-			// just have to send the message
-			//client.sendMessage(new ChatMessage(ChatMessage.MESSAGE, userTF.getText()));
-			userTF.setText("");
-			return;
-		}
-		
-
+		// if its the login button;
 		if(o == login) {
 			// action is a login request
 			String username = userTF.getText().trim();
@@ -184,6 +179,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 			catch(Exception en) {
 				return;   // can't do anything if port# invalid
 			}
+			
+			portTF.setEnabled(false);
+			userTF.setEnabled(false);
+			passTF.setEnabled(false);
 
 			// try creating a new Client with GUI
 			client = new Client(server, port, username, pass, this);

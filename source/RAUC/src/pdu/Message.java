@@ -7,6 +7,7 @@ import pdu.ChunkImpl.ContentChunk;
 import pdu.ChunkImpl.HeaderChunk;
 import pdu.MessageImpl.*;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,11 +49,13 @@ public abstract class Message{
                     (byte) getHeader().getChunkCount(),
                     (byte) getHeader().getMessageType().getOpcode().intValue()
             });
-            for (ContentChunk c  : this.getContent()) {
+            for (ContentChunk c : this.getContent()) {
                 array.write(new byte[]{(byte) c.getSize()});
                 array.write(c.getContent().getBytes());
             }
-            return array.toByteArray();
+            byte[] result = array.toByteArray();
+            System.out.println(">>> " + DatatypeConverter.printHexBinary(result));
+            return result;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,13 +71,13 @@ public abstract class Message{
         } catch (IllegalArgumentException e) {
             throw new IOException("Invalid message type " + opCode, e);
         }
-        HeaderChunk header = new HeaderChunk(type, Integer.toString(chunkCount));
+        HeaderChunk header = new HeaderChunk(type, chunkCount);
         List<ContentChunk> chunks = new ArrayList<>(chunkCount);
         for(;chunkCount > 0; chunkCount--) {
             int chunkSize = readOrError(stream);
             byte[] content = new byte[chunkSize];
             stream.read(content, 0, chunkSize);
-            chunks.add(new ContentChunk(Integer.toString(chunkSize), new String(content)));
+            chunks.add(new ContentChunk(new String(content)));
         }
         return fromType(type, header, chunks);
     }
