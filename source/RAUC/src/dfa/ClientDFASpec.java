@@ -70,9 +70,11 @@ public class ClientDFASpec extends DFASpec {
                 setState(ESTABLISHED);
                 return m;
             case OP_TMP_ERROR:
+            	setState(INIT);
+            	return m;
             case OP_ERROR:
                 // Failed authentication; retry
-                setState(AUTH);
+                setState(INIT);
                 return m;
             default:
                 // Something went wrong, received unexpected message
