@@ -226,7 +226,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		switch (msg) {
 			case "User Authentication": 	m = new UserAuthenMessage(userTF.getText(), passTF.getText());
 											break;
-			case "Utility Control Request": m = new UtilityControlReqMessage("1", "0" , "Power", "1");
+			case "Utility Control Request": m = new UtilityControlReqMessage("1", "0" , "power", "off");
 											break;
 			case "Utility State Query": 	m = new UtilityStateQueryMessage("1");
 											break;

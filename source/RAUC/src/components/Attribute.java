@@ -32,4 +32,9 @@ public class Attribute {
 	public String stateToString() {
 		return this._currentValue;
 	}
+	 public void set(String value) {
+		 if (_values.contains(value)) {
+			 _currentValue = value;
+		 }
+	}
 }

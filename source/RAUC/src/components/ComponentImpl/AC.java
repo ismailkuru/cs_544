@@ -56,7 +56,14 @@ public class AC extends Component {
 
 	@Override
 	public void applyCommand(Command cmd) {
-		// TODO Auto-generated method stub
+		String res = null;
+		for(Attribute a : attributes){
+			if(a.attribToString().equals(cmd.getAttribute())){
+				String val = cmd.getValue();
+				a.set(val);
+			}
+			
+		}
 		
 	}
 	

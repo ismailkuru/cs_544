@@ -36,13 +36,13 @@ public class QueryExecutorTest {
 		//Create Automobiles
 		Automobile a1 = new Automobile("1");
 		//Create Components
-		AC ac = new AC("0", ComponentType.AC);
+		AC ac = new AC("0");
 	
 		
 		//Create Automobiles
 		Automobile a2 = new Automobile("2");
 		//Create Components
-		AC ac2 = new AC("0", ComponentType.AC);
+		AC ac2 = new AC("0");
 		//add to components list
 		ArrayList<Component> lcomps = new ArrayList<Component>();
 		lcomps.add(ac);
