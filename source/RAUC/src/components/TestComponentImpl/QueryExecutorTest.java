@@ -37,7 +37,7 @@ public class QueryExecutorTest {
 		Automobile a1 = new Automobile("1");
 		//Create Components
 		AC ac = new AC("0", ComponentType.AC);
-		
+	
 		
 		//Create Automobiles
 		Automobile a2 = new Automobile("2");

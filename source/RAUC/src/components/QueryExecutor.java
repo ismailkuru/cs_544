@@ -63,7 +63,7 @@ public class QueryExecutor {
 						if(c.getComponentCode().equals(cmpt))
 							cmp = c;
 					}
-					result = cmp.attribToStringtoString(attrib);
+					result = cmp.attribStateToString(attrib);
 					return result; 
 				default: throw new Exception("Invalid Query");
 			}

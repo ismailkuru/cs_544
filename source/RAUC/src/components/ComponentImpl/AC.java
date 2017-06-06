@@ -1,37 +1,29 @@
 package components.ComponentImpl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import components.Attribute;
 import components.Command;
 import components.Component;
 import components.ComponentType;
 
 public class AC extends Component {
-	ACAttribute _state;
+	ArrayList<Attribute> _attribs = new ArrayList<>();
 	
-
-	//attributes mapped to their values
-	protected static Map<ACAttribute,String> _commandParamMap;
-	static {
-
-		// map for commands and its parameters
-		_commandParamMap = new HashMap<ACAttribute, String>();
-		_commandParamMap.put(ACAttribute.ON, "1");
-		_commandParamMap.put(ACAttribute.OFF, "0");
-			
-	}
 	
 	public AC(String name, ComponentType compType){	
-		super(name,compType);
+		super(name,compType);	
+		Power p = new Power("OFF");
+		_attribs.add(p);
 		
 	}
 
 	@Override
 	public String getComponentName() {
-		
 		return this._name;
 	}
 
@@ -41,84 +33,58 @@ public class AC extends Component {
 	}
 	public String toString(){
 	     StringBuilder sb = new StringBuilder();
-	        Iterator<Entry<ACAttribute, String>> iter = _commandParamMap.entrySet().iterator();
-	        while (iter.hasNext()) {
-	        	Entry<ACAttribute, String> entry = iter.next();
-	            sb.append(entry.getKey());
-	            sb.append('=').append('"');
-	            sb.append(entry.getValue());
-	            sb.append('"');
-	            if (iter.hasNext()) {
-	                sb.append(',').append(' ');
-	            }
-	        }
-	        return sb.toString();
+	       for(Attribute a : _attribs){
+	            sb.append(a.attribToString());
+	            //sb.append('=').append('"');
+	            sb.append(a.stateToString());
+	            //sb.append('"');
+	       }
+	  return sb.toString();
 	}
-	public String getValueOfAttrb(String attrb){
-		
-		ACAttribute atrb = ACAttribute.typeFromStringCode(attrb);	
-		return AC._commandParamMap.get(atrb);
-		
-	}
-	@Override	
-	public void applyCommand(Command cmd) {
+	public String attribStateToString(String attrib) {
+		String res = null;
+		for(Attribute a : _attribs){
+			if(a.attribToString().equals(attrib)){
+				res = a.stateToString();
+			}
 			
-		String val = cmd.getValue();
-		ACAttribute atrb = ACAttribute.typeFromStringCode(cmd.getAttribute());	
-		AC._commandParamMap.put(atrb, val);
-		
-	}
-	
-	public Map<ACAttribute,String> getComponentMap(){
-		return AC._commandParamMap;
+		}
+		return res;
 	}
 
 	@Override
-	public String attribToStringtoString(String attrib) {
-		StringBuilder sb = new StringBuilder();
-		ACAttribute atrb = ACAttribute.typeFromStringCode(attrib);
-		String sval = _commandParamMap.get(atrb);
-        sb.append(atrb);
-        sb.append('=').append('"');
-        sb.append(sval);
-        sb.append('"');
-		return sb.toString();
+	public void applyCommand(Command cmd) {
+		
+		String res = null;
+		for(Attribute a : _attribs){
+			if(a.attribToString().equals(cmd.getAttribute())){
+				String val = cmd.getValue();
+				a.setState(val);
+			}
+			
+		}
 	}
-
 	
 }
 
-enum ACAttribute {
-	OFF	(0),
-	ON	(1);
-	
-	private ACAttribute(Integer onoff) {
-		this._status = onoff;
+class Power extends Attribute{
+	String _onoff;
+	String _name;
+	Power(String onoff) {
+		this._name = "Power";
+		this._onoff = onoff;
 	}
 	
-	private Integer _status;
-	
-	public Integer getStatus() {
-		return _status;
+	public String attribToString(){
+		return this._name;
 	}
-	public static ACAttribute typeFromStringCode(String code) {
-		Integer sc = Integer.parseInt(code);
-		switch (sc) {
-		case 0: return OFF;
-		case 1: return ON;
-		default: {
-			throw new RuntimeException("Invalid state : " + code);
-		}
+	public String stateToString(){
+		return _onoff;
 	}
+
+	@Override
+	public void setState(String val) {
+		this._onoff = val;
 	}
 	
-	public static ACAttribute typeFromIntegerCode(Integer code) {
-		switch (code) {
-			case 0: return OFF;
-			case 1: return ON;
-			default: {
-				throw new RuntimeException("Invalid state : " + code);
-			}
-		}
-	}	
 }

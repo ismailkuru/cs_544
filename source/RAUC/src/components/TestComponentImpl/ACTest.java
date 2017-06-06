@@ -30,7 +30,7 @@ public class ACTest {
 		System.out.println();
 		System.out.println();
 		
-		System.out.println("Value of attrib 0 is now " +  ac.getValueOfAttrb("0"));
+		//System.out.println("Value of attrib 0 is now " +  ac.getValueOfAttrb("0"));
 		
 		
 	}
