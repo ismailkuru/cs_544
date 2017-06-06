@@ -1,7 +1,9 @@
 package components.ComponentImpl;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import components.Command;
 import components.Component;
@@ -11,16 +13,16 @@ public class AC extends Component {
 	ACAttribute _state;
 	
 
-		//attributes mapped to their values
-		protected static Map<ACAttribute,String> _commandParamMap;
-		static {
+	//attributes mapped to their values
+	protected static Map<ACAttribute,String> _commandParamMap;
+	static {
 
-			// map for commands and its parameters
-			_commandParamMap = new HashMap<ACAttribute, String>();
-			_commandParamMap.put(ACAttribute.ON, "1");
-			_commandParamMap.put(ACAttribute.OFF, "0");
+		// map for commands and its parameters
+		_commandParamMap = new HashMap<ACAttribute, String>();
+		_commandParamMap.put(ACAttribute.ON, "1");
+		_commandParamMap.put(ACAttribute.OFF, "0");
 			
-		}
+	}
 	
 	public AC(String name, ComponentType compType){	
 		super(name,compType);
@@ -37,13 +39,21 @@ public class AC extends Component {
 	public ComponentType getComponentCode() {		
 		return this._typeCode;
 	}
-/*
-	@Override
-	public String getComponentAutoId() {
-		
-		return this._autoId;
+	public String toString(){
+	     StringBuilder sb = new StringBuilder();
+	        Iterator<Entry<ACAttribute, String>> iter = _commandParamMap.entrySet().iterator();
+	        while (iter.hasNext()) {
+	        	Entry<ACAttribute, String> entry = iter.next();
+	            sb.append(entry.getKey());
+	            sb.append('=').append('"');
+	            sb.append(entry.getValue());
+	            sb.append('"');
+	            if (iter.hasNext()) {
+	                sb.append(',').append(' ');
+	            }
+	        }
+	        return sb.toString();
 	}
-	*/
 	public String getValueOfAttrb(String attrb){
 		
 		ACAttribute atrb = ACAttribute.typeFromStringCode(attrb);	
@@ -61,6 +71,18 @@ public class AC extends Component {
 	
 	public Map<ACAttribute,String> getComponentMap(){
 		return AC._commandParamMap;
+	}
+
+	@Override
+	public String attribToStringtoString(String attrib) {
+		StringBuilder sb = new StringBuilder();
+		ACAttribute atrb = ACAttribute.typeFromStringCode(attrib);
+		String sval = _commandParamMap.get(atrb);
+        sb.append(atrb);
+        sb.append('=').append('"');
+        sb.append(sval);
+        sb.append('"');
+		return sb.toString();
 	}
 
 	

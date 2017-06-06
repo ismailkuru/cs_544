@@ -22,7 +22,7 @@ public class Factory {
 		//Fill the DB
 		
 		//Create Users
-		User u1 = new User("ismail", "1234");
+		User u1 = new User("user", "pass");
 		//Create Automobiles
 		Automobile a1 = new Automobile("1");
 		//Create Components

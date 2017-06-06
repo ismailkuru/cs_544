@@ -226,9 +226,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 		switch (msg) {
 			case "User Authentication": 	m = new UserAuthenMessage(userTF.getText(), passTF.getText());
 											break;
-			case "Utility Control Request": m = new UtilityControlReqMessage("default", "default", "default", "default");
+			case "Utility Control Request": m = new UtilityControlReqMessage("1", "0" , "0", "4");
 											break;
-			case "Utility State Query": 	m = new UtilityStateQueryMessage("car1", "ac");
+			case "Utility State Query": 	m = new UtilityStateQueryMessage("1");
 											break;
 			case "Termination":	 			client.disconnect(true); // use client's built in disconnect rather than make a new message
 											return;

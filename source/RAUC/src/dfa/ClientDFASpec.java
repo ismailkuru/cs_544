@@ -92,6 +92,7 @@ public class ClientDFASpec extends DFASpec {
     protected Message receiveWaitcmd(Message m) {
         switch (m.getMessageType()) {
             case OP_COMMAND_RECEIVED:
+            	setState(ESTABLISHED);
             case OP_TMP_ERROR:
             case OP_ERROR:
                 // Successfully executed command or received error from server

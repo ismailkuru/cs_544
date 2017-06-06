@@ -9,10 +9,13 @@ package dfa;
 *
 * */
 
+import components.Command;
 import components.Component;
 import components.Factory;
+import components.QueryExecutor;
 import pdu.Message;
 import pdu.MessageImpl.AckMessage;
+import pdu.MessageImpl.QueryResultMessage;
 import pdu.MessageImpl.RequestReceivedMessage;
 import pdu.MessageImpl.TemporaryErrorMessage;
 import pdu.MessageImpl.UserAuthenMessage;
@@ -131,12 +134,37 @@ public class ServerDFASpec extends DFASpec {
             case OP_COMMAND:
                 setState(WAITCMD);
                 // TODO: actually execute command
+			try {
+				//[TODO] For demo purposes
+				Command cmd = Command.createCommand(m);
+				String autoId = cmd.getAutoId();
+				ArrayList<Component> lcomps = componentMap.get(autoId);
+				Component compApplyTo = null;
+				for(Component cmp : lcomps){
+					if(cmp.getComponentCode().equals(cmd.getComponentType()))
+						compApplyTo = cmp;
+				}
+				//if(applyTo == null)
+				compApplyTo.applyCommand(cmd);
+					
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				System.out.println("Error : Invalid Command Creation");
+			}
                 return new RequestReceivedMessage();
             case OP_QUERY:
                 setState(WAITQRY);
                 // TODO: get requested information
                 // Not yet implemented, just return temp error
-                return new TemporaryErrorMessage();
+                //[TODO] For demo purposes
+                String qres = null;
+                try {
+                	qres = QueryExecutor.executeQuery(m, componentMap);
+                } catch (Exception e) {
+                	// TODO Auto-generated catch block
+                	System.out.println("Error : Invalid Query Creation");
+                }
+                return new QueryResultMessage(qres);
             default:
                 return receiveUnexpected(m);
         }
