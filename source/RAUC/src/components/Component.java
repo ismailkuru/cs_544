@@ -29,5 +29,6 @@ public abstract class Component {
 	public abstract String attribToStringtoString(String attrib);
 	public abstract String toString();
 	public abstract void applyCommand(Command cmd);
+	public abstract String attribStateToString(String attrib);
 		
 }

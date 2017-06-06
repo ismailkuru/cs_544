@@ -10,6 +10,7 @@ public class Automobile {
 	ArrayList<Component> components;
 	
 	public Automobile(String id ) {
+		components = new ArrayList<Component>();
 		_id = id;
 		addComponent(new AC("ac1"));
 		addComponent(new Radio("radio1"));

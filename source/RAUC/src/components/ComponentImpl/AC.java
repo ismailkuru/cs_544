@@ -49,6 +49,10 @@ public class AC extends Component {
 	       }
 	  return sb.toString();
 	}
+	
+	public String attribStateToString(String attrib) {
+		return attributes.get(attributes.indexOf(attrib)).stateToString();
+	}
 
 	@Override
 	public void applyCommand(Command cmd) {
