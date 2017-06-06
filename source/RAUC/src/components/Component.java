@@ -1,5 +1,6 @@
 package components;
 
+import java.util.List;
 
 public abstract class Component {
 	
@@ -7,6 +8,9 @@ public abstract class Component {
 	//Name of the component
 	protected final String _name;
 	protected final ComponentType _typeCode;
+	
+	// the attrs housed by this component
+	protected List<Attribute> attributes;
 	
 	
 	public Component(){ 
@@ -17,13 +21,13 @@ public abstract class Component {
 		this._typeCode = code;
 		
 		this._name = name;
-		//this._autoId = autoId;
+		
+		this.attributes = ComponentFactory.getDefault(_typeCode);
 	}
 	public abstract String getComponentName();	
 	public abstract ComponentType getComponentCode();
-	public abstract String attribStateToString(String attrib);
+	public abstract String attribToStringtoString(String attrib);
 	public abstract String toString();
 	public abstract void applyCommand(Command cmd);
-	
 		
 }
