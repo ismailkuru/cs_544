@@ -29,6 +29,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JLabel lblAuth;
 	private JTextField userTF;
 	private JTextField passTF;
+	private JTextField messageINP;
 	private JTextField serverTF, portTF;
 	private JButton login, logout;
 	private JTextArea ta;
@@ -77,7 +78,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 			passTF.setPreferredSize(new Dimension(100, 20));
 			loginPanel.add(passTF);
 			passTF.setBackground(Color.WHITE);
-					
+			
+			
+			
+			
 			// login and logout buttons
 			login = new JButton("Login");
 			loginPanel.add(login);
@@ -103,20 +107,23 @@ public class ClientGUI extends JFrame implements ActionListener {
 			lblSendNewMessage = new JLabel("Send new message:");
 			southPanel.add(lblSendNewMessage);
 			
-			btnDefaultMessage = new JButton("Default Messages");
+			btnDefaultMessage = new JButton("Message Builder");
 			btnDefaultMessage.addActionListener(this);
 			btnDefaultMessage.setEnabled(false);
-			southPanel.add(btnDefaultMessage, BorderLayout.WEST);
+			southPanel.add(btnDefaultMessage, BorderLayout.EAST);
 			
+			messageINP = new JTextField();
+			messageINP.setPreferredSize(new Dimension(300, 20));
+			southPanel.add(messageINP,BorderLayout.WEST);
 
 			
-			btnMessageBuilder = new JButton("Message Builder");
-			btnMessageBuilder.addActionListener(this);
-			btnMessageBuilder.setEnabled(false);
-			southPanel.add(btnMessageBuilder, BorderLayout.WEST);
+			//btnMessageBuilder = new JButton("Message Builder");
+			//btnMessageBuilder.addActionListener(this);
+			//btnMessageBuilder.setEnabled(false);
+			//southPanel.add(btnMessageBuilder, BorderLayout.WEST);
 
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
-			setSize(600, 600);
+			setSize(700, 700);
 			setVisible(true);
 		// --------------------------------------------------------------------------
 		// END GUI BUILD
@@ -203,6 +210,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			serverTF.setEditable(false);
 			portTF.setEditable(false);
 			btnDefaultMessage.setEnabled(true);
+			btnMessageBuilder.setEnabled(true);
 		}
 		
 		if (o == btnDefaultMessage) {
@@ -218,17 +226,26 @@ public class ClientGUI extends JFrame implements ActionListener {
 			sendDefault(s);
 		}
 		
+		
 
 	}
 	
 	public void sendDefault(String msg) {
 		Message m = null;
+		String mStr = null;
+		String[] splited = null;
 		switch (msg) {
 			case "User Authentication": 	m = new UserAuthenMessage(userTF.getText(), passTF.getText());
 											break;
-			case "Utility Control Request": m = new UtilityControlReqMessage("1", "0" , "power", "off");
+			case "Utility Control Request": 
+											mStr = messageINP.getText();
+											splited = mStr.split("\\s+");
+											m = new UtilityControlReqMessage(splited[0], splited[1] , splited[2], splited[3]);
 											break;
-			case "Utility State Query": 	m = new UtilityStateQueryMessage("1");
+			case "Utility State Query": 	
+											mStr = messageINP.getText();
+											splited = mStr.split("\\s+");
+											m = new UtilityStateQueryMessage(splited);
 											break;
 			case "Termination":	 			client.disconnect(true); // use client's built in disconnect rather than make a new message
 											return;
@@ -240,6 +257,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} catch (IOException e) {
 			display("Error sending message:");
 		}
+		messageINP.setText("");
 	}
 
 	// to start the whole thing the server
