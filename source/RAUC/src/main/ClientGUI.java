@@ -211,7 +211,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			serverTF.setEditable(false);
 			portTF.setEditable(false);
 			btnDefaultMessage.setEnabled(true);
-			btnMessageBuilder.setEnabled(true);
+			//btnMessageBuilder.setEnabled(true);
 		}
 		
 		if (o == btnDefaultMessage) {
