@@ -16,7 +16,28 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import static dfa.DFAState.ESTABLISHED;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Message.java
+* **************************************************
+* Definition: Purpose of this file is provide functionality to initialize a connection to the server.
+*  It uses GUI functionality provided by ClientGUI.java to control the client side capabilities.
+*  It is the main client driver. Handles DFA, socket connection, reading/writing threads, 
+*  and printing info for the user
+* *******************************************************
+* Requirements:
+* - CONCURRENT : This requirement is satisfied by Client.java in a way that it spawns a Listener thread 
+* to process Servers responses [ref to Client 106-109] right after establishing connection with server
+* [ref to Client 81-101] through SSL sockets with parametrized Server port number and Server address. [ref to Client 50-58]
+* 
+* ==============================================================================
+*/ 
 /**
  * Main client driver. Handles DFA, socket connection, reading/writing threads, and printing info for the user
  */
