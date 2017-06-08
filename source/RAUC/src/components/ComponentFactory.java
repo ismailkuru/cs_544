@@ -20,7 +20,7 @@ public final class ComponentFactory {
 		for (int i = 0; i < 1; i++) {
 			switch (i) {
 			case 0:
-				String pwr = "state";
+				String pwr = "lock";
 				String[] pwrVals = {"closed", "open"};
 				attrs.add(new Attribute(pwr, Arrays.asList(pwrVals)));
 				break;
