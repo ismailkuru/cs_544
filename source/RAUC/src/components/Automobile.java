@@ -2,18 +2,32 @@ package components;
 
 import java.util.ArrayList;
 import components.ComponentImpl.*;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Automobile.java
+* **************************************************
+* Definition: This file includes logical representation of an automobile. 
+* It includes list of components which can be AC, Radio etc.
+* *******************************************************
+* Related Requirements:
+* - STATEFUL : 
+* - SERVICE : the messages are an important part in the protocol service
+*   definition: initiating a connection, initializing states of components of the
+*   automobile at the client/server side ex: Command / ACK  etc.
+* 
+* ==============================================================================
+*/ 
 public class Automobile {
-//[TODO] User , automobile etc. need to be added. A random autonmobile and component generator
-// might be implemented ....
 	String _id;
-	ArrayList<Component> components;
 	
 	public Automobile(String id ) {
-		components = new ArrayList<Component>();
 		_id = id;
-		addComponent(new AC("ac1"));
-		addComponent(new Radio("radio1"));
 	}
 
 	public String get_id() {
@@ -23,9 +37,5 @@ public class Automobile {
 	public void set_id(String _id) {
 		this._id = _id;
 	}
-	
-	public void addComponent(Component c) {
-		components.add(c);
-	}
-	
+		
 }

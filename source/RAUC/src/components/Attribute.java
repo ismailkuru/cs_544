@@ -1,7 +1,25 @@
 package components;
 
 import java.util.List;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Attribute.java
+* **************************************************
+* Definition: Definitions of attributes associated with each component of an 
+* automobile included in this file.
+* *******************************************************
+* Related Requirements:
+* - STATEFUL : .
+* - SERVICE :  .
+* 
+* ==============================================================================
+*/ 
 public class Attribute {
 	private String _attr;
 	private List<String> _values;
