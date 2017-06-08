@@ -1,9 +1,14 @@
 package main;
 
 import javax.swing.*;
+
+import pdu.Message;
+import pdu.MessageImpl.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 
 public class ClientGUI extends JFrame implements ActionListener {
@@ -29,9 +34,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JTextArea ta;
 	private JPanel loginPanel;
 	private JPanel southPanel;
-	private JTextField msgField;
 	private JButton btnMessageBuilder;
-	private JLabel lblEnterMessage;
+	private JButton btnDefaultMessage;
+	private JLabel lblSendNewMessage;
 
 	// Build the GUI and load a default hostname and port number
 	public ClientGUI(String host, int port) {
@@ -90,25 +95,24 @@ public class ClientGUI extends JFrame implements ActionListener {
 			centerPanel.add(new JScrollPane(ta));
 			ta.setEditable(false);
 			getContentPane().add(centerPanel, BorderLayout.CENTER);
-			
-			
+						
 			// the SouthPanel, which contains controls for sending a new message
 			southPanel = new JPanel();
 			getContentPane().add(southPanel, BorderLayout.SOUTH);
+
+			lblSendNewMessage = new JLabel("Send new message:");
+			southPanel.add(lblSendNewMessage);
 			
-			lblEnterMessage = new JLabel("Enter Message: ");
-			southPanel.add(lblEnterMessage);
+			btnDefaultMessage = new JButton("Default Messages");
+			btnDefaultMessage.addActionListener(this);
+			btnDefaultMessage.setEnabled(false);
+			southPanel.add(btnDefaultMessage, BorderLayout.WEST);
 			
-			msgField = new JTextField();
-			msgField.setPreferredSize(new Dimension(300, 20));
-			southPanel.add(msgField, BorderLayout.CENTER);
-			msgField.setColumns(10);
+
 			
 			btnMessageBuilder = new JButton("Message Builder");
-			btnMessageBuilder.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
+			btnMessageBuilder.addActionListener(this);
+			btnMessageBuilder.setEnabled(false);
 			southPanel.add(btnMessageBuilder, BorderLayout.WEST);
 
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -122,6 +126,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 	// called by the client if the connection failed
 	// reset our buttons, labels, etc
 	void reset() {
+		portTF.setEnabled(true);
+		userTF.setEnabled(true);
+		passTF.setEnabled(true);
 		login.setEnabled(true);
 		logout.setEnabled(false);
 		//reset login info panel
@@ -132,8 +139,8 @@ public class ClientGUI extends JFrame implements ActionListener {
 		portTF.setText("" + defaultPort);
 		serverTF.setText(defaultHost);
 		// let the user change them
-		serverTF.setEditable(false);
-		portTF.setEditable(false);
+		serverTF.setEditable(true);
+		portTF.setEditable(true);
 		// don't react to a <CR> after the username
 		userTF.removeActionListener(this);
 		connected = false;
@@ -147,9 +154,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 		// if it is the Logout button
 		if(o == logout) {
 			client.disconnect(true);
-			portTF.setEnabled(true);
-			userTF.setEnabled(true);
-			passTF.setEnabled(true);
 			return;
 		}
 
@@ -198,10 +202,44 @@ public class ClientGUI extends JFrame implements ActionListener {
 			logout.setEnabled(true);
 			serverTF.setEditable(false);
 			portTF.setEditable(false);
-			// Action listener for client sending a message
-			msgField.addActionListener(this);
+			btnDefaultMessage.setEnabled(true);
 		}
+		
+		if (o == btnDefaultMessage) {
+			Object[] possibilities = {"User Authentication", "Utility Control Request", "Utility State Query", "Termination"};
+			String s = (String)JOptionPane.showInputDialog(
+			                    this,
+			                    "Select a default message to send:",
+			                    "Send New Message",
+			                    JOptionPane.PLAIN_MESSAGE,
+			                    null,
+			                    possibilities,
+			                    "Message Choice");
+			sendDefault(s);
+		}
+		
 
+	}
+	
+	public void sendDefault(String msg) {
+		Message m = null;
+		switch (msg) {
+			case "User Authentication": 	m = new UserAuthenMessage(userTF.getText(), passTF.getText());
+											break;
+			case "Utility Control Request": m = new UtilityControlReqMessage("1", "0" , "power", "off");
+											break;
+			case "Utility State Query": 	m = new UtilityStateQueryMessage("1");
+											break;
+			case "Termination":	 			client.disconnect(true); // use client's built in disconnect rather than make a new message
+											return;
+			
+			default: 						break;
+		}
+		try {
+			client.sendMessage(m);
+		} catch (IOException e) {
+			display("Error sending message:");
+		}
 	}
 
 	// to start the whole thing the server
@@ -209,6 +247,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		new ClientGUI("localhost", 1500);
 	}
 	
+	// print something to output window
 	public void display(String s) {
 		ta.append(s);
 	}

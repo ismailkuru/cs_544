@@ -70,9 +70,11 @@ public class ClientDFASpec extends DFASpec {
                 setState(ESTABLISHED);
                 return m;
             case OP_TMP_ERROR:
+            	setState(INIT);
+            	return m;
             case OP_ERROR:
                 // Failed authentication; retry
-                setState(AUTH);
+                setState(INIT);
                 return m;
             default:
                 // Something went wrong, received unexpected message
@@ -90,6 +92,7 @@ public class ClientDFASpec extends DFASpec {
     protected Message receiveWaitcmd(Message m) {
         switch (m.getMessageType()) {
             case OP_COMMAND_RECEIVED:
+            	setState(ESTABLISHED);
             case OP_TMP_ERROR:
             case OP_ERROR:
                 // Successfully executed command or received error from server

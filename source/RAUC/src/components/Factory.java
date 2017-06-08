@@ -22,11 +22,11 @@ public class Factory {
 		//Fill the DB
 		
 		//Create Users
-		User u1 = new User("ismail", "1234");
+		User u1 = new User("user", "pass");
 		//Create Automobiles
 		Automobile a1 = new Automobile("1");
 		//Create Components
-		AC ac = new AC("0", ComponentType.AC);
+		AC ac = new AC("0");
 		
 		//add to components list
 		ArrayList<Component> lcomps = new ArrayList<Component>();

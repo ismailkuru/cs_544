@@ -1,16 +1,16 @@
 package components.ComponentImpl;
 
-import java.util.*;
+import java.util.List;
 
 import components.Attribute;
 import components.Command;
 import components.Component;
 import components.ComponentType;
 
-public class AC extends Component {
+public class Radio extends Component {
 	
-	public AC(String name) {
-		super(name, ComponentType.AC);
+	public Radio (String name) {
+		super(name, ComponentType.RADIO);
 	}
 
 	@Override
@@ -56,14 +56,7 @@ public class AC extends Component {
 
 	@Override
 	public void applyCommand(Command cmd) {
-		String res = null;
-		for(Attribute a : attributes){
-			if(a.attribToString().equals(cmd.getAttribute())){
-				String val = cmd.getValue();
-				a.set(val);
-			}
-			
-		}
+		// TODO Auto-generated method stub
 		
 	}
 	
