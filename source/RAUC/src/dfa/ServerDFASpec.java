@@ -1,14 +1,5 @@
 package dfa;
 
-/*
-* Ismail Kuru - Max Mattes - Lewis Cannalongo
-* 
-* File : Server.java
-* Aim : This file includes the machinery specified for
-* Server DFA in design document.
-*
-* */
-
 import components.Command;
 import components.Component;
 import components.Factory;
@@ -25,11 +16,34 @@ import java.util.Map;
 
 import static dfa.DFAState.*;
 import static pdu.MessageType.OP_AUTH;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: ServerDFASpec.java
+* **************************************************
+* Definition: This file includes the definitions for specification of 
+* the Server side functionality. It is sub type of DFASpec.java.
+* *******************************************************
+* Requirements:
+* - STATEFUL :STATEFUL : Entire file defines valid client side states and admissible 
+* valid transitions between these states. All functions([Details below ServerSpecDFA 
+* sendAuth, sendWaitcmd, sendWaitqry, receiveInit,receiveEstablished]) inherited from
+*  DFASpec.java defines the valid transition relation between server side states, 
+*  setting state of server dfa in each of these functions, triggered by Message m.
+* - SERVICE : Server side functionality is specified in this file.
+* 
+* ==============================================================================
+*/
 public class ServerDFASpec extends DFASpec {
-    // Ideally we'd be connecting to a real database for these, but this works for the prototype
-    // automobile --> components  map
-    // Loaded inside authentication process
+    /*
+     *  SERVICE:Ideally we'd be connecting to a real database for these, but this works for the prototype
+     *  automobile --> components  map Loaded inside authentication process
+     */
     private Map<String, ArrayList<Component>> componentMap;
     private Map<String, String> users;
     private Factory db;
@@ -50,10 +64,12 @@ public class ServerDFASpec extends DFASpec {
     protected boolean sendAuth(Message m) {
         switch (m.getMessageType()) {
             case OP_SUCCESS:
+            	//STATEFUL:Authentication is provided
                 setState(ESTABLISHED);
                 return true;
             case OP_ERROR:
             case OP_TMP_ERROR:
+            	//STATEFUL:Authentication fails
                 setState(INIT);
                 return true;
             default:
@@ -73,6 +89,8 @@ public class ServerDFASpec extends DFASpec {
             case OP_ERROR:
             case OP_TMP_ERROR:
             case OP_COMMAND_RECEIVED:
+            	//STATEFUL:Set state connection established
+            	//         now commands can be received
                 setState(ESTABLISHED);
                 return true;
             default:
@@ -92,6 +110,8 @@ public class ServerDFASpec extends DFASpec {
             case OP_ERROR:
             case OP_TMP_ERROR:
             case OP_INFO:
+            	//STATEFUL:Set state connection established
+            	//         now commands can be received 
                 setState(ESTABLISHED);
                 return true;
             default:
@@ -111,6 +131,7 @@ public class ServerDFASpec extends DFASpec {
             return receiveUnexpected(m);
         }
         UserAuthenMessage am = (UserAuthenMessage) m;
+        //STATEFUL:Server is in state to receive authentication requests
         setState(AUTH);
         // Scary string password matching for PROTOTYPE ONLY. THIS SHOULD NEVER HAPPEN IN PRODUCTION CODE
         if (users.containsKey(am.getUserName()) && users.get(am.getUserName()).equals(am.getPassword())) {
@@ -132,10 +153,9 @@ public class ServerDFASpec extends DFASpec {
     protected Message receiveEstablished(Message m) {
         switch (m.getMessageType()) {
             case OP_COMMAND:
+            	//STATEFUL: Server waits commands
                 setState(WAITCMD);
-                // TODO: actually execute command
 			try {
-				//[TODO] For demo purposes
 				Command cmd = Command.createCommand(m);
 				String autoId = cmd.getAutoId();
 				ArrayList<Component> lcomps = componentMap.get(autoId);
@@ -144,19 +164,15 @@ public class ServerDFASpec extends DFASpec {
 					if(cmp.getComponentCode().equals(cmd.getComponentType()))
 						compApplyTo = cmp;
 				}
-				//if(applyTo == null)
 				compApplyTo.applyCommand(cmd);
 					
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				System.out.println("Error : Invalid Command Creation");
 			}
                 return new RequestReceivedMessage();
             case OP_QUERY:
+            	//STATEFUL: Server waits query requests
                 setState(WAITQRY);
-                // TODO: get requested information
-                // Not yet implemented, just return temp error
-                //[TODO] For demo purposes
                 String qres = null;
                 try {
                 	qres = QueryExecutor.executeQuery(m, componentMap);

@@ -16,11 +16,8 @@ import components.ComponentImpl.*;
 * It includes list of components which can be AC, Radio etc.
 * *******************************************************
 * Related Requirements:
-* - STATEFUL : 
-* - SERVICE : the messages are an important part in the protocol service
-*   definition: initiating a connection, initializing states of components of the
-*   automobile at the client/server side ex: Command / ACK  etc.
-* 
+* - SERVICE : This file includes implementation which is part of SERVICE
+* requirement as they are query/change the values of attributes of components
 * ==============================================================================
 */ 
 public class Automobile {

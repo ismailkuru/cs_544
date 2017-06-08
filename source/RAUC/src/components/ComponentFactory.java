@@ -2,6 +2,24 @@ package components;
 
 import java.util.*;
 
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: ComponentFactory.java
+* **************************************************
+* Definition: 
+* *******************************************************
+* Requirements:
+* - STATEFUL : 
+* - SERVICE : 
+* ==============================================================================
+*/ 
+
 public final class ComponentFactory {
 		
 	public ComponentFactory() {

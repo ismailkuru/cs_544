@@ -6,7 +6,24 @@ import java.util.Set;
 
 import pdu.Message;
 import pdu.MessageType;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: QueryExecutor.java
+* **************************************************
+* Definition: 
+* *******************************************************
+* Requirements:
+* - STATEFUL : 
+* - SERVICE : 
+* 
+* ==============================================================================
+*/ 
 public class QueryExecutor {
 
 	private QueryExecutor(){}

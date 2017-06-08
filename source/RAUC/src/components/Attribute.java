@@ -15,9 +15,9 @@ import java.util.List;
 * automobile included in this file.
 * *******************************************************
 * Related Requirements:
-* - STATEFUL : .
-* - SERVICE :  .
-* 
+* - SERVICE : It is part of the service of the protocol as we query the 
+* current values of the attributes in read only queries, UtilityStateQuery
+* and change the current value of an attribute through UtilityReqCommand.
 * ==============================================================================
 */ 
 public class Attribute {

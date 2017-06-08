@@ -10,7 +10,24 @@ import users.User;
 import components.ComponentImpl.AC;
 import components.ComponentImpl.Door;
 import components.ComponentImpl.Radio;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Factory.java
+* **************************************************
+* Definition: This file includes instantiation of couple of objects (User, Automobile, Components
+etc.) to demonstrate that protocol is servicing properly.
+* *******************************************************
+* Requirements:
+* - SERVICE : This file partly satisfies the SERVICE requirement as it instantiates the 
+* data which is needed for client and server message exchange.
+* ==============================================================================
+*/ 
 public class Factory {
 	HashMap<String, HashMap<String , ArrayList<Component>>> _db;
 	public Factory(){

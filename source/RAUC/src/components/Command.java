@@ -1,12 +1,27 @@
 package components;
 
 import pdu.*;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Command.java
+* **************************************************
+* Definition:  This file includes implementation of converting a utility request command 
+* to a command object to be applied on components.
+* *******************************************************
+* Requirements:
+* - SERVICE : Commands are operations applied on states of components of an automobile. 
+* Command objects are generated from Message objects, and applied on 
+* components of an automobile. It is part of the protocol’s service.
+* ==============================================================================
+*/ 
 /*
- * This file includes implementation of 
- * converting a utility request command 
- * to a command object to be applied on
- * components.
+ *
  * 
  * */
 
@@ -15,6 +30,7 @@ public class Command {
 	ComponentType _comp;
 	String _attrb;
 	String _val ;
+	
 	
 	private Command(String autoId, ComponentType comp, String attrb, String val){
 		_autoId =autoId;
@@ -26,6 +42,10 @@ public class Command {
 	
 	public static Command createCommand(Message msg) throws Exception{
 
+		/*
+		 * SERVICE: Creating commands from message objects
+		 * 
+		 * */
 		if(msg.getMessageType() != MessageType.OP_COMMAND ){
 			throw new Exception("Invalid message type : " + msg.getMessageType());	
 		}

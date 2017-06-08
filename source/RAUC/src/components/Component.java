@@ -1,7 +1,26 @@
 package components;
 
 import java.util.List;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Component.java
+* **************************************************
+* Definition: This file includes abstract class for a component that can be 
+* part of an automobile controlled by the protocol. 
+* *******************************************************
+* Requirements:
+* - SERVICE : It is part of the protocol’s
+*  service because Component.java specifies that each component sub type, 
+*  ex:AC.java, needs to implement applyCommand, 
+*  which enables applying a command to change component’s state of attributes
+* ==============================================================================
+*/
 public abstract class Component {
 	
 	

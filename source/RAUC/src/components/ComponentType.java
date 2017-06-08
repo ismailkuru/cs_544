@@ -1,5 +1,21 @@
 package components;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: ComponentType.java
+* **************************************************
+* Definition: .
+* *******************************************************
+* Requirements:
+* - STATEFUL : 
+* - SERVICE : 
+* ==============================================================================
+*/ 
 public enum ComponentType {
 
 	AC		(0),
