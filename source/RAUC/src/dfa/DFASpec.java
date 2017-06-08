@@ -5,7 +5,23 @@ import pdu.Message;
 import static dfa.DFAState.CLOSED;
 import static pdu.MessageType.OP_SHUTDOWN;
 
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: DFASpec.java
+* **************************************************
+* Definition:This is an abstract class which defines methods to be implemented by
+*  the client and server for the operations to apply at any given state of the protocol.
+* *******************************************************
+* Requirements:
+* - STATEFUL : Entire file details relevant satisfaction of STATEFUL requirement  
+* ==============================================================================
+*/ 
 public abstract class DFASpec {
     protected volatile DFAState state;
     protected volatile DFAState _prev;
@@ -27,7 +43,7 @@ public abstract class DFASpec {
      * @return true if message can be sent
      */
     public boolean send(Message m) {
-        // if the incoming message is a shutdown request, return immediately
+        //STATEFUL: if the incoming message is a shutdown request, return immediately
         if (m.getMessageType() == OP_SHUTDOWN) {
             setState(CLOSED);
             return true;
@@ -58,7 +74,7 @@ public abstract class DFASpec {
     public Message receive(Message m) {
         // if the incoming message is a shutdown request, return immediately
         if (m.getMessageType() == OP_SHUTDOWN) return null;
-        // otherwise, process the message in the respective state of the protocol
+        //STATEFUL: otherwise, process the message in the respective state of the protocol
         switch (state) {
             case INIT:
                 return receiveInit(m);
