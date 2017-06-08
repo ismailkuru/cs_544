@@ -4,6 +4,7 @@ public enum ComponentType {
 
 	AC		(0),
 	RADIO   (1),
+	DOOR	(2),
 	INVALID_DEVICE (-1);
 
 

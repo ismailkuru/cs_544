@@ -1,16 +1,15 @@
 package components.ComponentImpl;
 
-import java.util.*;
+import java.util.List;
 
 import components.Attribute;
 import components.Command;
 import components.Component;
 import components.ComponentType;
 
-public class AC extends Component {
-	
-	public AC(String name) {
-		super(name, ComponentType.AC);
+public class Door extends Component{
+	public Door (String name) {
+		super(name, ComponentType.DOOR);
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class AC extends Component {
 	     StringBuilder sb = new StringBuilder();
 	       for(Attribute a : attributes){
 	            sb.append(a.attribToString());
-	            sb.append('=');//.append('"');
+	            //sb.append('=').append('"');
 	            sb.append(a.stateToString());
 	            //sb.append('"');
 	       }
@@ -56,15 +55,7 @@ public class AC extends Component {
 
 	@Override
 	public void applyCommand(Command cmd) {
-		String res = null;
-		for(Attribute a : attributes){
-			if(a.attribToString().equals(cmd.getAttribute())){
-				String val = cmd.getValue();
-				a.set(val);
-			}
-			
-		}
+		// TODO Auto-generated method stub
 		
 	}
-	
 }

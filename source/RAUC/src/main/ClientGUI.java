@@ -77,9 +77,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			passTF = new JTextField("Pass");
 			passTF.setPreferredSize(new Dimension(100, 20));
 			loginPanel.add(passTF);
-			passTF.setBackground(Color.WHITE);
-			
-			
+			passTF.setBackground(Color.WHITE);		
 			
 			
 			// login and logout buttons
@@ -102,6 +100,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 						
 			// the SouthPanel, which contains controls for sending a new message
 			southPanel = new JPanel();
+			southPanel.setPreferredSize(new Dimension(300, 300));
 			getContentPane().add(southPanel, BorderLayout.SOUTH);
 
 			lblSendNewMessage = new JLabel("Send new message:");
@@ -113,7 +112,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			southPanel.add(btnDefaultMessage, BorderLayout.EAST);
 			
 			messageINP = new JTextField();
-			messageINP.setPreferredSize(new Dimension(300, 20));
+			messageINP.setPreferredSize(new Dimension(400, 20));
 			southPanel.add(messageINP,BorderLayout.WEST);
 
 			
@@ -123,7 +122,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			//southPanel.add(btnMessageBuilder, BorderLayout.WEST);
 
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
-			setSize(700, 700);
+			setSize(800, 800);
 			setVisible(true);
 		// --------------------------------------------------------------------------
 		// END GUI BUILD

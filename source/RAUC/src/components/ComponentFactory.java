@@ -11,9 +11,25 @@ public final class ComponentFactory {
 		switch (type) {
 		case AC: return defaultAC();
 		case RADIO: return defaultRadio();
+		case DOOR: return defaultDoor();
 		default: return null;
 		}
 	}
+	private static ArrayList<Attribute> defaultDoor() {
+		ArrayList<Attribute> attrs = new ArrayList<Attribute>();
+		for (int i = 0; i < 1; i++) {
+			switch (i) {
+			case 0:
+				String pwr = "state";
+				String[] pwrVals = {"closed", "open"};
+				attrs.add(new Attribute(pwr, Arrays.asList(pwrVals)));
+				break;
+				
+			default: break;
+		}
+	}
+		return attrs;
+	}	
 	
 	private static ArrayList<Attribute> defaultAC() {
 		ArrayList<Attribute> attrs = new ArrayList<Attribute>();
