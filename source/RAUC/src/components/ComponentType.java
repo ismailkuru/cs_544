@@ -20,6 +20,7 @@ public enum ComponentType {
 		switch (Integer.parseInt(code)) {
 		case 0: return AC;
 		case 1: return RADIO;
+		case 2: return DOOR;
 		default: throw new Exception("Invalid component code: " + INVALID_DEVICE);
 		}
 	}

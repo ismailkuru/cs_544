@@ -29,7 +29,8 @@ public class Server {
     private static final Map<String, String> testUsers = new HashMap<>();
 
     static {
-        testUsers.put("user", "pass");
+        testUsers.put("user1", "pass1");
+        testUsers.put("user2", "pass2");
     }
 
     // gui if running in gui mode

@@ -17,52 +17,54 @@ public class Factory {
 		
 		//Initial DB
 		_db = new HashMap<String, HashMap<String, ArrayList<Component>>>();
-		
-		//automobile1 --> components  map
+		//automobile --> components  map
 		HashMap<String, ArrayList<Component>> acomps = new HashMap<String, ArrayList<Component>>();
-		//automobile2 --> components  map
+		//automobile --> components  map
 		HashMap<String, ArrayList<Component>> acomps1 = new HashMap<String, ArrayList<Component>>();
 		
 		//Fill the DB
-		//Create Users
 		
-		//first user
+		//Create Users
 		User u1 = new User("user1", "pass1");
 		//Create Automobiles
-		Automobile a1 = new Automobile("Auto1");
+		Automobile a1 = new Automobile("au1");
 		//Create Components
-		AC ac = new AC("AC0");
-		Radio rd = new Radio("RD0");
-		Door dr = new Door("DR0");
+		AC ac = new AC("ac1");
+		Radio rd = new Radio("rd1");
+		Door dr = new Door("dr1");
 		//add to components list
 		ArrayList<Component> lcomps = new ArrayList<Component>();
 		lcomps.add(ac);
 		lcomps.add(rd);
-		lcomps.add(dr);
+		
 		//Fill auto --> list components map
 		acomps.put(a1.get_id(),lcomps);
+		
+	
 		//Fill user --> auto,list<comps> map
 		_db.put(u1.get_uname(),acomps );
 		
 		
+		//[TODO:] Add auto and components to this factory
+		
 		//second user
 		User u2 = new User("user2","pass2");
 		//Create Automobile
-		Automobile a2 = new Automobile("Auto2");
+		Automobile a2 = new Automobile("au2");
 		//Create Components
-		AC ac1 = new AC("1");
-		Radio rd1 = new Radio("RD1");
-		Door dr1 = new Door("DR1");
+		AC ac1 = new AC("ac2");
+		Radio rd1 = new Radio("rd2");
+		Door dr1 = new Door("dr2");
 		//add to components list
 		ArrayList<Component> lcomps1 = new ArrayList<Component>();
 		lcomps1.add(ac1);
 		lcomps1.add(rd1);
-		lcomps.add(dr1);
+		lcomps1.add(dr1);
 		//Fill auto --> list components map
-		acomps1.put(a2.get_id(),lcomps);
+		acomps1.put(a2.get_id(),lcomps1);
 		//Fill user --> auto,list<comps> map
 		_db.put(u2.get_uname(),acomps1 );
-						
+		
 	}
 	
 	public HashMap<String, ArrayList<Component>> loadUserDB(String uname){

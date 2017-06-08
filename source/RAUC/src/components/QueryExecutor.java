@@ -28,7 +28,7 @@ public class QueryExecutor {
 					Set<String> autos = cmap.keySet();
 					String[] aautos = autos.toArray(new String[autos.size()]);
 					for(String s : aautos) {
-					    builder.append(s);
+					    builder.append(s).append(" - ");
 					}
 					result = builder.toString();
 					return result; 
@@ -51,7 +51,7 @@ public class QueryExecutor {
 						if(c.getComponentCode().equals(cmpt))
 							cmp = c;
 					}
-					result = cmp.toString();
+					result = cmp.toString() + " - ";
 					return result;
 				case 3: // List internal state of the attribute
 					autoId = msg.getContent().get(0).getContent();

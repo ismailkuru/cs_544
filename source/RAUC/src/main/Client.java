@@ -129,17 +129,8 @@ public class Client {
     protected void display(String msg) {
         if (cg == null)
             System.out.println(msg);      // print to sout in in CLI mode
-        else{
-        	//String str = myString.split(" ")[0];
-        	//msg = msg.replace("\\","");
-        	//String[] arr = msg.split("u");
-        	//String text = "";
-        	//for(int i = 1; i < arr.length; i++){
-        	    //int hexVal = Integer.parseInt(arr[i], 16);
-        	    //text += (char)hexVal;
-        	//}
+        else
             cg.display(msg + "\n");        // append to the ClientGUI conversation window
-        }
     }
 
     /**

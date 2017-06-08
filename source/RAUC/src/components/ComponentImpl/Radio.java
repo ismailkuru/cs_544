@@ -40,14 +40,14 @@ public class Radio extends Component {
 	}
 	@Override
 	public String toString() {
-	     StringBuilder sb = new StringBuilder();
+		   StringBuilder sb = new StringBuilder();
 	       for(Attribute a : attributes){
 	            sb.append(a.attribToString());
-	            //sb.append('=').append('"');
+	            sb.append('-');
 	            sb.append(a.stateToString());
 	            //sb.append('"');
 	       }
-	  return sb.toString();
+	  return super._name + ":" + sb.toString();
 	}
 	
 	public String attribStateToString(String attrib) {

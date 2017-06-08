@@ -77,7 +77,9 @@ public class ClientGUI extends JFrame implements ActionListener {
 			passTF = new JTextField("Pass");
 			passTF.setPreferredSize(new Dimension(100, 20));
 			loginPanel.add(passTF);
-			passTF.setBackground(Color.WHITE);		
+			passTF.setBackground(Color.WHITE);
+			
+			
 			
 			
 			// login and logout buttons
@@ -112,7 +114,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			southPanel.add(btnDefaultMessage, BorderLayout.EAST);
 			
 			messageINP = new JTextField();
-			messageINP.setPreferredSize(new Dimension(400, 20));
+			messageINP.setPreferredSize(new Dimension(300, 20));
 			southPanel.add(messageINP,BorderLayout.WEST);
 
 			
