@@ -134,12 +134,22 @@ public class Client {
     }
 
     /**
-     * Prints to GUI or CLI
+     * Prints incoming RAUC message to GUI or CLI
      *
      * @param msg Message to display to user
      */
-    protected void display(Message msg) {
+    protected void displayIncoming(Message msg) {
         display("<<< " + msg.toString());
+    }
+    
+    
+    /**
+     * Prints outgoing RAUC message to GUI or CLI
+     *
+     * @param msg Message to display to user
+     */
+    protected void displayOutgoing(Message msg) {
+    	display(">>> " + msg.toString());
     }
 
     /**
@@ -151,7 +161,7 @@ public class Client {
         try {
             // if current state allows for sending this message
             if (dfa.send(msg)) {
-                display(">>> " + msg.toString());
+                displayOutgoing(msg);
                 sOutput.write(msg.toBytes());
                 sOutput.flush();
             } else {
@@ -229,7 +239,7 @@ public class Client {
                 disconnect(false);
             } else {
                 // display error or valid message
-                display(outMsg);
+                displayIncoming(outMsg);
             }
         }
     }

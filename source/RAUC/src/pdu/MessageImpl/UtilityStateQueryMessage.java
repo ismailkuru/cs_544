@@ -17,6 +17,9 @@ public class UtilityStateQueryMessage extends Message{
 		this._header = new HeaderChunk(MessageType.OP_QUERY, params.length);
         this._content = new ArrayList<>();
 		for (String param : params) {
+			if (param == null) {
+				break;
+			}
 			this._content.add(new ContentChunk(param));
 		}
 	}

@@ -108,20 +108,22 @@ public class ClientGUI extends JFrame implements ActionListener {
 			lblSendNewMessage = new JLabel("Send new message:");
 			southPanel.add(lblSendNewMessage);
 			
-			btnDefaultMessage = new JButton("Message Builder");
+			btnDefaultMessage = new JButton("Default Messages");
 			btnDefaultMessage.addActionListener(this);
 			btnDefaultMessage.setEnabled(false);
 			southPanel.add(btnDefaultMessage, BorderLayout.EAST);
 			
+			/*
 			messageINP = new JTextField();
 			messageINP.setPreferredSize(new Dimension(300, 20));
 			southPanel.add(messageINP,BorderLayout.WEST);
-
+*/
+	
 			
-			//btnMessageBuilder = new JButton("Message Builder");
-			//btnMessageBuilder.addActionListener(this);
-			//btnMessageBuilder.setEnabled(false);
-			//southPanel.add(btnMessageBuilder, BorderLayout.WEST);
+			btnMessageBuilder = new JButton("Message Builder");
+			btnMessageBuilder.addActionListener(this);
+			btnMessageBuilder.setEnabled(false);
+			southPanel.add(btnMessageBuilder, BorderLayout.WEST);
 
 			setDefaultCloseOperation(EXIT_ON_CLOSE);
 			setSize(800, 800);
@@ -211,10 +213,12 @@ public class ClientGUI extends JFrame implements ActionListener {
 			serverTF.setEditable(false);
 			portTF.setEditable(false);
 			btnDefaultMessage.setEnabled(true);
-			//btnMessageBuilder.setEnabled(true);
+			btnMessageBuilder.setEnabled(true);
 		}
 		
+		// if user wants to send a default message
 		if (o == btnDefaultMessage) {
+			// pick a default message from a dropdown box
 			Object[] possibilities = {"User Authentication", "Utility Control Request", "Utility State Query", "Termination"};
 			String s = (String)JOptionPane.showInputDialog(
 			                    this,
@@ -224,31 +228,41 @@ public class ClientGUI extends JFrame implements ActionListener {
 			                    null,
 			                    possibilities,
 			                    "Message Choice");
+			// send that default message
 			sendDefault(s);
+		}
+		
+		// if user wants to build a new message
+		if (o == btnMessageBuilder) {
+			Object[] possibilities = {"Utility Control Request", "Utility State Query"};
+			// choose the type of message to build
+			String s = (String)JOptionPane.showInputDialog(
+			                    this,
+			                    "Select a message type to send:",
+			                    "Message Builder",
+			                    JOptionPane.PLAIN_MESSAGE,
+			                    null,
+			                    possibilities,
+			                    "Message Choice");
+			// build that message
+			sendMessageBuilder(s);
 		}
 		
 		
 
 	}
 	
+	// dialog box to send default messages
 	public void sendDefault(String msg) {
 		Message m = null;
-		String mStr = null;
-		String[] splited = null;
 		switch (msg) {
-			case "User Authentication": 	m = new UserAuthenMessage(userTF.getText(), passTF.getText());
+			case "User Authentication": 	m = new UserAuthenMessage(userTF.getText(), passTF.getText()); // should never send but there for demonstration
 											break;
-			case "Utility Control Request": 
-											mStr = messageINP.getText();
-											splited = mStr.split("\\s+");
-											m = new UtilityControlReqMessage(splited[0], splited[1] , splited[2], splited[3]);
+			case "Utility Control Request": m = new UtilityControlReqMessage("au1", "0" , "power", "off"); // turns default component off
 											break;
-			case "Utility State Query": 	
-											mStr = messageINP.getText();
-											splited = mStr.split("\\s+");
-											m = new UtilityStateQueryMessage(splited);
+			case "Utility State Query": 	m = new UtilityStateQueryMessage("au1"); // list components on auto 1
 											break;
-			case "Termination":	 			client.disconnect(true); // use client's built in disconnect rather than make a new message
+			case "Termination":	 			client.disconnect(true); // use client's built in disconnect (sends Termination message)
 											return;
 			
 			default: 						break;
@@ -258,7 +272,27 @@ public class ClientGUI extends JFrame implements ActionListener {
 		} catch (IOException e) {
 			display("Error sending message:");
 		}
-		messageINP.setText("");
+	}
+	
+	public void sendMessageBuilder(String msg) {
+		Message m = null;
+		MessageBuilder mb = new MessageBuilder(this);
+		
+		// launch specific builder based on user choice
+		switch (msg) {
+			case "Utility Control Request": m = mb.buildUCR();
+											break;
+			case "Utility State Query": 	m = mb.buildQRY();
+											break;
+			
+			default: 						break;
+		}
+		try {
+			// send the message we built
+			client.sendMessage(m);
+		} catch (IOException e) {
+			display("Error sending message:");
+		}
 	}
 
 	// to start the whole thing the server
@@ -269,5 +303,195 @@ public class ClientGUI extends JFrame implements ActionListener {
 	// print something to output window
 	public void display(String s) {
 		ta.append(s);
+	}
+	
+	
+	
+	
+	protected class MessageBuilder {
+		
+		JFrame parent;
+		
+		MessageBuilder(JFrame par) {
+			parent = par;
+		}
+		
+		// builds a UCR message from user input dialogs
+		protected  UtilityControlReqMessage buildUCR() {
+			String auto= null;
+			String comp= null;
+			String attr= null;
+			String val = null;
+			
+			// get auto id to send to
+			auto = (String) JOptionPane.showInputDialog(
+					parent,
+					"Enter the automobile name to send this message to:",
+					"UCR Builder: Enter Auto",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					null,
+					null
+					);
+			
+			// get component to send to
+			comp = (String) JOptionPane.showInputDialog(
+					parent,
+					"Enter the component on " + auto + " to control",
+					"UCR Builder: Enter Component",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					null,
+					null
+					);
+			
+			// get attribute to adjust
+			attr = (String) JOptionPane.showInputDialog(
+					parent,
+					"Enter the attribute of " + auto + "/" + comp + " to adjust",
+					"UCR Builder: Enter Attribute",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					null,
+					null
+					); 
+			
+			// get value to set attribute to
+			val = (String) JOptionPane.showInputDialog(
+					parent,
+					"Enter the new value of " + auto + "/" + comp + "/" + attr,
+					"UCR Builder: Set Value",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					null,
+					null
+					);
+			// build the message and return it
+			return new UtilityControlReqMessage(auto, comp, attr, val);
+		}
+		
+		protected UtilityStateQueryMessage buildQRY() {
+			String auto= null;
+			String comp= null;
+			String attr= null;
+			String val = null;
+
+			
+			UCRType type = new UCRType();
+			UCRType[] ask = type.ucrs();
+		
+			
+			
+			 type = (UCRType) JOptionPane.showInputDialog(
+					parent,
+					"What is your query?",
+					"QRY Builder",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					ask,
+					null
+					);
+			 
+			 display(type.toString() + "\n");
+			 
+			 int buildSeq = type.getVal();
+			 
+			 display("build case " + buildSeq + "\n");
+			 
+			 switch (buildSeq) {
+			 	case 1: 
+			 		val = "1";
+			 	case 2:
+			 		attr = getAttr();
+			 	case 3:
+			 		comp = getComp();
+			 	case 4:
+			 		auto = getAuto();
+			 	case 5:
+			 		break;
+			 }
+			 
+			 
+			 
+			 
+			 return new UtilityStateQueryMessage(auto, comp, attr, val);
+		
+		}
+		
+		private String getAuto() {
+			String res = (String) JOptionPane.showInputDialog(
+					parent,
+					"Which automobile do you want to know about?",
+					"QRY Builder: Enter Auto",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					null,
+					null
+					); 
+			return res;
+		}
+		private String getComp() {
+			String res = (String) JOptionPane.showInputDialog(
+					parent,
+					"Which component do you want to know about?",
+					"QRY Builder: Enter Component",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					null,
+					null
+					); 
+			return res;
+		}
+		private String getAttr() {
+			String res = (String) JOptionPane.showInputDialog(
+					parent,
+					"Which attribute do you want to know about?",
+					"QRY Builder: Enter Attribute",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					null,
+					null
+					); 
+			return res;
+		}
+		
+
+		
+		// VERY messy subclass just to clean up above, really should be an enum or similar but unable to do that in private MessageBuilder subclass
+		private class UCRType {
+			
+			String askLine;
+			int val;
+			
+			UCRType(String ask, int value) {
+				askLine = ask;
+				val = value;
+			}
+			
+			UCRType() {
+			}
+			
+			UCRType[] ucrs() {
+				UCRType[] res = new UCRType[5];
+				
+				res[0] = new UCRType("List autos on this account", 5);
+				res[1] = new UCRType("List components on an auto", 4);
+				res[2] = new UCRType("List attributes of a component", 3);
+				res[3] = new UCRType("List possible values of an attribute", 2);
+				res[4] = new UCRType("Show the current value of an attribute", 1);
+				
+				return res;
+				
+			}
+			
+			int getVal() {
+				return val;
+			}
+			
+			public String toString() {
+				return askLine;
+			}
+		}
+		
 	}
 }
