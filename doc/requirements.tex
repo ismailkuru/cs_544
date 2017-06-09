@@ -119,13 +119,13 @@ The following sections include links to the explanations of the requirements in 
      \item {\tt SERVICE}:  Messages are core components of the protocol service in a way that they are used in initiating a connection, initializing states of components of the automobile at the client/server side ex: Command / ACK  etc.
      \item {\tt STATEFUL} : The Message objects are the arrows in the DFA, i.e. the operations by which state transitions in the protocol DFA are applied.
      \end{itemize}
-\subsubsection{AckMessage.java}: This file includes implementation of the message which serves for acknowledgment of the Client for success authentication.
+\subsubsection{AckMessage.java} This file includes implementation of the message which serves for acknowledgment of the Client for success authentication.
      \begin{itemize}
      \item {\tt SERVICE} Acknowledgement Service
      \item {\tt STATEFUL} [ref ServerDFASpec.java line 106 -120]
      \end{itemize}
 
-     \subsubsection{PermanentErrorMessage.java}This file includes 
+     \subsubsection{PermanentErrorMessage.java}This file includes implementation of the message which serves for acknowledgment of the Client for unsuccessful communication.
      \begin{itemize}
      \item {\tt SERVICE}  Error-Acknowledgement.
      \item {\tt STATEFUL} Both Client/Sever DFAs use Error Messages as feedback to other end. [ref to ClientSpecDFA.java ServerSpecDFA.java]

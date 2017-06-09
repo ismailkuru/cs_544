@@ -7,6 +7,23 @@ import pdu.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: TerminationMessage.java
+* **************************************************
+* Definition: 
+* *******************************************************
+* Requirements:
+* - STATEFUL : The AckMessage objects are the [SHUTDOWN]arrows in the DFA.
+* - SERVICE : Communication Termination Request Service
+* ==============================================================================
+*/ 
 
 public class TerminationMessage extends Message{
 	public TerminationMessage(HeaderChunk h, List<ContentChunk> c){
