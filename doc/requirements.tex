@@ -188,7 +188,7 @@ The following sections include links to the explanations of the requirements in 
      \item {\tt SERVICE}: The relevant requirement the entire file satisfies is partly {\tt SERVICE} because it is one type of basic units of Messages.
      \end{itemize}
 
-    \subsubsection{HeaderChunk.java}This file includes definitions for one type of basic unit of a message of which content of the message comprises.
+    \subsubsection{HeaderChunk.java}This file includes definitions for one type of basic unit of a message. Header chunk is a tuple where first element of the tuple denotes type of operation and second element of the tuple denots the number of the chunks which are going to follow header chunk.
     \begin{itemize}
     \item {\tt SERVICE} Entire file includes definitions for one type of basic unit of a message which represents header of the file.
       \item {\tt STATEFUL} This file defines the Message Type  which is partly a part of being statefulness. The reason is that Message Type is tightly coupled with Client/Server DFAs' state [ref to one for the switch case in message] when they are processing the message taken from other end. [ref HeaderChunk.java 6]
