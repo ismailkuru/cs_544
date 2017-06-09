@@ -1,5 +1,23 @@
 package pdu;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: MessageType.java
+* **************************************************
+* Definition: This file includes definitions of enumeration of message types
+* *******************************************************
+* Requirements:
+* - SERVICE : Messages are core components of the protocol service. Definitions
+* in this file also enhances the reliability to keep the state transitions 
+* in accordance with message types.
+* 
+* ==============================================================================
+*/ 
 public enum MessageType {
 	OP_AUTH			(3),
 	OP_SUCCESS 		(4),

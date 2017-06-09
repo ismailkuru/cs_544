@@ -13,7 +13,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Message.java
+* **************************************************
+* Definition: Definitions of all protocol messages. All messages passed
+* from one end to another are encapsulated in a Message object.
+* *******************************************************
+* Requirements:
+* - STATEFUL : the Message objects are the arrows in the DFA, i.e. the operations
+*   by which state transitions in the protocol DFA are applied.
+* - SERVICE : the messages are an important part in the protocol service
+*   definition: initiating a connection, initializing states of components of the
+*   automobile at the client/server side ex: Command / ACK  etc.
+* 
+* ==============================================================================
+*/  
 public abstract class Message{
 	public HeaderChunk _header;
 	public List<ContentChunk> _content;

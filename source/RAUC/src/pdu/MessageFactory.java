@@ -12,7 +12,26 @@ import pdu.MessageImpl.TerminationMessage;
 import pdu.MessageImpl.UserAuthenMessage;
 import pdu.MessageImpl.UtilityControlReqMessage;
 import pdu.MessageImpl.UtilityStateQueryMessage;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: MessageFactory.java -- Deprecated
+* **************************************************
+* Definition: This file includes implementation of factory methods which
+*  generates Message objects.
+* *******************************************************
+* Requirements:
+* - SERVICE : Messages are core components of the protocol service. It also
+* enhances the reliability to keep the state transitions in accordance with
+* message types.
+* 
+* ==============================================================================
+*/  
 public class MessageFactory{
 	
 	private static JSONObject jObject = null;
