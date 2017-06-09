@@ -13,7 +13,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: ServerGUI.java
+* **************************************************
+* Definition: This file includes implementation of GUI which aims to provide server’s logs.
+* *******************************************************
+* Requirements:
+* - UI : Entire file’s relevant requirement is satisfying UI.
+* 
+* ==============================================================================
+*/
 public class ServerGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
