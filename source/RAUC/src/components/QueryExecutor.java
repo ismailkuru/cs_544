@@ -17,11 +17,14 @@ import pdu.ChunkImpl.ContentChunk;
 ***************************************************
 * File name: QueryExecutor.java
 * **************************************************
-* Definition: 
+* Definition: This file includes implementation of read-only commands.
+* QueryExecutor is run by Server when it gets UtilityStateQuery message.
 * *******************************************************
 * Requirements:
-* - STATEFUL : 
-* - SERVICE : 
+* - STATEFUL : Server needs to be in WAITQRY state when it gets executes query
+* Details are in ServerDFASpec.java
+* - SERVICE : It includes the implementation which is one of the backbones and
+* provides Read-Only-Query of the data resides in ACS(Server).
 * 
 * ==============================================================================
 */ 
@@ -48,7 +51,7 @@ public class QueryExecutor {
 													System.out.println("Beginning query execution");
 													System.out.println("On message: " + msg.toString());
 			switch (msg.getContent().size()) {
-				case 0: // List all automobiles registered
+				case 0: //SERVICE: List all automobiles registered
 					Set<String> autos = cmap.keySet();
 					String[] aautos = autos.toArray(new String[autos.size()]);
 					for(String s : aautos) {
@@ -58,7 +61,7 @@ public class QueryExecutor {
 					return result; 
 					
 					
-				case 1: // List all components in the component list of the given automobile
+				case 1: // SERVICE: List all components in the component list of the given automobile
 					autoId = msg.getContent().get(0).getContent(); // auto id
 					// the list of components on this auto
 					lcomps = cmap.get(autoId);
@@ -71,7 +74,7 @@ public class QueryExecutor {
 					return result; 
 					
 					
-				case 2: // list the attributes of the given component on the given auto
+				case 2: // SERVICE: list the attributes of the given component on the given auto
 					autoId = msg.getContent().get(0).getContent(); // get the car 
 					lcomps = cmap.get(autoId); // get the components on the car
 					
@@ -93,7 +96,7 @@ public class QueryExecutor {
 					result = builder.toString();
 					return result;
 				
-				case 3: // list the possible values of the given attribute
+				case 3: // SERVICE: list the possible values of the given attribute
 					autoId = msg.getContent().get(0).getContent(); // get the car 
 					lcomps = cmap.get(autoId); // get the components on the car
 					
@@ -126,7 +129,7 @@ public class QueryExecutor {
 
 					
 				case 4:
-					// List the value an attribute on the given component of a given auto
+					// SERVICE: List the value an attribute on the given component of a given auto
 					autoId = msg.getContent().get(0).getContent(); // get the car
 					lcomps = cmap.get(autoId); // get the components
 					

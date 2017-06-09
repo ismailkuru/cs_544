@@ -107,7 +107,7 @@ The following sections include links to the explanations of the requirements in 
   \item {\tt SERVICE} : Server side functionality is specified in this file.
   \item {\tt STATEFUL} : Entire file defines valid client side states and admissible valid transitions between these states. All functions([ref ServerSpecDFA sendAuth, sendWaitcmd, sendWaitqry, receiveInit, receiveEstablished]) inherited from DFASpec.java defines the valid transition relation between server side states, setting state of server dfa in each of these functions, triggered by \textsf{Message m}. 
   \end{itemize}
-\subsection{DFASpec.java}This is an abstract class which defines methods to be implemented by the client and server for the operations to apply at any given state of the protocol ,[TODO]
+\subsection{DFASpec.java}This is an abstract class which defines methods to be implemented by the client and server for to satisfy the specification of the protocol in both end.
 \begin{itemize}
   \item {\tt STATEFUL} : It includes all abstractions for representing states/transitions of DFAs.
 \end{itemize}
@@ -205,7 +205,11 @@ The following sections include links to the explanations of the requirements in 
   \item ComponentFactory.java : Service similar to Factory.java is provided for Component(AC, Door, Radio) generation with this file.
   \item Attribute.java : This file includes implementation of representation of attributes of components such as power, lock, temperature. It is part of the components which are part of data service of protocol.
   \end{itemize}
-  
+  \section{QueryExecutor.java}This file includes implementation of read-only commands. QueryExecutor is run by Server when it gets UtilityStateQuery message.
+  \begin{itemize}
+  \item {\tt STATEFUL} : Server needs to be in WAITQRY state when it gets executes query from Client.  Details are in ServerDFASpec.java.
+  \item {\tt SERVICE} : It includes the implementation which is one of the backbones and provides Read-Only-Query of the data resides in ACS(Server).
+    \end{itemize}
   \section{Users}
   \subsection{User.java} This file includes representation of user which is one of the core parts of the protocol service. 
   \begin{itemize}

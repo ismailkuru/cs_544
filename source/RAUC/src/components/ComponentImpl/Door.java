@@ -20,8 +20,7 @@ import components.ComponentType;
 *  an automobile can have. It is sub type of the Component.java
 * *******************************************************
 * Requirements:
-* - STATEFUL : 
-* - SERVICE : 
+* - SERVICE : It is sub-type of the Component.java
 * ==============================================================================
 */  
 public class Door extends Component{

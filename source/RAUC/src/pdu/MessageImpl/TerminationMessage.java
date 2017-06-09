@@ -17,7 +17,7 @@ import java.util.List;
 ***************************************************
 * File name: TerminationMessage.java
 * **************************************************
-* Definition: 
+* Definition: This file includes implementation of Termination message
 * *******************************************************
 * Requirements:
 * - STATEFUL : The TerminationMessage objects are the [SHUTDOWN]arrows in the DFA.
