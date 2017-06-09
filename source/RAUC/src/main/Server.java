@@ -149,7 +149,31 @@ public class Server {
             connections.get(id).disconnect(true);
         }
     }
-
+    /* =============================================================================
+    * CS544 - Computer Networks - Drexel University, Spring 2017
+    * Protocol Implementation: Remote Automobile Utility Control
+    * Group 2:
+    * - Ismail Kuru
+    * - Max Mattes
+    * - Lewis Cannalongo
+    ***************************************************
+    * File name: ConnectionThread.java
+    * **************************************************
+    * Definition: THandles a single connection between server and client.
+    * This files includes the thread implementation aiming to handle server 
+    * communication to the client. Main server drivers Server.java spawns ConnectionThread
+    *  for each client communication.
+    * 
+    * *******************************************************
+    * Requirements:
+    * - SERVICE : Main thread to handle server communication to the client,
+    * - CONCURRENT: This is includes the implementation of execution unit 
+    * of concurrent Server driver
+    * - SERVICE : Processing/exchange of messages - byte streams - which is core part
+    * of the service of the protocol. 
+    * ==============================================================================
+    */  
+    
     /**
      * Handles a single connection between server and client
      */
@@ -164,7 +188,7 @@ public class Server {
 
 
         /**
-         * Creates a new thread for the connection
+         * CONCURRENT: Creates a new thread for the connection
          *
          * @param socket Socket to connect to
          * @param cp     GUI handle if applicable, else null
@@ -201,7 +225,7 @@ public class Server {
         public void run() {
             while (connected) {
                 try {
-                    // when a bytestream is received, process it through the DFA and display it
+                    //SERVICE: when a bytestream is received, process it through the DFA and display it
                     Message outM = receiveMessage(sInput);
                     if (outM == null) {
                         // Received shutdown from client
