@@ -1,19 +1,33 @@
 \contentsline {section}{\numberline {1}Service Description}{1}{section.1}
-\contentsline {section}{\numberline {2}Message Definition -- PDU}{2}{section.2}
-\contentsline {subsection}{\numberline {2.1}Addressing}{2}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Flow Control}{2}{subsection.2.2}
-\contentsline {subsubsection}{\numberline {2.2.1}Handshake}{2}{subsubsection.2.2.1}
-\contentsline {subsection}{\numberline {2.3}PDU (Message) Definitions}{2}{subsection.2.3}
-\contentsline {subsubsection}{\numberline {2.3.1}Minimum Required Implementation}{3}{subsubsection.2.3.1}
-\contentsline {paragraph}{User Authentication}{3}{section*.2}
-\contentsline {paragraph}{Authentication Acknowledgement}{3}{section*.3}
-\contentsline {paragraph}{Utility Control Request}{3}{section*.4}
-\contentsline {paragraph}{Request Received}{4}{section*.5}
-\contentsline {paragraph}{Utility State Query}{4}{section*.6}
-\contentsline {paragraph}{Query Result}{4}{section*.7}
-\contentsline {paragraph}{Termination}{5}{section*.8}
-\contentsline {subsection}{\numberline {2.4}Error Control}{5}{subsection.2.4}
-\contentsline {paragraph}{Permanent Error}{5}{section*.9}
-\contentsline {paragraph}{Temporary Error}{5}{section*.10}
-\contentsline {subsection}{\numberline {2.5}Quality of Service}{6}{subsection.2.5}
-\contentsline {section}{\numberline {3}DFA}{7}{section.3}
+\contentsline {section}{\numberline {2}Common Themes Detailed}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}PDU (Message) Definitions}{2}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Message Types}{2}{subsubsection.2.1.1}
+\contentsline {paragraph}{3 - User Authentication}{2}{section*.2}
+\contentsline {paragraph}{4 - Authentication Acknowledgement}{3}{section*.3}
+\contentsline {paragraph}{5 - Utility Control Request}{3}{section*.4}
+\contentsline {paragraph}{15 - Request Received}{3}{section*.5}
+\contentsline {paragraph}{6 - Utility State Query}{3}{section*.6}
+\contentsline {paragraph}{16 - Query Result}{4}{section*.7}
+\contentsline {paragraph}{9 - Termination}{4}{section*.8}
+\contentsline {subsection}{\numberline {2.2}Error Control}{4}{subsection.2.2}
+\contentsline {paragraph}{Permanent Error}{4}{section*.9}
+\contentsline {paragraph}{Temporary Error}{4}{section*.10}
+\contentsline {subsection}{\numberline {2.3}Addressing}{4}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}General Addressing Concerns}{4}{subsubsection.2.3.1}
+\contentsline {subsection}{\numberline {2.4}Flow Control}{5}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}Quality of Service}{5}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}Sending and Receiving Strategy}{5}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}Timeouts}{5}{subsubsection.2.5.2}
+\contentsline {subsubsection}{\numberline {2.5.3}Performace Enhancement}{5}{subsubsection.2.5.3}
+\contentsline {section}{\numberline {3}DFA}{6}{section.3}
+\contentsline {section}{\numberline {4}Extensibility}{7}{section.4}
+\contentsline {subsection}{\numberline {4.1}Version and Extension Negotiation}{7}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Extension Model}{7}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Extensibility of Protocol DFA}{7}{subsection.4.3}
+\contentsline {section}{\numberline {5}Security}{8}{section.5}
+\contentsline {subsection}{\numberline {5.1}Authentication}{8}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Authorization}{8}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Confidentiality}{8}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}Availability}{8}{subsection.5.4}
+\contentsline {subsection}{\numberline {5.5}Integrity}{9}{subsection.5.5}
+\contentsline {subsection}{\numberline {5.6}Non-Repudiation}{9}{subsection.5.6}

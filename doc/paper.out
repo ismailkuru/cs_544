@@ -1,14 +1,24 @@
 \BOOKMARK [1][-]{section.1}{Service Description}{}% 1
-\BOOKMARK [1][-]{section.2}{Message Definition \205 PDU}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Addressing}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Flow Control}{section.2}% 4
-\BOOKMARK [3][-]{subsubsection.2.2.1}{Handshake}{subsection.2.2}% 5
-\BOOKMARK [2][-]{subsection.2.3}{PDU \(Message\) Definitions}{section.2}% 6
-\BOOKMARK [3][-]{subsubsection.2.3.1}{Minimum Required Implementation}{subsection.2.3}% 7
-\BOOKMARK [2][-]{subsection.2.4}{Error Control}{section.2}% 8
+\BOOKMARK [1][-]{section.2}{Common Themes Detailed}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{PDU \(Message\) Definitions}{section.2}% 3
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Message Types}{subsection.2.1}% 4
+\BOOKMARK [2][-]{subsection.2.2}{Error Control}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.3}{Addressing}{section.2}% 6
+\BOOKMARK [3][-]{subsubsection.2.3.1}{General Addressing Concerns}{subsection.2.3}% 7
+\BOOKMARK [2][-]{subsection.2.4}{Flow Control}{section.2}% 8
 \BOOKMARK [2][-]{subsection.2.5}{Quality of Service}{section.2}% 9
-\BOOKMARK [1][-]{section.3}{DFA}{}% 10
-\BOOKMARK [1][-]{section.4}{Extensibility}{}% 11
-\BOOKMARK [2][-]{subsection.4.1}{Version and Extension Negotiation}{section.4}% 12
-\BOOKMARK [2][-]{subsection.4.2}{Extension Model}{section.4}% 13
-\BOOKMARK [2][-]{subsection.4.3}{Extensibility of Protocol DFA}{section.4}% 14
+\BOOKMARK [3][-]{subsubsection.2.5.1}{Sending and Receiving Strategy}{subsection.2.5}% 10
+\BOOKMARK [3][-]{subsubsection.2.5.2}{Timeouts}{subsection.2.5}% 11
+\BOOKMARK [3][-]{subsubsection.2.5.3}{Performace Enhancement}{subsection.2.5}% 12
+\BOOKMARK [1][-]{section.3}{DFA}{}% 13
+\BOOKMARK [1][-]{section.4}{Extensibility}{}% 14
+\BOOKMARK [2][-]{subsection.4.1}{Version and Extension Negotiation}{section.4}% 15
+\BOOKMARK [2][-]{subsection.4.2}{Extension Model}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.3}{Extensibility of Protocol DFA}{section.4}% 17
+\BOOKMARK [1][-]{section.5}{Security}{}% 18
+\BOOKMARK [2][-]{subsection.5.1}{Authentication}{section.5}% 19
+\BOOKMARK [2][-]{subsection.5.2}{Authorization}{section.5}% 20
+\BOOKMARK [2][-]{subsection.5.3}{Confidentiality}{section.5}% 21
+\BOOKMARK [2][-]{subsection.5.4}{Availability}{section.5}% 22
+\BOOKMARK [2][-]{subsection.5.5}{Integrity}{section.5}% 23
+\BOOKMARK [2][-]{subsection.5.6}{Non-Repudiation}{section.5}% 24

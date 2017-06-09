@@ -1,60 +1,21 @@
-# cs_544
+# CS 544 - Group 2
+## To Run
+* `ant all` to build
+* `ant server` to run commandline server, or `ant serverGUI` for GUI server
+* `ant client` to run quick test of client. `ant clientGUI` will open up the
+  GUI for interactive message sending
 
+Note that the server must be running for the client to be able to connect
 
-##Usage
-1. Compile & prepare files
-
-  ```
-  Make sure that you have externally linked your gson.jar and org.json.jar. 
-  ```
-  
-  ```
-  TODO: Giving complete paths of certificates in source.
-  ```
-  
-  ```
-  Use eclipse and export as runnable-jar. Before this, make sure that 
-  you set two mains (Client.java, SocketListener.java) in you Run-Configurations.
-  ```
-  
-  
-  ```
-  Export Client and Server (whose main is in SocketListener.java) as executable
-  jars. Reference : http://www.wikihow.com/Create-an-Executable-File-from-Eclipse
-  ```
-2. Start server & client
-
-  server:
-  ```
-  java -jar Server
-  ```
-  client:
-  ```
-  java -jar Client
-  ```
-3. Customize SSL
-
-  Create a client keystore file
-  ```
-  keytool -genkey -alias sslclient -keystore sslclientkeys
-  ```
-  Export client keystore as certification
-  ```
-  keytool -export -alias sslclient -keystore sslclientkeys -file sslclient.cer
-  ```
-  Create a server keystore file
-  ```
-  keytool -genkey -alias sslserver -keystore sslserverkeys
-  ```
-  Import client's certification into server's truststore
-  ```
-  keytool -import -alias sslclient -keystore sslservertrust -file sslclient.cer 
-  ```
-  Import server's certification into client's truststore
-  ```
-  keytool -import -alias sslserver -keystore sslclienttrust -file sslserver.cer 
-  ```
-  To view your keystore or trust
-  ```
-  keytool -list -keystore sslclienttrust
-  ```
+## Robustness
+The client and server are both written to specification and thus should be no
+less robust than what is written there. They should both be capable of handling
+messages longer or shorter than the size specified in the header or content
+chunk by returning an error to the peer. Any garbage data (random bits) will
+result in an error unless it validly fits the specified protocol. The security
+provided by TLS prevents any unauthorized access, making the server robust
+against those types of intrusions, as discussed in the paper. Ultimately the
+one major vulnerability is the same shared with every TLS service due to the
+overhead: DOS. This is easier to handle outside of the server itself through
+firewalls and other methods of blocking malicious IPs, so no protections have
+been instated in the code here.
