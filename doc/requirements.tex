@@ -67,23 +67,23 @@ This document specifies the packages and files in the RAUC protocol implementati
 
 The following sections include links to the explanations of the requirements in files at code base in git-hub repository.
 \section{Client}
-\subsection{Client.java}Purpose of this file is provide functionality to initialize a connection to the server. It uses GUI functinolity provided by ClientGUI.java to control the client side capabilities. 
+\subsection{Client.java}Purpose of this file is to provide functionality to initialize a connection to the server. It uses GUI functionality provided by ClientGUI.java to control the client side capabilities. 
 \begin{itemize}
-\item {\tt CLIENT} : requirement is satisfied by Client.java in a way that it provides instantiates Client object with parametrized Server port number and Server address. [ref to Client 50-58]
-  \item {\tt CONCURRENT} : This requirement is satisfied by Client.java in a way that it spawns a Listener thread to process Servers responses [ref to Client 106-109] right after establishing connection with server [ref to Client 81-101] through SSL sockets.
+\item {\tt CLIENT} : This requirement is satisfied by Client.java in a way that it provides instantiation of Client object with Server port number and Server address.
+  \item {\tt CONCURRENT} : This requirement is satisfied by Client.java in a way that it spawns a Listener thread to handle Servers responses right after establishing connection with server through SSL sockets.
 \end{itemize}
            
-\subsection{ClientGUI.java} Client.java handles interactions with user through ClientGUI.java object handle, [ref Client 35-36]. ClientGUI.java uses \textsf{javax.swing} GUI objects to handle user interaction and inputs [ref ClientGUI.java 23-34].
+\subsection{ClientGUI.java} Client.java driver handles interactions with user through ClientGUI.java object handle. ClientGUI.java uses \textsf{javax.swing} GUI objects to handle user interaction and inputs.
 \begin{itemize}
-\item {\tt UI} : ClientGUI.java abstracts the way communication is handled between Client and Server. A GUI based on \textsf{javax.swing} panels is provided to user for providing inputs which are used as arguments for buildiing a message to be sent to Server, [ref ClientGUI 102-112]. In addition, user authentication is provided with the inputs through Login-GUI [ref to ClientGUI.java 65-85]. 
- \item {\tt CLIENT} : is relavant to CLientGUI.java because this file enables you to indicate Server address and Server port number. [ref CLientGUI.java 40-60]
+\item {\tt UI} : A GUI based on \textsf{javax.swing} panels is provided to user for taking inputs which are used as arguments for building messages to be sent to Server. In addition, user authentication is provided with the inputs through Login-GUI. 
+ \item {\tt CLIENT} : This requirement is relavant to CLientGUI.java because GUI for Client enables you to indicate Server address and Server port number.
 \end{itemize}
 
 \section{Server}
 \subsection{Server.java}This file is main driver for performing server functionalities.
 \begin{itemize}
-\item {\tt SERVICE} : Main class for starting a server. The server is hardcoded to port 1500. The server keeps client connections in a map [ref Server.java 23].
-\item {\tt CONCURRENT} : The server initializes a connection listener which handles incoming connections, [ref 75-95]. It spawns a new thread, ConnectionThread , for handling each different client connection. This makes Server to handle multiple connections at a time , [ref Server.java 80-85].
+\item {\tt SERVICE} : Main class for starting a server. The server is hardcoded to port 1500. The server keeps client connections in a map of identifier and connection.
+\item {\tt CONCURRENT} : The server initializes a connection listener which handles incoming connections. It spawns a new thread, ConnectionThread , for handling each different client connection. This makes Server to handle multiple connections at a time.
 \end{itemize}
 
 \subsection{ServerGUI.java}This file includes implementation of GUI which aims to provide server's logs.
@@ -109,78 +109,78 @@ The following sections include links to the explanations of the requirements in 
   \end{itemize}
 \subsection{DFASpec.java}This is an abstract class which defines methods to be implemented by the client and server for the operations to apply at any given state of the protocol ,[TODO]
 \begin{itemize}
-  \item {\tt STATEFUL}
+  \item {\tt STATEFUL}:It includes all abstractions for representing states/transitions of DFAs.
 \end{itemize}
 
-  \section{PDU} All files under this folder represents the message implementation used in protocol. They are received and sent accordingly with the Client/Server's state.
+  \section{PDU} All files under this package represents the message implementation used in protocol. They are received and sent accordingly with the Client/Server's state.
 
-     \subsection{Message.java} Entire file includes definitions of all protocol messages. All messages passed to/from by Client/Server are encapsulated in a Message object.
+     \subsection{Message.java} Entire file includes definitions of all protocol messages. All messages passed to/from by Client/Server are encapsulated in Message objects.
      \begin{itemize}
      \item {\tt SERVICE}:  Messages are core components of the protocol service in a way that they are used in initiating a connection, initializing states of components of the automobile at the client/server side ex: Command / ACK  etc.
      \item {\tt STATEFUL} : The Message objects are the arrows in the DFA, i.e. the operations by which state transitions in the protocol DFA are applied.
      \end{itemize}
 \subsubsection{AckMessage.java} This file includes implementation of the message which serves for acknowledgment of the Client for success authentication.
      \begin{itemize}
-     \item {\tt SERVICE} Acknowledgement Service
-     \item {\tt STATEFUL} [ref ServerDFASpec.java line 106 -120]
+     \item {\tt SERVICE} Successful Acknowledgement Service
+     \item {\tt STATEFUL} Server generates [SUCCESSFUL] messages and Client acts accordingly to successful acknowledgement. Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and AckMessage.java.
      \end{itemize}
 
      \subsubsection{PermanentErrorMessage.java}This file includes implementation of the message which serves for acknowledgment of the Client for unsuccessful communication.
      \begin{itemize}
      \item {\tt SERVICE}  Error-Acknowledgement.
-     \item {\tt STATEFUL} Both Client/Sever DFAs use Error Messages as feedback to other end. [ref to ClientSpecDFA.java ServerSpecDFA.java]
+     \item {\tt STATEFUL} Permanent errors are sent by the server to the client and instructs the client that the same message sent at the current protocol state will never be accepted. Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and PermanentErrorMessage.java.
      \end{itemize}
 
-     \subsubsection{QueryResultMessage.java}
+     \subsubsection{QueryResultMessage.java}Query result is sent by the server in response to a Utility State Query. Query Result messages contain a header chunk and only one content chunk: the result list of a successful query.
      \begin{itemize}
      \item {\tt SERVICE} Service for Retrieval of Components' States  
-     \item {\tt STATEFUL} [ref  ServerSpecDFA  87-96]
+     \item {\tt STATEFUL}It is generated by Server when it is in state of WAITQRY and when Client is in ESTABLISHED state. Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and QueryResultMessage.java.
      \end{itemize}
 
-     \subsubsection{RequestReceivedMessage.java}
+     \subsubsection{RequestReceivedMessage.java}Request received message is sent to the client when the server successfully receives a Utility Control Request command.
      \begin{itemize}
-     \item {\tt SERVICE}  Messages are core components of the protocol service
-     \item {\tt STATEFUL} [ref 129 - 135 ServerDFASpec.java]
+     \item {\tt SERVICE}  Acknowledgement of commands validity/arrival to Client by Server.
+     \item {\tt STATEFUL} Server is in WAITCMD state and Client is already authenticated and in ESTABLISHED state. Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and RequestReceivedMessage.java.
      \end{itemize}
 
-     \subsubsection{TemporaryMessage.java}This file includes implementation of 
+     \subsubsection{TemporaryErrorMessage.java}Temporary error messages are sent by the server when a command is not received by the server because of a temporal machine state problem.
      \begin{itemize}
-     \item {\tt SERVICE}  TemporaryError-Acknowledgement Service
-     \item {\tt STATEFUL} [ref to DFAs ]
+     \item {\tt SERVICE}  TemporaryError-Acknowledgement Service: Temporary errors indicate that the client sent a valid command which can be tried again at a later time without modification.
+     \item {\tt STATEFUL} Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and TemporaryErrorMessage.java.
      \end{itemize}
 
      \subsubsection{TerminationMessage.java}
      \begin{itemize}
      \item {\tt SERVICE}  Communication Termination Service
-     \item {\tt STATEFUL} [ref to DFAs]
+     \item {\tt STATEFUL} Client is in ESTABLISHED state. Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and TerminationMessage.java.
      \end{itemize}
 
      \subsubsection{UserAuthenMessage.java}This file includes implementation of the message which serves for user to authenticate itself in the system.
      \begin{itemize}
      \item {\tt SERVICE}  Authentication Service
-     \item {\tt STATEFUL} [ref to DFAs]
+     \item {\tt STATEFUL} Client is in INIT state and Server is in AUTH state. Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and UserAuthenMessage.java.
      \end{itemize}
 
     \subsubsection{UtilityControlReqMessage.java}This file includes implementation of the message which serves to set/change the states of components' attributes associated with an automobile.
      \begin{itemize}
      \item {\tt SERVICE}  Component Control Service
-     \item {\tt STATEFUL} [ref to DFAs]
+     \item {\tt STATEFUL} Client is in ESTABLISHED state and Server is in WAITCMD state.  Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and UtilityControlReqMessage.java.
      \end{itemize}
 
      \subsubsection{UtilityStateQueryMessage.java} This file includes implementation of the message which serves to query the states of components' attributes associated with an automobile.
      \begin{itemize}
      \item {\tt SERVICE}  Component State Query Service
-     \item {\tt STATEFUL} [refs to DFAs]
+     \item {\tt STATEFUL} Client is in ESTABLISHED state and Server is in WAITQRY state.  Details can be found in entire ServerDFASpec.java, ClientDFASpec.java and UtilityStateQueryMessage.java.
      \end{itemize} 
      
-    \subsection{MessageFactory.java} This file includes implementation of factory methods which generates Message objects.
+    \subsection{MessageFactory.java} This file includes implementation of factory methods which generates Message objects. [Deprecated]
      \begin{itemize}
      \item {\tt SERVICE}  Messages are core components of the protocol service. 
      \end{itemize}
      
      \subsection{Chunk.java} This file includes abstract definitions for the most basic unit of Message which is core components of protocol's service.
      \begin{itemize}
-     \item {\tt SERVICE}: Entire file 
+     \item {\tt SERVICE}: Entire file is related with {\tt SERVICE} requirement.
      \end{itemize}
 
     \subsubsection{ContentChunk.java}This file includes definitions for one type of basic unit of a message of which content of the message comprises.
@@ -191,7 +191,7 @@ The following sections include links to the explanations of the requirements in 
     \subsubsection{HeaderChunk.java}This file includes definitions for one type of basic unit of a message. Header chunk is a tuple where first element of the tuple denotes type of operation and second element of the tuple denots the number of the chunks which are going to follow header chunk.
     \begin{itemize}
     \item {\tt SERVICE} Entire file includes definitions for one type of basic unit of a message which represents header of the file.
-      \item {\tt STATEFUL} This file defines the Message Type  which is partly a part of being statefulness. The reason is that Message Type is tightly coupled with Client/Server DFAs' state [ref to one for the switch case in message] when they are processing the message taken from other end. [ref HeaderChunk.java 6]
+      \item {\tt STATEFUL} This file defines the Message Type  which is partly a part of being statefulness. The reason is that Message Type is tightly coupled with Client/Server DFAs' state [ref to one for the switch case in message] when they are processing the message taken from other end.
      \end{itemize}   
 
   \section{Components} All files under this folder serves for the implementation of representation of an automobile, components of the automobile and commands that are applied on the status of these components. All of them satisfy the {\tt SERVICE} requirement.
