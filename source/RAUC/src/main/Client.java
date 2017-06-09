@@ -33,9 +33,10 @@ import static dfa.DFAState.ESTABLISHED;
 * *******************************************************
 * Requirements:
 * - CONCURRENT : This requirement is satisfied by Client.java in a way that it spawns a Listener thread 
-* to process Servers responses [ref to Client 106-109] right after establishing connection with server
-* [ref to Client 81-101] through SSL sockets with parametrized Server port number and Server address. [ref to Client 50-58]
-* 
+* to process Servers responses right after establishing connection with server
+* through SSL sockets with parameterized Server port number and Server address.
+* - CLIENT : This requirement is satisfied by Client.java in a way that it provides implementation
+* of Client object which is driver for handling Client activities.
 * ==============================================================================
 */ 
 /**
@@ -56,10 +57,10 @@ public class Client {
     // if using a gui
     private ClientGUI cg;
 
-    // dfa to make client respect RAUC protocol
+    // STATEFUL: dfa to make client respect RAUC protocol
     private final ClientDFASpec dfa;
 
-    /**
+    /**CLIENT: Main driver constructor
      * Common constructor / Constructor used via a GUI. In CLI mode the ClientGUI parameter is null
      *
      * @param server   Server address
@@ -122,7 +123,7 @@ public class Client {
         }
 
         display("Starting DFA");
-        // TODO: ??? dfa.setState(DFAState.AUTH);
+        
         dfa.setState(DFAState.INIT);
 
         // create the thread that listens for server responses
@@ -224,7 +225,7 @@ public class Client {
 
 
     /**
-     * Listening thread. Processes messages from the server through the DFA
+     *CONCURRENT: Listening thread. Processes messages from the server through the DFA
      */
     private class ListenThread extends Thread {
         @Override
@@ -271,7 +272,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
         System.setProperty("javax.net.ssl.trustStore", "./cert/sslclienttrust");
         System.setProperty("javax.net.ssl.trustStorePassword", "123456");
-
+        
         Client client = new Client("localhost", 1500, "user", "pass");
         System.out.println("Starting");
         client.start();
