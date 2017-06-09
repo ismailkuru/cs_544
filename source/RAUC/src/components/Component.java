@@ -46,8 +46,9 @@ public abstract class Component {
 	public abstract String getComponentName();	
 	public abstract ComponentType getComponentCode();
 	public abstract String attribToStringtoString(String attrib);
-	public abstract String toString();
+	public String toString() {return _name;}
 	public abstract void applyCommand(Command cmd);
-	public abstract String attribStateToString(String attrib);
+	public String attribStateToString(String attrib) {return attributes.get(attributes.indexOf(attrib)).stateToString();}
+	public List<Attribute> getAttrs() {return attributes;}
 		
 }

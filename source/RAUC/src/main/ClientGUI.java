@@ -29,7 +29,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private JLabel lblAuth;
 	private JTextField userTF;
 	private JTextField passTF;
-	private JTextField messageINP;
 	private JTextField serverTF, portTF;
 	private JButton login, logout;
 	private JTextArea ta;
@@ -113,13 +112,6 @@ public class ClientGUI extends JFrame implements ActionListener {
 			btnDefaultMessage.setEnabled(false);
 			southPanel.add(btnDefaultMessage, BorderLayout.EAST);
 			
-			/*
-			messageINP = new JTextField();
-			messageINP.setPreferredSize(new Dimension(300, 20));
-			southPanel.add(messageINP,BorderLayout.WEST);
-*/
-	
-			
 			btnMessageBuilder = new JButton("Message Builder");
 			btnMessageBuilder.addActionListener(this);
 			btnMessageBuilder.setEnabled(false);
@@ -133,7 +125,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		
 	}
 	
-	// called by the client if the connection failed
+	// called by the client if the connection ends
 	// reset our buttons, labels, etc
 	void reset() {
 		portTF.setEnabled(true);
@@ -157,19 +149,19 @@ public class ClientGUI extends JFrame implements ActionListener {
 	}
 		
 	/*
-	* Button clicked
+	* Handle various actions performed across the GUI
 	*/
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		// if it is the Logout button
+		// if the logout button is clicked
 		if(o == logout) {
 			client.disconnect(true);
 			return;
 		}
 
-		// if its the login button;
+		// if the login button is clicked
 		if(o == login) {
-			// action is a login request
+			// get connection info 
 			String username = userTF.getText().trim();
 			// empty username, ignore it
 			if(username.length() == 0)
@@ -193,7 +185,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			catch(Exception en) {
 				return;   // can't do anything if port# invalid
 			}
-			
+			// disable gui elements that should not be edited during session
 			portTF.setEnabled(false);
 			userTF.setEnabled(false);
 			passTF.setEnabled(false);
@@ -205,6 +197,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 				return;
 			}
 			
+			// boolean connected used for some unimplemented features, retain for posterity
 			connected = true;
 			
 			// disable connection fields and login button / enable logout button
@@ -234,7 +227,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		
 		// if user wants to build a new message
 		if (o == btnMessageBuilder) {
-			Object[] possibilities = {"Utility Control Request", "Utility State Query"};
+			Object[] possibilities = {"Utility Control Request", "Utility State Query"}; // only 2 types of messages allow user input
 			// choose the type of message to build
 			String s = (String)JOptionPane.showInputDialog(
 			                    this,
@@ -295,7 +288,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 		}
 	}
 
-	// to start the whole thing the server
+	// to start the GUI with default host address and port
 	public static void main(String[] args) {
 		new ClientGUI("localhost", 1500);
 	}
@@ -308,8 +301,10 @@ public class ClientGUI extends JFrame implements ActionListener {
 	
 	
 	
+	// a series of dialog boxes that help user build a dynamic message to send across the RAUC connection
 	protected class MessageBuilder {
 		
+		// where to send the dialogs
 		JFrame parent;
 		
 		MessageBuilder(JFrame par) {
@@ -366,7 +361,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 					null,
 					null
 					);
-			// build the message and return it
+			// create the message and return it
 			return new UtilityControlReqMessage(auto, comp, attr, val);
 		}
 		
@@ -376,12 +371,11 @@ public class ClientGUI extends JFrame implements ActionListener {
 			String attr= null;
 			String val = null;
 
-			
+			// see below - messy way to fill "What is your query?" input box
 			UCRType type = new UCRType();
 			UCRType[] ask = type.ucrs();
 		
-			
-			
+			// here user decides how many arguments to send with this message
 			 type = (UCRType) JOptionPane.showInputDialog(
 					parent,
 					"What is your query?",
@@ -392,15 +386,13 @@ public class ClientGUI extends JFrame implements ActionListener {
 					null
 					);
 			 
-			 display(type.toString() + "\n");
-			 
+			 // use an int to make case statement cleaner
 			 int buildSeq = type.getVal();
 			 
-			 display("build case " + buildSeq + "\n");
-			 
+			 // build the message in reverse order based on previous decision
 			 switch (buildSeq) {
 			 	case 1: 
-			 		val = "1";
+			 		val = "1"; // val is only ever a dummy content chunk if included in QRY
 			 	case 2:
 			 		attr = getAttr();
 			 	case 3:
@@ -410,13 +402,14 @@ public class ClientGUI extends JFrame implements ActionListener {
 			 	case 5:
 			 		break;
 			 }
-			 
-			 
-			 
-			 
+			 // create the message and return it
+			 // NULL arguments will not be added as content chunks
 			 return new UtilityStateQueryMessage(auto, comp, attr, val);
-		
 		}
+		
+		/*
+		 * helper methods for buildQRY() to show relevant input dialog
+		 */
 		
 		private String getAuto() {
 			String res = (String) JOptionPane.showInputDialog(
@@ -458,6 +451,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 
 		
 		// VERY messy subclass just to clean up above, really should be an enum or similar but unable to do that in private MessageBuilder subclass
+		// TODO: low priority, refactor
 		private class UCRType {
 			
 			String askLine;

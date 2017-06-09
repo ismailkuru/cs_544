@@ -135,6 +135,7 @@ public class ServerDFASpec extends DFASpec {
         setState(AUTH);
         // Scary string password matching for PROTOTYPE ONLY. THIS SHOULD NEVER HAPPEN IN PRODUCTION CODE
         if (users.containsKey(am.getUserName()) && users.get(am.getUserName()).equals(am.getPassword())) {
+        	// populate this session with the components (autos/components/etc) that are tied to this user
             componentMap = db.loadUserDB(am.getUserName());
             // Build response
             return new AckMessage();
@@ -179,6 +180,7 @@ public class ServerDFASpec extends DFASpec {
                 } catch (Exception e) {
                 	// TODO Auto-generated catch block
                 	System.out.println("Error : Invalid Query Creation");
+                	e.printStackTrace();
                 }
                 return new QueryResultMessage(qres);
             default:
