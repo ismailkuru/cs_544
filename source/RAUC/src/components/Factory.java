@@ -32,7 +32,7 @@ public class Factory {
 	HashMap<String, HashMap<String , ArrayList<Component>>> _db;
 	public Factory(){
 		
-		//Initial DB
+		//SERVICE : Initial DB - Data Service
 		_db = new HashMap<String, HashMap<String, ArrayList<Component>>>();
 		//automobile --> components  map
 		HashMap<String, ArrayList<Component>> acomps = new HashMap<String, ArrayList<Component>>();

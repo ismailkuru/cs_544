@@ -12,11 +12,12 @@ import java.util.*;
 ***************************************************
 * File name: ComponentFactory.java
 * **************************************************
-* Definition: 
+* Definition: This file includes implementation which generates 
+* component data to be serviced in protocol.
 * *******************************************************
 * Requirements:
-* - STATEFUL : 
-* - SERVICE : 
+* - SERVICE : It is generator of the data which part of the data 
+* being served/exchanged in protocol
 * ==============================================================================
 */ 
 

@@ -9,11 +9,13 @@ package components;
 ***************************************************
 * File name: ComponentType.java
 * **************************************************
-* Definition: .
+* Definition: This file includes abstract enumeration of the
+* components. 
 * *******************************************************
-* Requirements:
-* - STATEFUL : 
-* - SERVICE : 
+* Requirements: 
+* - SERVICE : It partly serves to the satisfaction of the data-service
+*  required by protocol. This file also serves reliability of due to enumeration and 
+*  typing of components. 
 * ==============================================================================
 */ 
 public enum ComponentType {

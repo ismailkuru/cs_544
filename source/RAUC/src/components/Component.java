@@ -28,7 +28,7 @@ public abstract class Component {
 	protected final String _name;
 	protected final ComponentType _typeCode;
 	
-	// the attrs housed by this component
+	// SERVICE : part of the data being serviced-the attrs housed by this component
 	protected List<Attribute> attributes;
 	
 	

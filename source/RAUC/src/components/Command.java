@@ -20,10 +20,6 @@ import pdu.*;
 * components of an automobile. It is part of the protocol’s service.
 * ==============================================================================
 */ 
-/*
- *
- * 
- * */
 
 public class Command {
 	String _autoId;
