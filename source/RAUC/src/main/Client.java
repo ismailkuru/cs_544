@@ -33,9 +33,10 @@ import static dfa.DFAState.ESTABLISHED;
 * *******************************************************
 * Requirements:
 * - CONCURRENT : This requirement is satisfied by Client.java in a way that it spawns a Listener thread 
-* to process Servers responses [ref to Client 106-109] right after establishing connection with server
-* [ref to Client 81-101] through SSL sockets with parametrized Server port number and Server address. [ref to Client 50-58]
-* 
+* to process Servers responses right after establishing connection with server
+* through SSL sockets with parameterized Server port number and Server address.
+* - CLIENT : This requirement is satisfied by Client.java in a way that it provides implementation
+* of Client object which is driver for handling Client activities.
 * ==============================================================================
 */ 
 /**
@@ -125,7 +126,7 @@ public class Client {
         // TODO: ??? dfa.setState(DFAState.AUTH);
         dfa.setState(DFAState.INIT);
 
-        // create the thread that listens for server responses
+        //CONCURRENT create the thread that listens for server responses
         display("Starting Listening thread");
         new ListenThread().start();
 
@@ -149,9 +150,9 @@ public class Client {
      */
     protected void display(String msg) {
         if (cg == null)
-            System.out.println(msg);      // print to sout in in CLI mode
+            System.out.println(msg); // print to sout in in CLI mode
         else
-            cg.display(msg + "\n");        // append to the ClientGUI conversation window
+            cg.display(msg + "\n"); // append to the ClientGUI conversation window
     }
 
     /**
@@ -272,6 +273,7 @@ public class Client {
         System.setProperty("javax.net.ssl.trustStore", "./cert/sslclienttrust");
         System.setProperty("javax.net.ssl.trustStorePassword", "123456");
 
+        //CLIENT : Client driver is created which is parameterized over Server's address and port number
         Client client = new Client("localhost", 1500, "user", "pass");
         System.out.println("Starting");
         client.start();
