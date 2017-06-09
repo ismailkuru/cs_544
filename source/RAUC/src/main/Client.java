@@ -10,6 +10,7 @@ import pdu.MessageImpl.UtilityControlReqMessage;
 import pdu.MessageImpl.UtilityStateQueryMessage;
 
 import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -99,8 +100,8 @@ public class Client {
     public boolean start() {
         // Establish the SSL connection
         try {
-            SocketFactory sf = SocketFactory.getDefault();
-            //SocketFactory sf = SSLSocketFactory.getDefault();
+            //SocketFactory sf = SocketFactory.getDefault();
+            SocketFactory sf = SSLSocketFactory.getDefault();
             display("Socket created");
             socket = sf.createSocket(server, port);
             display("Connection accepted " + socket.getInetAddress() + ":" + socket.getPort());
