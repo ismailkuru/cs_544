@@ -20,7 +20,10 @@ import java.util.*;
 * ==============================================================================
 */ 
 
-public final class ComponentFactory {
+public class ComponentFactory {
+	
+	static String atrName;
+	static ArrayList<String> valsLst;
 		
 	public ComponentFactory() {
 		
@@ -38,9 +41,11 @@ public final class ComponentFactory {
 		for (int i = 0; i < 1; i++) {
 			switch (i) {
 			case 0:
-				String pwr = "lock";
-				String[] pwrVals = {"closed", "open"};
-				attrs.add(new Attribute(pwr, Arrays.asList(pwrVals)));
+				atrName = "lock";
+				String[] lckVals ={"closed", "open"};
+				ArrayList<String> valsLst = new ArrayList<String>();
+				valsLst.addAll(Arrays.asList(lckVals));
+				attrs.add(new Attribute(atrName, valsLst));
 				break;
 				
 			default: break;
@@ -54,15 +59,19 @@ public final class ComponentFactory {
 		for (int i = 0; i < 2; i++) {
 			switch (i) {
 			case 0:
-				String pwr = "power";
-				String[] pwrVals = {"on", "off"};
-				attrs.add(new Attribute(pwr, Arrays.asList(pwrVals)));
+				String atrName = "power";
+				String[] acPwrVals = {"on", "off"};
+				ArrayList<String> valsLst = new ArrayList<String>();
+				valsLst.addAll(Arrays.asList(acPwrVals));
+				attrs.add(new Attribute(atrName, valsLst));
 				break;
 				
 			case 1:
-				String name = "temp";
-				String[] vals = {"hot", "cold", "middle"};
-				attrs.add(new Attribute(name, Arrays.asList(vals)));
+				atrName = "temp";
+				String[] tmpVals = {"cld", "mid", "hot"};
+				valsLst = new ArrayList<String>();
+				valsLst.addAll(Arrays.asList(tmpVals));
+				attrs.add(new Attribute(atrName, valsLst));
 				break;
 				
 			default: break;
@@ -78,17 +87,23 @@ public final class ComponentFactory {
 			switch (i) {
 			case 0:
 				String[] pwrVals = {"on", "off"};
-				attrs.add(new Attribute("power", Arrays.asList(pwrVals)));
+				valsLst = new ArrayList<String>();
+				valsLst.addAll(Arrays.asList(pwrVals));
+				attrs.add(new Attribute("power", valsLst));
 				break;
 				
 			case 1:
 				String[] vols = {"mute", "quiet", "mid", "loud"};
-				attrs.add(new Attribute("volume", Arrays.asList(vols)));
+				valsLst = new ArrayList<String>();
+				valsLst.addAll(Arrays.asList(vols));
+				attrs.add(new Attribute("volume", valsLst));
 				break;
 			
 			case 2:
 				String[] presets = {"102.1", "101.1", "104.5", "98.1"};
-				attrs.add(new Attribute("presets", Arrays.asList(presets)));
+				valsLst = new ArrayList<String>();
+				valsLst.addAll(Arrays.asList(presets));
+				attrs.add(new Attribute("presets", valsLst));
 			default: break;
 		}
 	}

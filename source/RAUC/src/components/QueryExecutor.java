@@ -92,10 +92,10 @@ public class QueryExecutor {
 					}
 					result = builder.toString();
 					return result;
-					
-				case 3: // List the possible values of an attribute of a component
-					autoId = msg.getContent().get(0).getContent(); // get the car
-					lcomps = cmap.get(autoId); // get the components
+				
+				case 3: // list the possible values of the given attribute
+					autoId = msg.getContent().get(0).getContent(); // get the car 
+					lcomps = cmap.get(autoId); // get the components on the car
 					
 					// search the list of components on the car for the queried component
 					ccCmp = msg.getContent().get(1).getContent();
@@ -107,31 +107,23 @@ public class QueryExecutor {
 						}
 					}
 					
-					// search the list of attributes for the queried component
+					//search the list of attributes of the component for the queried attribute
 					ccAtr = msg.getContent().get(2).getContent();
 					for (Attribute at : lattrs) {
-						if (ccCmp.equals(at.attribToString())) {
-							// capture the values of that attribute
+						if (ccAtr.equals(at.getName())) {
+							// capture the values of this attribute
 							vals = (ArrayList<String>) at.getValues();
-							break;
 						}
 					}
 					
-					
-					
-					for (Attribute at : lattrs) {
-						if (ccAtr.equals(at.toString())) {
-							vals = (ArrayList<String>) at.getValues();
-						}
-						
-					// build a string of those values
-					for (String s : vals) {
-						builder.append(s);
+					//build a string of those values & return it
+					for (String v : vals) {
+						builder.append(v);
 						builder.append(" - ");
-						}
+					}
 					result = builder.toString();
 					return result;
-					}
+
 					
 				case 4:
 					// List the value an attribute on the given component of a given auto
