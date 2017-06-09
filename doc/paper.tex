@@ -86,25 +86,3 @@
 %\input{appendicies}
 
 \end{document}
-\begin{comment}
-
-Message definition (PDUs) 
-Need better representation for message definitions. 
-256 byte is a long password. Is it a password or a hash of a password, or some other type of key? 
-What if authentication changes with the next protocol version, how does this message structure handles that? 
-
-
-DFA
-According to this DFA, the only service this protocol provides is authentication and then just pass messages along. 
-Is this the intention?
-
- Extensibility 
-Protocol version negotiation happens after authentication. 
-What is the authentication changes with the next version? 
-For example new hash algorithm or an extra step. 
-Also, what happens when you add fields to the header?
-
-Security
-Degree of Difficulty
-Look & Feel
-\end{comment}

@@ -6,10 +6,10 @@ import dfa.DFAState;
 import pdu.Message;
 import pdu.MessageImpl.TerminationMessage;
 import pdu.MessageImpl.UserAuthenMessage;
+import pdu.MessageImpl.UtilityControlReqMessage;
 import pdu.MessageImpl.UtilityStateQueryMessage;
 
 import javax.net.SocketFactory;
-import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -279,7 +279,11 @@ public class Client {
 
         while (client.dfa.state() != ESTABLISHED) { /* Busy loop, but it's just for testing */ }
         System.out.println("Sending query");
-        client.sendMessage(new UtilityStateQueryMessage("test", "test"));
+        client.sendMessage(new UtilityStateQueryMessage("au1"));
+
+        while (client.dfa.state() != ESTABLISHED) { /* Busy loop, but it's just for testing */ }
+        System.out.println("Sending command");
+        client.sendMessage(new UtilityControlReqMessage("au1", "0" , "power", "off"));
 
         while (client.dfa.state() != ESTABLISHED) { /* Busy loop, but it's just for testing */ }
         System.out.println("Sending shutdown");

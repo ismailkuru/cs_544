@@ -1,1 +1,9 @@
 /bin/
+.idea/
+doc/*.log
+doc/*.synctex.gz
+doc/*.aux
+doc/*.toc
+doc/*.out
+lib/
+out/

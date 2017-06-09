@@ -5,22 +5,20 @@ In this section, we discuss the details of the \textsf{RAUC} protocol.
 
 \subsection{PDU (Message) Definitions}
 \label{sec:pdudef}
-RAUC uses a single generic, variable sized PDU comprised of two parts: A single HEADER CHUNK and an ordered set of up to 255 CONTENT CHUNKs. The PDU is delineated by the end of the final CONTENT CHUNK in the message. Determining the position of the end of the last CONTENT CHUNK is defined below. This same PDU is used for both client-to-server and server-to-client messages.
+RAUC uses a single generic, variable sized PDU comprised of two parts: A 2 Byte HEADER CHUNK and a list of up to 255 CONTENT CHUNKs, which each range in size from 1 to 256 Bytes. The PDU is delineated by the end of the final CONTENT CHUNK in the message. Determining the position of the end of the last CONTENT CHUNK is defined below. This same PDU is used for both client-to-server and server-to-client messages. Exact message type codes are listed below in \S \ref{sec:pdus:pdu:c_to_s}.
 
 \[\textsf{\textbf{MESSAGE:} [HEADER CHUNK} : \textsf{[CONTENT CHUNK] [...]]}\]
 
-The HEADER CHUNK is a special, fixed-size chunk that contains two one-byte elements. The first byte specifies the MESSAGE TYPE being transmitted and the second byte contains the number of content chunks (CHUNK COUNT) contained in the message. This means that RAUC supports up to 256 unique message types and The number of content chunks in a given message can range from 0 to 255.
+The HEADER CHUNK is composed of 1 Byte specifying the type, and 1 Byte specifying the number of following content chunks. RAUC supports up to 255 unique message types (with 1 reserved for future extension) and the number of content chunks in a given message can range from 0 to 255.
 
 \[\textsf{\textbf{HEADER CHUNK:} [MESSAGE TYPE} : \textsf{CHUNK COUNT]}\]
 
-CONTENT CHUNKs are generically defined and dynamically sized message elements. A content chunk has two parts: SIZE and DATA. SIZE is a single byte that defines how many bytes make up the data portion of the chunk. DATA is the actual data content of the chunk that is meaningful to the application. RAUC clients must size the data sent in each content chunk it sends out; relying on default implementations (such as setting all usernames to 32 bytes long and setting all unused high-order bytes to 0) is not advised.
+CONTENT CHUNKs are variable size. The first Byte specifies the number of Bytes to follow it with data for that chunk. Each following chunk may contain data in UTF-8 encoding. There should not be any padding bytes since the size is specified exactly.
 
 \[\textsf{\textbf{CONTENT CHUNK:} [SIZE} : \textsf{DATA]}\]
 
-
-
-\subsubsection{Minimum Required Implementation}
-All RAUC implementations must implement the following  messages, as well as the two error messages, to be considered fully-functioning. In table \ref{tab:coml}, we list the message types and their usage. We basically assign a type code to each message type so that we can identify what sort of message is sent/recevived. We structure our messages in a way that we can support variable length messages. We keep track of number of required content chunks of for each message. 
+\subsubsection{Message Types}
+In table \ref{tab:coml}, we list the message types and their usage. Each message type has a number of required content chunks that form the parameters of the message. Below, we go into the details of each message and provide the structure and an example with each type.
 
 \label{sec:pdus:pdu:c_to_s}
 \
@@ -49,21 +47,23 @@ All RAUC implementations must implement the following  messages, as well as the 
 \hline
   \textsf{Temporary Error}             & \textsf{254}   & \textsf{0} & \textsf{Error Message}\\
 \hline
+  \textsf{Termination}             & \textsf{9}   & \textsf{0} & \textsf{Close the connection}\\
+\hline
 \end{tabular}}
 
 \caption{Message Types}
 \label{tab:coml}
 \end{table}
 
-\paragraph{User Authentication}: After establishing a connection, ACS servers must not accept any commands other than User Authentication(header [3:2]) or CLOSE (header [9:0])  before first authenticating the client. Once authenticated, clients can issue further commands. The User Authentication command is a 3-chunk message made up of the header and two content chunks: USERNAME and PASSWORD.  With "..." representing user data, the following is an example of the User Authentication command with USERNAME that is 32 bytes long and a PASSWORD that is 256 bytes long:
+\paragraph{3 - User Authentication}: The User Authentication command is a 3-chunk message made up of the header and two content chunks: USERNAME and PASSWORD.
 
 \begin{center}
 {\textsf{[3:2] : [USERNAME] [PASSWORD]}}
 
-{\textsf{[3:2] : [32: ... ] [256: ... ]}}
+{\textsf{[3:2] : [5:uname] [17:aVeryLongPassword]}}
 \end{center}
 
-\paragraph{Authentication Acknowledgement}: Authentication Acknowledgement (AA) (header [4:0-*]) commands are sent by ACS servers ONLY after successful user authentication. This message lets the client know that the server is ready to begin receiving Utility Control Request or Utility State Query messages. ACS servers may use Authentication Acknowledgement commands to transmit additional information such as protocol version, supported extensions with an extended content chunk count. The message header being set to 4 is enough for clients to know that authentication was successful and that the server is listening for commands. Two examples appear below.
+\paragraph{4 - Authentication Acknowledgement}: This message lets the client know that they are authenticated and the server is ready to begin receiving Utility Control Request or Utility State Query messages. ACS servers may use Authentication Acknowledgement commands to transmit additional information such as protocol version, supported extensions with an extended content chunk count.
 
 \begin{center}
 {\textsf{[4:0] : []}}
@@ -71,19 +71,19 @@ All RAUC implementations must implement the following  messages, as well as the 
 %\\[1\baselineskip]
 {\textsf{[4:1] : [SERVER VERSION]}}
 
-{\textsf{[4:1] : [1 : ...]}}
+{\textsf{[4:1] : [1:0]}}
 \end{center}
 
-\paragraph{Utility Control Request}: A Utility Control Request (UCR) (header [5:4]) represents a command that a smart device wishes to ultimately forward to an automobile connected to the ACS server. The ACS server must acknowledge receipt of a Utility Control Request message but may choose whether or not to acknowledge if the command was successfully forwarded. A UCR is a 5-chunk message made up of the header and four content chunks: AUTOID (unique identifier of the automobile), COMP (the specific component on the automobile to access), ATTR (the attribute of the component we wish to modify), and VAL (the value we wish to set the attribute to). Using some sample user data, the following is an example of the User Authentication command:
+\paragraph{5 - Utility Control Request}: A Utility Control Request (UCR) represents a command to be executed by the vehicle. A UCR contains four content chunks: AUTOID (unique identifier of the automobile), COMP (the specific component on the automobile to access), ATTR (the attribute of the component we wish to modify), and VAL (the value we wish to set the attribute to).
 
 \begin{center}
 {\textsf{[5:4] : [AUTOID] [COMP] [ATTR] [VAL]}}
 
-{\textsf{[5:4] : [red car] [radio] [volume] [5]}}
+{\textsf{[5:4] : [5:34769] [5:radio] [6:volume] [1:5]}}
 \end{center}
 
-\paragraph{Request Received}: A Command Received (CR) (header [15:0-1]) message is sent to the client when the server successfully receives a Utility Control Request command. The message does not contain any information
-about whether or not such commands were forwarded; only that the command was valid and accepted by the server. Command received messages may contain 0 or 1 content chunks. ACS servers may send 1-byte content chunks to verify whether or not a command was successfully forwarded to an automobile. A content chunk with a DATA portion of all 1s indicates success while a DATA portion of all 0s indicates failure.
+\paragraph{15 - Request Received}: A Command Received (CR) (header [15:0-1]) message is sent to the client when the server successfully receives a Utility Control Request command. The message does not contain any information
+about whether or not such commands were forwarded; only that the command was valid and accepted by the server. Command received messages may contain 0 or 1 content chunks. ACS servers may send 1-byte content chunks to verify whether or not a command was successfully forwarded to an automobile. A content chunk 0s indicates failure, anything else indicates success.
 
 \begin{center}
 {\textsf{[15:0] : []}}
@@ -91,10 +91,10 @@ about whether or not such commands were forwarded; only that the command was val
 %\\[1\baselineskip]
 {\textsf{[15:1] : [SUCCESS]}}
 
-{\textsf{[15:1] : [1 : 1111 1111]}}
+{\textsf{[15:1] : [1:1]}}
 \end{center}
 
-\paragraph{Utility State Query}: A Utility State Query (USQ) (header [6:0-4]) message alerts the server that the device would like some information returned. This command has 0 to 4 CONTENT CHUNKs depending on the nature of the query, however a hierarchical rule must be followed when providing arguments. The arguments AUTO, COMP, ATTR, and VAL are detailed below.
+\paragraph{6 - Utility State Query}: A Utility State Query (USQ) message is for requesting information about a vehicle. This command has 0 to 4 CONTENT CHUNKs depending on the nature of the query.
 
 If no arguments are provided, the server returns a list that uniquely identifies each automobile which has been registered to this account that is currently connected to the ACS server.  This list essentially provides a list of automobiles that the client can interact with at the present time.
 
@@ -106,24 +106,20 @@ The ATTR argument may only be provided if the AUTO and COMP arguments have been 
 
 The VAL argument may only be provided if the AUTO, COMP, and ATTR arguments have been provided. It is a dummy content chunk that instructs the server to return  is the currently-set value of the ATTR on the specific COMP for the specific AUTO provided.
 
-The following message would provide a list of all radio presets [ATTR] saved on [RED CAR]'s [RADIO] component:
-
 \begin{center}
-{\textsf{[6:3] : [AUTOID] [COMP] [ATTR]}}
+{\textsf{[6:3] : [AUTOID] [COMP] [ATTR] [VAL]}}
 
-{\textsf{[6:3] : [RED CAR] [RADIO] [PRESETS]}}
+{\textsf{[6:3] : [5:34769] [5:radio] [6:volume]}}
 \end{center}
 
-\paragraph{Query Result}: A Query Result (QR) (header [16:1]) message is sent by the server in response to a Utility State Query. Query Result messages contain a  header chunk and only one content chunk: the result list of a successful query. The content chunk byte-length will naturally vary depending on the result set returned to the client. The following represents a Query Result message for a one-argument Utility State Query with a 64 byte content chunk.
+\paragraph{16 - Query Result}: A Query Result (QR) message is sent by the server in response to a Utility State Query. Query Result messages contain a  header chunk and only one content chunk: the result list of a successful query. The content chunk byte-length will naturally vary depending on the result set returned to the client. The following represents a Query Result message for a one-argument Utility State Query with a 64 byte content chunk.
 
 \begin{center}
 {\textsf{[16:1] : [REGISTERED VEHICLES]}}
-
-{\textsf{[16:1] : [64 : ... ]}}
 \end{center}
 
 
-\paragraph{Termination}: Termination (header [9:0]) messages may be sent by both client and server. Once command for termination is sent by any of two, all resources being used for the connection is properly finalized and connection is terminated.
+\paragraph{9 - Termination}: Termination (header [9:0]) messages may be sent by both client and server. Once command for termination is sent by any of two, all resources being used for the connection is properly finalized and connection is terminated.
 
 \begin{center}
 {\textsf{[9:0] : []}}

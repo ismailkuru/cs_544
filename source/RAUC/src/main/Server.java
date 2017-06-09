@@ -7,7 +7,6 @@ import pdu.Message;
 import pdu.MessageImpl.TerminationMessage;
 
 import javax.net.ServerSocketFactory;
-import javax.net.ssl.SSLServerSocketFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -51,6 +50,8 @@ public class Server {
     private static final Map<String, String> testUsers = new HashMap<>();
 
     static {
+        testUsers.put("user", "pass");
+        testUsers.put("User", "Pass");
         testUsers.put("user1", "pass1");
         testUsers.put("user2", "pass2");
     }
