@@ -7,12 +7,25 @@ import pdu.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: UtilityControlReqMessage.java
+* **************************************************
+* Definition: This file includes implementation of the message which serves to
+*  set/change the states of components’ attributes associated with an automobile.
+* *******************************************************
+* Requirements:
+* - STATEFUL : The UtilityControlReqMessage objects are the [COMMAND]arrows in the DFA.
+* - SERVICE : Component Control Service
+* ==============================================================================
+*/ 
 public class UtilityControlReqMessage extends Message {
-	//String _autoid;
-	//String _component;
-	//String _attribute;
-	//String _value;
 
 	public UtilityControlReqMessage(HeaderChunk h, List<ContentChunk> c){
 		super(h, c);
@@ -34,34 +47,8 @@ public class UtilityControlReqMessage extends Message {
 	}
 		
 	public MessageType getMessageType() {
+		//STATEFUL
 		return MessageType.OP_COMMAND;
 	}
-
-/*
-	public String getAutoId(){
-		return _autoid;
-	}
-	public String getComponent(){	
-		return _component;
-	}
-	public String getAttribute(){	
-		return _attribute;
-	}	
-	public String getValue(){	
-		return _value;
-	}
-	public void setAutoId(String ai){	
-		_autoid = ai;
-	}
-	public void setComponent(String cmp){	
-		_component = cmp;
-	}
-	public void setAttribute(String attr){	
-		_attribute = attr;
-	}
-	public void setValue(String vl){	
-		_value = vl;
-	}
-*/
 	
 }

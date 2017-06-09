@@ -20,7 +20,7 @@ import java.util.List;
 * Definition: 
 * *******************************************************
 * Requirements:
-* - STATEFUL : The AckMessage objects are the [SHUTDOWN]arrows in the DFA.
+* - STATEFUL : The TerminationMessage objects are the [SHUTDOWN]arrows in the DFA.
 * - SERVICE : Communication Termination Request Service
 * ==============================================================================
 */ 

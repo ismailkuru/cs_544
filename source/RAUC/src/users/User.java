@@ -1,5 +1,24 @@
 package users;
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: User.java
+* **************************************************
+* Definition: This file includes representation of user which is one of the
+*  core parts of the protocol service.
+* *******************************************************
+* Requirements:
+* - SERVICE: Authentication of an user with user name and password which is one 
+* important part of the protocol’s service. 
+* Each Client driver object is created with its user name and password 
+* and these inputs are used to create/send authenticate message, UserAuthMessage.java.
+* ==============================================================================
+*/ 
 public class User {
 	String _uname;
 	String _pass;

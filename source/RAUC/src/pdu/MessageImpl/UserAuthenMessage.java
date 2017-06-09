@@ -8,7 +8,24 @@ import pdu.MessageType;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: UserAuthenMessage.java
+* **************************************************
+* Definition: This file includes implementation of the message which serves for 
+* user to authenticate itself in the system.
+* *******************************************************
+* Requirements:
+* - STATEFUL : The UserAuthenMessage objects are the [AUTH]arrows in the DFA.
+* - SERVICE : Authentication Service
+* ==============================================================================
+*/ 
 public class UserAuthenMessage extends Message{
 	public UserAuthenMessage(HeaderChunk h, List<ContentChunk> c){
 		super(h, c);
@@ -26,6 +43,7 @@ public class UserAuthenMessage extends Message{
 	}
 		
 	public MessageType getMessageType() {
+		//STATEFUL
 		return MessageType.OP_AUTH;
 	}
 
