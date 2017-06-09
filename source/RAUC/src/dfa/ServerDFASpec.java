@@ -10,6 +10,7 @@ import pdu.MessageImpl.QueryResultMessage;
 import pdu.MessageImpl.RequestReceivedMessage;
 import pdu.MessageImpl.TemporaryErrorMessage;
 import pdu.MessageImpl.UserAuthenMessage;
+import pdu.MessageImpl.PermanentErrorMessage;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -181,6 +182,8 @@ public class ServerDFASpec extends DFASpec {
                 	// TODO Auto-generated catch block
                 	System.out.println("Error : Invalid Query Creation");
                 	e.printStackTrace();
+                	// a bad query returns a permanent error - we don't return info on cars/components/attributes that don't exist
+                	return new PermanentErrorMessage();                
                 }
                 return new QueryResultMessage(qres);
             default:
