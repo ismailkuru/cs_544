@@ -6,6 +6,7 @@ import java.util.Set;
 
 import pdu.Message;
 import pdu.MessageType;
+import pdu.ChunkImpl.ContentChunk;
 /* =============================================================================
 * CS544 - Computer Networks - Drexel University, Spring 2017
 * Protocol Implementation: Remote Automobile Utility Control
@@ -35,11 +36,17 @@ public class QueryExecutor {
 		else{
 			StringBuilder builder = new StringBuilder();
 			ArrayList<Component> lcomps = null ;
+			ArrayList<Attribute> lattrs = null ;
+			ArrayList<String> vals = null;
 			String autoId=null;
+			String ccCmp;
+			String ccAtr;
 			Component cmp = null;
 			ComponentType cmpt = null;
 			String attrib = null;
 			String result = null;
+													System.out.println("Beginning query execution");
+													System.out.println("On message: " + msg.toString());
 			switch (msg.getContent().size()) {
 				case 0: // List all automobiles registered
 					Set<String> autos = cmap.keySet();
@@ -49,41 +56,102 @@ public class QueryExecutor {
 					}
 					result = builder.toString();
 					return result; 
-				case 1: // List internal state of all components of the automobile
+					
+					
+				case 1: // List all components in the component list of the given automobile
 					autoId = msg.getContent().get(0).getContent(); // auto id
+					// the list of components on this auto
 					lcomps = cmap.get(autoId);
 					
 					for(Component c : lcomps) {
 					    builder.append(c.toString());
+					    builder.append(" - ");
+					}
+					result = builder.toString();										
+					return result; 
+					
+					
+				case 2: // list the attributes of the given component on the given auto
+					autoId = msg.getContent().get(0).getContent(); // get the car 
+					lcomps = cmap.get(autoId); // get the components on the car
+					
+					// search the list of components on the car for the queried component
+					ccCmp = msg.getContent().get(1).getContent();
+					for (Component c : lcomps) {
+						if (ccCmp.equals(c.getComponentName())) {
+							// capture the attributes of that component
+							lattrs = (ArrayList<Attribute>) c.getAttrs();
+							break;
+						}
+					}
+					
+					// build a string of those attributes & return it
+					for(Attribute a : lattrs) {
+						builder.append(a.attribToString());
+						builder.append(" - ");
 					}
 					result = builder.toString();
-					return result; 
-				case 2: // List internal state of of all states of the components
-					autoId = msg.getContent().get(0).getContent();
-					lcomps = cmap.get(autoId);
-					
-					cmpt = ComponentType.typeFromString(msg.getContent().get(1).getContent());
-					
-					for(Component c : lcomps){
-						if(c.getComponentCode().equals(cmpt))
-							cmp = c;
-					}
-					result = cmp.toString() + " - ";
 					return result;
-				case 3: // List internal state of the attribute
-					autoId = msg.getContent().get(0).getContent();
-					lcomps = cmap.get(autoId);
+				
+				case 3: // list the possible values of the given attribute
+					autoId = msg.getContent().get(0).getContent(); // get the car 
+					lcomps = cmap.get(autoId); // get the components on the car
 					
-					cmpt = ComponentType.typeFromString(msg.getContent().get(1).getContent());
-					attrib = msg.getContent().get(2).getContent();
-					for(Component c : lcomps){
-						if(c.getComponentCode().equals(cmpt))
-							cmp = c;
+					// search the list of components on the car for the queried component
+					ccCmp = msg.getContent().get(1).getContent();
+					for (Component c : lcomps) {
+						if (ccCmp.equals(c.getComponentName())) {
+							// capture the attributes of that component
+							lattrs = (ArrayList<Attribute>) c.getAttrs();
+							break;
+						}
 					}
-					result = cmp.attribStateToString(attrib);
+					
+					//search the list of attributes of the component for the queried attribute
+					ccAtr = msg.getContent().get(2).getContent();
+					for (Attribute at : lattrs) {
+						if (ccAtr.equals(at.getName())) {
+							// capture the values of this attribute
+							vals = (ArrayList<String>) at.getValues();
+						}
+					}
+					
+					//build a string of those values & return it
+					for (String v : vals) {
+						builder.append(v);
+						builder.append(" - ");
+					}
+					result = builder.toString();
+					return result;
+
+					
+				case 4:
+					// List the value an attribute on the given component of a given auto
+					autoId = msg.getContent().get(0).getContent(); // get the car
+					lcomps = cmap.get(autoId); // get the components
+					
+					// search the list of components on the car for the queried component
+					ccCmp = msg.getContent().get(1).getContent();
+					for (Component c : lcomps) {
+						if (ccCmp.equals(c.getComponentName())) {
+							// capture the attributes of that component
+							lattrs = (ArrayList<Attribute>) c.getAttrs();
+							break;
+						}
+					}
+					
+					// search for the attribute
+					ccAtr = msg.getContent().get(2).getContent();
+					for (Attribute at : lattrs) {
+						if (at.getName().equals(ccAtr)) {
+							// get the value of that attribute
+							result = at.stateToString();
+						}
+					}
 					return result; 
 				default: throw new Exception("Invalid Query");
 			}
 		}	
 	}
 }
+

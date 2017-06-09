@@ -1,6 +1,7 @@
 package components;
 
 import java.util.List;
+import java.util.ArrayList;
 /* =============================================================================
 * CS544 - Computer Networks - Drexel University, Spring 2017
 * Protocol Implementation: Remote Automobile Utility Control
@@ -22,16 +23,16 @@ import java.util.List;
 */ 
 public class Attribute {
 	private String _attr;
-	private List<String> _values;
+	private ArrayList<String> _values;
 	private String _currentValue;
 	
-	public Attribute(String attr, List<String> values) {
+	public Attribute(String attr, ArrayList<String> values) {
 		_attr = attr;
 		_values =  values;
 		_currentValue = _values.get(0); // make the first setting the default setting
 	}
 	
-	public List<String> getValues() {
+	public ArrayList<String> getValues() {
 		return _values;
 	}
 	

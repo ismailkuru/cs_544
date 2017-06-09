@@ -14,13 +14,14 @@ public class UtilityStateQueryMessage extends Message{
 	}
 
 	public UtilityStateQueryMessage(String... params){
-		this._header = new HeaderChunk(MessageType.OP_QUERY, params.length);
+		int i = 0;
         this._content = new ArrayList<>();
 		for (String param : params) {
-			if (param == null) {
-				break;
+			if (param != null) {
+				this._content.add(new ContentChunk(param));
+				i++;
 			}
-			this._content.add(new ContentChunk(param));
+			this._header = new HeaderChunk(MessageType.OP_QUERY, i);
 		}
 	}
 

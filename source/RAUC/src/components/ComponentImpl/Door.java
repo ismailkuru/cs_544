@@ -56,18 +56,11 @@ public class Door extends Component{
 	}
 	@Override
 	public String toString() {
-		   StringBuilder sb = new StringBuilder();
-	       for(Attribute a : attributes){
-	            sb.append(a.attribToString());
-	            sb.append('-');
-	            sb.append(a.stateToString());
-	            //sb.append('"');
-	       }
-	  return super._name + ":" + sb.toString();
+		return super.toString();
 	}
 	
 	public String attribStateToString(String attrib) {
-		return attributes.get(attributes.indexOf(attrib)).stateToString();
+		return super.attribStateToString(attrib);
 	}
 
 	@Override
