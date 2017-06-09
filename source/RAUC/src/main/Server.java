@@ -16,10 +16,32 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: Server.java
+* **************************************************
+* Definition: This file is main driver for performing server functionalities.Main server driver.
+*  Handles DFA, socket connection, reading/writing threads, and printing info for the user
+* 
+* *******************************************************
+* Requirements:
+* - STATEFUL : the Message objects are the arrows in the DFA, i.e. the operations
+*   by which state transitions in the protocol DFA are applied.
+* - CONCURRENT : The server initializes a connection listener which handles incoming connections. 
+* It spawns a new thread, ConnectionThread , for handling each different client connection. 
+* This makes Server to handle multiple connections at a time.
+* - SERVICE : Main class for starting a server. The server is hardcoded to port 1500. The server keeps 
+* client connections in a map.
+* 
+* ==============================================================================
+*/   
 
-/**
- * Main server driver. Handles DFA, socket connection, reading/writing threads, and printing info for the user
- */
 public class Server {
     private Map<String, ConnectionThread> connections; // <Identifier, client thread>
     private Map<String, String> users; // <username, password>
@@ -85,9 +107,9 @@ public class Server {
                 }
                 display("Connected to client " + cSocket.getInetAddress() + ":" + cSocket.getPort());
                 
-                // fork a new thread when a connection is accepted
+                //CONCURRENT: fork a new thread when a connection is accepted
                 ConnectionThread ct = new ConnectionThread(cSocket, sg);
-                // keep it in collection with an identifier
+                //CONCURRENT: keep it in collection with an identifier
                 connections.put(ct.identify(), ct);
                 
                 display("Starting client thread " + ct.identify());
@@ -291,6 +313,7 @@ public class Server {
        /*if (args.length > 1) {
             port = Integer.valueOf(args[1]);
         }*/
+        //SERVICE: Creating server driver
         Server server = new Server(port);
         server.run();
     }
