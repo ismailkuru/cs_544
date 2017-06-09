@@ -73,7 +73,7 @@
   
   
   
-  <property name="compiler.args.cs_544" value="-encoding UTF-8 -source 7 -target 7 ${compiler.args}"/>
+  <property name="compiler.args.cs_544" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
   
   <property name="cs_544.output.dir" value="${module.cs_544.basedir}/out/production"/>
   <property name="cs_544.testoutput.dir" value="${module.cs_544.basedir}/out/test"/>
