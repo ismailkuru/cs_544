@@ -10,7 +10,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-
+/* =============================================================================
+* CS544 - Computer Networks - Drexel University, Spring 2017
+* Protocol Implementation: Remote Automobile Utility Control
+* Group 2:
+* - Ismail Kuru
+* - Max Mattes
+* - Lewis Cannalongo
+***************************************************
+* File name: ClientGUI.java
+* **************************************************
+* Definition: Client driver gets interactions with user through ClientGUI.java object handle.
+*  ClientGUI.java uses javax.swing GUI objects to handle user interaction and inputs.
+* *******************************************************
+* Requirements:
+* - UI : ClientGUI.java abstracts the way communication is handled between Client and Server.
+* A GUI based on javax.swing panels is provided to user for providing inputs which are used as arguments for 
+* building a message to be sent to Server, [ref ClientGUI 102-112]. In addition, user authentication 
+* is provided with the inputs through Login-GUI.
+* - CLIENT : This requirement is relevant to CLientGUI.java because this file enables you to indicate
+*  Server address and Server port number.
+* ==============================================================================
+*/
 public class ClientGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -25,7 +46,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	private int defaultPort;
 	private String defaultHost;
 	
-	// GUI elements
+	//UI: GUI elements
 	private JLabel lblAuth;
 	private JTextField userTF;
 	private JTextField passTF;
@@ -149,7 +170,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	}
 		
 	/*
-	* Handle various actions performed across the GUI
+	* UI: Handle various actions performed across the GUI
 	*/
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
@@ -301,7 +322,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 	
 	
 	
-	// a series of dialog boxes that help user build a dynamic message to send across the RAUC connection
+	//UI-CLIENT:  a series of dialog boxes that help user build a dynamic message to send across the RAUC connection
 	protected class MessageBuilder {
 		
 		// where to send the dialogs
@@ -311,7 +332,7 @@ public class ClientGUI extends JFrame implements ActionListener {
 			parent = par;
 		}
 		
-		// builds a UCR message from user input dialogs
+		//UIS: builds a UCR message from user input dialogs
 		protected  UtilityControlReqMessage buildUCR() {
 			String auto= null;
 			String comp= null;
