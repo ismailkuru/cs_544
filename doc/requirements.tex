@@ -199,12 +199,11 @@ The following sections include links to the explanations of the requirements in 
   \item Automobile.java : This file includes the representation of the Automobile object.
   \item Command.java : Commands are operations applied on states of components of an automobile. Command objects are generated from Message objects, [details annotated in \textsf{createCommand} method in Command.java] and applied on components of an automobile. It is part of the protocol's service.
   \item Component.java :  This file includes abstract class for a component that can be part of an automobile controlled by the protocol. It is part of the protocol's service because Component.java specifies that each component sub type, ex:AC.java, needs to implement \textsf{applyCommand}, [details in Component.java and all its sub-type implementations], which enables applying a command to change component's state of attributes. 
-  \item ComponentType.java : 
   \item Factory.java : This file includes instantiation of couple of objects (User, Automobile, Components etc.) to demonstrate that protocol is servicing properly.
   \item Query.java : This file includes implementation of read-only operation to check the status of an automobile's components. This is part of the the protocol's service.
   \item AC.java-Radio.java-Door.java  : This is representation of one of the components that an automobile can have. It is sub type of the Component.java
   \item ComponentFactory.java : Service similar to Factory.java is provided for Component(AC, Door, Radio) generation with this file.
-  \item Attribute.java :
+  \item Attribute.java : This file includes implementation of representation of attributes of components such as power, lock, temperature. It is part of the components which are part of data service of protocol.
   \end{itemize}
   
   \section{Users}
