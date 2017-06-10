@@ -1,6 +1,6 @@
 # CS 544 - Group 2
 Note: Runs on Linux (tested on Debian and Kali Linux)
-
+Group Grading: Ismail:10 Max:10 Lewis:10
 ## To Run
 * `ant all` to build
 * `ant server` to run commandline server, or `ant serverGUI` for GUI server
